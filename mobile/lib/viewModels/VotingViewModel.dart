@@ -1,12 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import '../models/Room.dart';
 import '../services/WebSocketClient.dart';
 import '../models/VotingSummary.dart';
-import '../services/network/GameService.dart';
-
-import '../models/Room.dart';
-import '../models/VotingSummary.dart';
-import '../services/WebSocketClient.dart';
 import '../services/network/GameService.dart';
 
 class VotingViewModel extends ChangeNotifier {
@@ -22,8 +19,8 @@ class VotingViewModel extends ChangeNotifier {
   int? _votingId=0;
   Room? _room;
   Room? get room => _room;
-  bool _votingFinished = false;
-  bool get votingFinished => _votingFinished;
+  final _votingFinished = StreamController<void>.broadcast();
+  Stream<void> get votingFinished => _votingFinished.stream;
 
   VotingViewModel() {
     _players = webSocketClient.lastRoomUpdate!.accountUsernames.map(
@@ -79,7 +76,7 @@ class VotingViewModel extends ChangeNotifier {
   void setVotingResults(VotingSummary value)
   {
     _votingSummary = value;
-    _votingFinished = true;
+    _votingFinished.add(null);
     print("elop");
     notifyListeners();
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/services/network/GameService.dart';
 import 'package:mobile/services/network/RoomService.dart';
@@ -10,13 +12,13 @@ class RoomViewModel extends ChangeNotifier{
   final WebSocketClient webSocketClient = WebSocketClient();
   Room? _room;
   bool _isHost = false;
-  bool _gameStarted = false;
+  final _gameStarted = StreamController<void>.broadcast();
   final RoomService roomService = RoomService();
   final GameService gameService = GameService();
   String messageError = "";
 
   Room? get room => _room;
-  bool get gameStarted => _gameStarted;
+  Stream<void> get gameStarted => _gameStarted.stream;
   bool get isHost => _isHost;
 
   void setIsHost(bool value)
@@ -63,7 +65,7 @@ class RoomViewModel extends ChangeNotifier{
   void connectWebSocket() {
     webSocketClient.roomUpdate.listen((room) { setRoom(room); });
     webSocketClient.gameStartUpdate.listen((gameStart) {
-      _gameStarted = true;
+      _gameStarted.add(null);
       notifyListeners();
     });
   }
