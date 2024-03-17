@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/services/WebSocketClient.dart';
 import 'package:mobile/services/network/RoomService.dart';
 import 'package:mobile/models/Room.dart';
+import 'package:mobile/state/RoomState.dart';
 
 class JoinPrivateRoomViewModel extends ChangeNotifier {
 
@@ -14,11 +15,12 @@ class JoinPrivateRoomViewModel extends ChangeNotifier {
 
   final RoomService _roomService = RoomService();
   final WebSocketClient _webSocketClient = WebSocketClient();
+  final RoomState _roomState = RoomState();
 
   String inputCodeError = "";
   String messageError = "";
 
-  Future<void> joinRoom(String accessCode, void Function(Room room) onSuccess, void Function() onError) async {
+  Future<void> joinRoom(String accessCode, void Function() onSuccess, void Function() onError) async {
     _setLoading(true);
     inputCodeError = "";
     messageError = "";
@@ -27,7 +29,8 @@ class JoinPrivateRoomViewModel extends ChangeNotifier {
       try {
         Room room = await _roomService.joinRoomByAccessCode(accessCode);
         await _webSocketClient.connect(room.id);
-        onSuccess.call(room);
+        _roomState.setRoom(room);
+        onSuccess.call();
       }
       catch (e) {
         messageError = "Wrong code";

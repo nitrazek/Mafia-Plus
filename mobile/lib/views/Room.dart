@@ -6,9 +6,7 @@ import 'package:mobile/viewModels/RoomViewModel.dart';
 import 'UserRole.dart';
 
 class RoomPage extends StatefulWidget {
-  final Room room;
-
-  RoomPage(this.room);
+  const RoomPage({super.key});
 
   @override
   RoomPageState createState() => RoomPageState();
@@ -25,12 +23,6 @@ class RoomPageState extends State<RoomPage> {
   void didChangeDependencies()
   {
     super.didChangeDependencies();
-    final RoomViewModel viewModel = context.read<RoomViewModel>();
-    if(viewModel.room == null) {
-      viewModel.setRoom(widget.room);
-      viewModel.connectWebSocket();
-    }
-
     context.read<RoomViewModel>().gameStarted.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserRolePage()));

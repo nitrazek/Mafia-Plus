@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/services/network/GameService.dart';
-
-import 'package:mobile/models/Room.dart';
-import 'package:mobile/services/WebSocketClient.dart';
+import 'package:mobile/state/GameState.dart';
 
 class WinnerRoleViewModel extends ChangeNotifier{
+  final GameState _gameState = GameState();
+
   String _userRole = '';
-  WebSocketClient webSocketClient = WebSocketClient();
+  String get userRole => _userRole;
 
   WinnerRoleViewModel() {
-    if(webSocketClient.lastGameStartUpdate == null) return;
-    _userRole = webSocketClient.lastGameStartUpdate!.role;
-    notifyListeners();
+    _gameState.addListener(_updateRole); _updateRole();
   }
 
-  String get userRole => _userRole;
+  void _updateRole() {
+    if(_gameState.currentGame == null) return;
+    _userRole = _gameState.currentGame!.role;
+    notifyListeners();
+  }
 }

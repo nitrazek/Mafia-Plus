@@ -35,7 +35,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
       Timer(Duration(seconds: 8), () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => RoomPage(context.watch<VotingViewModel>().room!)),
+          MaterialPageRoute(builder: (context) => RoomPage()),
         );
       });
     }

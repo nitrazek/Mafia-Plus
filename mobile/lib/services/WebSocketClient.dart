@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
 import 'package:mobile/models/VotingSummary.dart';
-import 'package:mobile/utils/CustomHttpClient.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
@@ -20,21 +19,17 @@ class WebSocketClient {
 
   final String baseUrl = "ws://${Constants.baseUrl}";
 
-  final _roomUpdate = StreamController<Room>();
+  final _roomUpdate = StreamController<Room>.broadcast();
   Stream<Room> get roomUpdate => _roomUpdate.stream;
-  Room? lastRoomUpdate;
 
-  final _gameStartUpdate = StreamController<GameStart>();
+  final _gameStartUpdate = StreamController<GameStart>.broadcast();
   Stream<GameStart> get gameStartUpdate => _gameStartUpdate.stream;
-  GameStart? lastGameStartUpdate;
 
-  final _roundStartUpdate = StreamController<Round>();
+  final _roundStartUpdate = StreamController<Round>.broadcast();
   Stream<Round> get roundStartUpdate => _roundStartUpdate.stream;
-  Round? lastRoundStartUpdate;
 
   final _votingSummaryUpdate = StreamController<VotingSummary>.broadcast();
   Stream<VotingSummary> get votingSummaryUpdate => _votingSummaryUpdate.stream;
-  VotingSummary? lastVotingSummary;
 
   WebSocketClient._internal();
 
@@ -62,7 +57,6 @@ class WebSocketClient {
             callback: (frame) {
               Map<String, dynamic> roomJson = jsonDecode(frame.body!);
               Room room = Room.fromJson(roomJson);
-              lastRoomUpdate = room;
               _roomUpdate.add(room);
             }
           );
@@ -71,7 +65,6 @@ class WebSocketClient {
               callback: (frame) {
                 Map<String, dynamic> gameStartJson = jsonDecode(frame.body!);
                 GameStart gameStart = GameStart.fromJson(gameStartJson);
-                lastGameStartUpdate = gameStart;
                 _gameStartUpdate.add(gameStart);
               }
           );
@@ -80,7 +73,6 @@ class WebSocketClient {
               callback: (frame) {
                 Map<String, dynamic> roundStartJson = jsonDecode(frame.body!);
                 Round round = Round.fromJson(roundStartJson);
-                lastRoundStartUpdate = round;
                 _roundStartUpdate.add(round);
               }
           );
@@ -89,7 +81,6 @@ class WebSocketClient {
             callback: (frame) {
               Map<String, dynamic> votingSummaryJson = jsonDecode(frame.body!);
               VotingSummary votingSummary = VotingSummary.fromJson(votingSummaryJson);
-              lastVotingSummary = votingSummary;
               _votingSummaryUpdate.add(votingSummary);
             }
           );

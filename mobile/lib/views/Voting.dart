@@ -21,8 +21,6 @@ class _VotingPageState extends State<VotingPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    context.read<VotingViewModel>().connectWebSocket();
-
     context.read<VotingViewModel>().votingFinished.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => VotingResultsPage()));
