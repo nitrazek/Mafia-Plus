@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/LoginViewModel.dart';
 import 'Menu.dart';
 import 'Register.dart';
-import 'package:animate_do/animate_do.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
