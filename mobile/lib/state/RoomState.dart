@@ -12,7 +12,6 @@ class RoomState extends ChangeNotifier {
   RoomState._internal() {
     webSocketClient.roomUpdate.listen((room) {
       setRoom(room);
-      notifyListeners();
     });
   }
 
@@ -21,7 +20,8 @@ class RoomState extends ChangeNotifier {
     return _instance!;
   }
 
-  void setRoom(Room room) {
+  void setRoom(Room? room) {
     _currentRoom = room;
+    notifyListeners();
   }
 }

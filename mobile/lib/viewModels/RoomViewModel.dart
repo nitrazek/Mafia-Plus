@@ -59,6 +59,7 @@ class RoomViewModel extends ChangeNotifier {
   Future<void> leaveRoom(void Function() onSuccess, void Function() onError) async {
     try {
       await _roomService.leaveRoom();
+      _roomState.setRoom(null);
       onSuccess.call();
     } catch(e) {
       messageError = "Leaving room error";
