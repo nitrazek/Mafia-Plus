@@ -34,15 +34,28 @@ class LoginPageState extends State<LoginPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text('Mafia+'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              'assets/images/mafialogo.png',
+                width: screenWidth * 0.65,
+            ),
+            const SizedBox(height: 16.0),
+            const Text(
+              'Login', // Napis po angielsku pod obrazkiem
+              style: TextStyle(
+                fontSize: 36.0, // Dostosuj rozmiar czcionki według potrzeb
+              ),
+            ),
+            const SizedBox(height: 16.0),
             TextField(
               controller: _loginController,
               decoration: const InputDecoration(labelText: 'Login'),

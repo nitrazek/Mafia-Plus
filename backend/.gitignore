@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 local.properties
 *.db
+**/application-prod.properties
 
 ### STS ###
 .apt_generated
