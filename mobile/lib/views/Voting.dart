@@ -27,7 +27,11 @@ class _VotingPageState extends State<VotingPage> {
       create: (context) => viewModel,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Voting'),
+          title: Text('What\'s your gut feeling? \n      Who\'s the mafia?',
+            style: TextStyle(fontSize: 28),),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          toolbarHeight: 100,
         ),
         body: VotingBody(),
       ),
@@ -62,13 +66,19 @@ class VotingBody extends StatelessWidget {
                 if (player.nickname == webSocketClient.username) continue;
                 elements.add(
                   Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                      children: [
+                    Expanded( // Dodanie Expanded
                       child: PlayerButton(
-                        player: player,
+                      player: player,
                         onPressed: () => viewModel.vote(player.nickname),
                         votesCount: votesCount[player.nickname] ?? 0,
-                          avatarIndex: index + 1
-                      )),
+                      ),
+                    ),
+                      ],
+                    ),
+                  ),
                 );
               }
               return Column(
@@ -88,13 +98,11 @@ class PlayerButton extends StatefulWidget {
   final Player player;
   final VoidCallback onPressed;
   final int votesCount;
-  final int avatarIndex; // Dodajemy pole przechowujące indeks avatara
 
   PlayerButton({
     required this.player,
     required this.onPressed,
     required this.votesCount,
-    required this.avatarIndex, // Przekazujemy indeks avatara
   });
 
   @override
@@ -107,36 +115,60 @@ class _PlayerButtonState extends State<PlayerButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
-      child: AnimatedAlign(
-        curve: Curves.fastOutSlowIn,
-        duration: Duration(seconds: 1),
-        alignment: _isButtonPressed ? Alignment.centerLeft : Alignment.center,
-        child: GestureDetector(
-          onTap: widget.player.canVote &&
-              widget.player.nickname !=
-                  context
-                      .watch<VotingViewModel>()
-                      .votedPlayer
-                      ?.nickname
-              ? () {
-            setState(() {
-              _isButtonPressed = !_isButtonPressed;
-            });
-            widget.onPressed();
-          }
-              : null,
-          child: CircleAvatar(
-            radius: 30.0,
-            backgroundColor:
-            _isButtonPressed ? Colors.blue : Colors.blue,
-            backgroundImage: AssetImage(
-              'assets/avatars/avatar_${widget.avatarIndex}.png', // Wybieramy avatar na podstawie indeksu
+      //width: 360, // Zwiększenie szerokości aby pomieścić przycisk i tekst
+      child: GestureDetector(
+        onTap: widget.player.canVote &&
+            widget.player.nickname !=
+                context
+                    .watch<VotingViewModel>()
+                    .votedPlayer
+                    ?.nickname
+            ? () {
+          setState(() {
+            _isButtonPressed = !_isButtonPressed;
+          });
+
+          widget.onPressed();
+        }
+            : null,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // CircleAvatar
+            AnimatedAlign(
+              curve: Curves.fastOutSlowIn,
+              duration: Duration(seconds: 1),
+              alignment: _isButtonPressed ? Alignment.center : Alignment.centerLeft,
+              child: CircleAvatar(
+                radius: 30.0,
+                backgroundColor: _isButtonPressed ? Colors.red : Colors.blue,
+                child: Icon(Icons.person, size: 35.0, color: Colors.white),
+              ),
             ),
-            child: _isButtonPressed
-                ? Icon(Icons.check, color: Colors.white)
-                : null,
-          ),
+            // Tekst gracza
+            AnimatedOpacity(
+              duration: Duration(milliseconds: 500),
+              opacity: _isButtonPressed ? 0.0 : 1.0,
+              child: Container(
+                padding: EdgeInsets.all(8.0), // Opcjonalne wewnętrzne odstępy
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black, // Kolor obramowania
+                    width: 2.0, // Grubość obramowania
+                  ),
+                ),
+                child: Text(
+                  widget.player.nickname,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                  ),
+
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
