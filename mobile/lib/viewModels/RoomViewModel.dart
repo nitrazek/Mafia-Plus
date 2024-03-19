@@ -60,6 +60,7 @@ class RoomViewModel extends ChangeNotifier {
     try {
       await _roomService.leaveRoom();
       _roomState.setRoom(null);
+      _webSocketClient.disconnect();
       onSuccess.call();
     } catch(e) {
       messageError = "Leaving room error";

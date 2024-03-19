@@ -13,7 +13,7 @@ import '../models/Round.dart';
 class WebSocketClient {
   static WebSocketClient? _instance;
   StompClient? _stompClient;
-  late int roomId;
+  final List<void Function({Map<String, String>? unsubscribeHeaders})> _unsubscribeFunctions = [];
   late String username;
   late String password;
 
@@ -52,38 +52,38 @@ class WebSocketClient {
     StompConfig config = StompConfig(
         url: "$baseUrl/ws",
         onConnect: (StompFrame frame) {
-          _stompClient?.subscribe(
+          _unsubscribeFunctions.add(_stompClient!.subscribe(
             destination: "/topic/$roomId/room",
             callback: (frame) {
               Map<String, dynamic> roomJson = jsonDecode(frame.body!);
               Room room = Room.fromJson(roomJson);
               _roomUpdate.add(room);
             }
-          );
-          _stompClient?.subscribe(
+          ));
+          _unsubscribeFunctions.add(_stompClient!.subscribe(
               destination: "/user/queue/game-start",
               callback: (frame) {
                 Map<String, dynamic> gameStartJson = jsonDecode(frame.body!);
                 GameStart gameStart = GameStart.fromJson(gameStartJson);
                 _gameStartUpdate.add(gameStart);
               }
-          );
-          _stompClient?.subscribe(
+          ));
+          _unsubscribeFunctions.add(_stompClient!.subscribe(
               destination: "/topic/$roomId/round-start",
               callback: (frame) {
                 Map<String, dynamic> roundStartJson = jsonDecode(frame.body!);
                 Round round = Round.fromJson(roundStartJson);
                 _roundStartUpdate.add(round);
               }
-          );
-          _stompClient?.subscribe(
+          ));
+          _unsubscribeFunctions.add(_stompClient!.subscribe(
             destination: "/topic/$roomId/voting-summary",
             callback: (frame) {
               Map<String, dynamic> votingSummaryJson = jsonDecode(frame.body!);
               VotingSummary votingSummary = VotingSummary.fromJson(votingSummaryJson);
               _votingSummaryUpdate.add(votingSummary);
             }
-          );
+          ));
           connectionCompleter.complete();
         },
         onDisconnect: (StompFrame frame) {
@@ -100,8 +100,15 @@ class WebSocketClient {
     return connectionCompleter.future;
   }
 
-  void dispose() {
-    _roomUpdate.close();
+  void unsubscribeAll() {
+    for(var unsubscribeFn in _unsubscribeFunctions) {
+      unsubscribeFn(unsubscribeHeaders: {});
+    }
+    _unsubscribeFunctions.clear();
+  }
+
+  void disconnect() {
+    unsubscribeAll();
     _stompClient?.deactivate();
   }
 }
