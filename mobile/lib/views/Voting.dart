@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/services/WebSocketClient.dart';
 import 'package:mobile/views/VotingResults.dart';
+import 'package:mobile/views/styles.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 
@@ -28,11 +30,13 @@ class _VotingPageState extends State<VotingPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('What\'s your gut feeling? \n      Who\'s the mafia?',
-            style: TextStyle(fontSize: 28),),
+            style: TextStyle(fontSize: 28,),),
           centerTitle: true,
           automaticallyImplyLeading: false,
           toolbarHeight: 100,
+          backgroundColor: MyStyles.appBarColor,
         ),
+          backgroundColor: MyStyles.backgroundColor,
         body: VotingBody(),
       ),
     );
@@ -47,8 +51,13 @@ class VotingBody extends StatelessWidget {
     if (context.watch<VotingViewModel>().votingFinished) {
       print("elo");
       WidgetsBinding.instance!.addPostFrameCallback((_) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => VotingResultsPage()));
+        Navigator.pushReplacement(
+          context,
+          PageTransition(
+            type: PageTransitionType.fade, // Wybierz typ animacji
+            child: VotingResultsPage(),
+          ),
+        );
       });
     }
     return Consumer<VotingViewModel>(
@@ -115,7 +124,6 @@ class _PlayerButtonState extends State<PlayerButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      //width: 360, // Zwiększenie szerokości aby pomieścić przycisk i tekst
       child: GestureDetector(
         onTap: widget.player.canVote &&
             widget.player.nickname !=
@@ -134,14 +142,13 @@ class _PlayerButtonState extends State<PlayerButton> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // CircleAvatar
             AnimatedAlign(
               curve: Curves.fastOutSlowIn,
               duration: Duration(seconds: 1),
               alignment: _isButtonPressed ? Alignment.center : Alignment.centerLeft,
               child: CircleAvatar(
                 radius: 30.0,
-                backgroundColor: _isButtonPressed ? Colors.red : Colors.blue,
+                backgroundColor: _isButtonPressed ? Colors.red : MyStyles.buttonStyle.backgroundColor!.resolve({}),
                 child: Icon(Icons.person, size: 35.0, color: Colors.white),
               ),
             ),
@@ -152,22 +159,21 @@ class _PlayerButtonState extends State<PlayerButton> {
               child: Container(
                 padding: EdgeInsets.all(8.0), // Opcjonalne wewnętrzne odstępy
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black, // Kolor obramowania
-                    width: 2.0, // Grubość obramowania
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.white, // Kolor dolnego obramowania
+                      width: 2.0, // Grubość dolnego obramowania
+                    ),
                   ),
                 ),
                 child: Text(
                   widget.player.nickname,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                  ),
+                  style: MyStyles.backgroundTextStyle,
+                )
 
                 ),
               ),
-            ),
           ],
         ),
       ),
