@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
+import 'package:mobile/models/VotingResult.dart';
 import 'package:mobile/models/VotingSummary.dart';
 import 'package:mobile/utils/CustomHttpClient.dart';
 import 'package:stomp_dart_client/stomp.dart';
@@ -88,9 +89,11 @@ class WebSocketClient {
             destination: "/topic/$roomId/voting-summary",
             callback: (frame) {
               Map<String, dynamic> votingSummaryJson = jsonDecode(frame.body!);
-              VotingSummary votingSummary = VotingSummary.fromJson(votingSummaryJson);
-              lastVotingSummary = votingSummary;
-              _votingSummaryUpdate.add(votingSummary);
+              //VotingSummary votingSummary = VotingSummary.fromJson(votingSummaryJson);
+              VotingResult result = VotingResult(username: 'Gracz1', voteCount: 7);
+              VotingSummary summary = VotingSummary(results: [result]);
+              lastVotingSummary = summary;
+              _votingSummaryUpdate.add(summary);
             }
           );
           connectionCompleter.complete();
