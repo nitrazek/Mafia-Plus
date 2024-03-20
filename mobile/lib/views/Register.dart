@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,6 +23,16 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
   bool _showErrorMessage = false;
   bool _passwordsMismatch = false;
 
+  late double screenWidth;
+
+  @override
+  void initState() {
+    super.initState();
+    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+    Size size = view.physicalSize;
+    screenWidth = size.width;
+  }
+
   @override
   void didChangeDependencies() {
     context.read<RegisterViewModel>().reset();
@@ -43,7 +55,6 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
         width: double.infinity,
