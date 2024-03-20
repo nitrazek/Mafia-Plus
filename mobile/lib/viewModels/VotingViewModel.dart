@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/models/VotingResult.dart';
 import '../models/Room.dart';
 import '../services/WebSocketClient.dart';
 import '../models/VotingSummary.dart';
@@ -22,7 +23,7 @@ class VotingViewModel extends ChangeNotifier {
   int? _votingId=0;
   Room? _room;
   Room? get room => _room;
-  bool _votingFinished = false;
+  bool _votingFinished = true;
   bool get votingFinished => _votingFinished;
 
   VotingViewModel() {
@@ -31,6 +32,8 @@ class VotingViewModel extends ChangeNotifier {
     _votesCount = Map<String, int>.fromIterable(_players, key: (player) => player.nickname, value: (player) => 0);
     _votingId = webSocketClient.lastRoundStartUpdate?.votingCityId;
     notifyListeners();
+    VotingResult result = VotingResult(username: 'Gracz', voteCount: 3);
+    _votingSummary = VotingSummary(results: [result]);
   }
 
   List<Player> getPlayers() {
