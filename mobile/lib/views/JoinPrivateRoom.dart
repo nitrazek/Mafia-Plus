@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/JoinPrivateRoomViewModel.dart';
 import 'Room.dart';
+import 'styles.dart';
 
 class JoinPrivateRoomPage extends StatefulWidget {
   TextEditingController lobbyCodeController = TextEditingController();
@@ -14,8 +15,10 @@ class _JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyStyles.backgroundColor,
       appBar: AppBar(
-        title: const Text('Join Room'),
+          backgroundColor: MyStyles.appBarColor,
+        title:  Text('Join Room',style: MyStyles.backgroundTextStyle,)
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -30,6 +33,7 @@ class _JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
               ),
               child: TextField(
                 controller: widget.lobbyCodeController,
+                style: MyStyles.buttonTextStyle,
                 decoration: const InputDecoration(
                   hintText: 'Enter the Room Code',
                   border: InputBorder.none,
@@ -42,9 +46,9 @@ class _JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
                 String accessCode = widget.lobbyCodeController.text;
                 final viewModel = context.read<JoinPrivateRoomViewModel>();
                 await viewModel.joinRoom(accessCode,
-                    (room) {
+                    () {
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => RoomPage(room))
+                          MaterialPageRoute(builder: (context) => RoomPage())
                       );
                     },
                     () {
@@ -58,7 +62,8 @@ class _JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
                     }
                 );
               },
-              child: Text('Join'),
+              style: MyStyles.buttonStyle,
+              child: Text('Join', style: MyStyles.buttonTextStyle,),
             ),
           ],
         ),
