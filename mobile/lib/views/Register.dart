@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/RegisterViewModel.dart';
 import 'Menu.dart';
+import 'Login.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -41,93 +43,214 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            colors: [
+              Color(0xFF8E44AD),
+              Color(0xFFc8a2d8)
+            ]
+          )
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _loginController,
-              decoration: const InputDecoration(labelText: 'Login'),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Password'),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-              controller: _confirmPasswordController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Confirm Password'),
-            ),
-            const SizedBox(height: 16.0),
-            if (_showErrorMessage || _passwordsMismatch)
-              Text(
-                _passwordsMismatch
-                    ? 'Please make sure your password match.'
-                    : 'Add login, password and email',
-                style: const TextStyle(
-                  color: Colors.red,
-                  fontSize: 18.0,
-                ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const SizedBox(height: 40,),
+            const Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text("Register",style: TextStyle(color: Colors.white, fontSize: 30),),
+                ],
               ),
-            Consumer<RegisterViewModel>(
-              builder: (context, viewModel, child) {
-                return ElevatedButton(
-                  onPressed: () async {
-                    String login = _loginController.text;
-                    String email = _emailController.text;
-                    String password = _passwordController.text;
-                    String confirmPassword = _confirmPasswordController.text;
+            ),
+            Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(40), topRight: Radius.circular(40))
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: Column(
+                      children: <Widget>[
+                        const SizedBox(height: 35,),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: const [BoxShadow(
+                              color: Color(0x6D8E44AD),
+                              blurRadius: 20,
+                              offset: Offset(0,10)
+                            )]
+                          ),
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                decoration: const BoxDecoration(
+                                    border: Border(bottom: BorderSide(color: Colors.grey))
+                                ),
+                                padding: const EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: _loginController,
+                                  decoration: const InputDecoration(
+                                    hintText: "Login",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: const BoxDecoration(
+                                    border: Border(bottom: BorderSide(color: Colors.grey))
+                                ),
+                                child: TextField(
+                                  controller: _emailController,
+                                  decoration: const InputDecoration(
+                                    hintText: "Email",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: const BoxDecoration(
+                                      border: Border(bottom: BorderSide(color: Colors.grey))
+                                  ),
+                                  child: TextField(
+                                    controller: _passwordController,
+                                    obscureText: true,
+                                    decoration: const InputDecoration(
+                                      hintText: "Password",
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      border: InputBorder.none,
+                                    ),
+                                  )
+                              ),
+                              Container(
+                                  padding: const EdgeInsets.all(10),
+                                  child: TextField(
+                                    controller: _confirmPasswordController,
+                                    obscureText: true,
+                                    decoration: const InputDecoration(
+                                      hintText: "Confirm password",
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      border: InputBorder.none,
+                                    ),
+                                  )
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (_showErrorMessage || _passwordsMismatch)
+                          const SizedBox(height: 35,),
+                        if (_showErrorMessage || _passwordsMismatch)
+                          Text(
+                            _passwordsMismatch
+                                ? 'Please make sure your password match.'
+                                : 'Add login, password and email',
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 18.0,
+                            ),
+                          ),
+                        if (_showErrorMessage || _passwordsMismatch)
+                          const SizedBox(height: 20,),
+                        if (!_showErrorMessage && !_passwordsMismatch)
+                          const SizedBox(height: 81,),
+                        Consumer<RegisterViewModel>(
+                            builder: (context, viewModel, child) {
+                              return ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0x6D8E44AD),
+                                    minimumSize: Size(screenWidth-150, 50)
+                                ),
+                                onPressed: () async {
+                                  String login = _loginController.text;
+                                  String email = _emailController.text;
+                                  String password = _passwordController.text;
+                                  String confirmPassword = _confirmPasswordController.text;
 
-                    if (email.isEmpty || password.isEmpty || login.isEmpty || confirmPassword.isEmpty) {
-                      setState(() {
-                        _showErrorMessage = true;
-                        _passwordsMismatch = false; // Reset password mismatch error
-                      });
-                    } else if (password == confirmPassword) {
-                      bool isRegistered = await viewModel.register(login, email, password);
-                      if(isRegistered) {
-                        Fluttertoast.showToast(
-                          msg: "Successful registration",
-                          toastLength: Toast.LENGTH_SHORT
-                        );
-                        if(!context.mounted) return;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const MenuPage())
-                        );
-                      }
-                      setState(() {
-                        _showErrorMessage = false; // Reset error message
-                        _passwordsMismatch = false; // Reset password mismatch error
-                      });
-                    } else {
-                      setState(() {
-                        _passwordsMismatch = true;
-                        _showErrorMessage = false; // Reset error message
-                      });
-                      print('Password mismatch');
-                    }
-                  },
-                  child: const Text('Confirm'),
-                );
-              }
+                                  if (email.isEmpty || password.isEmpty || login.isEmpty || confirmPassword.isEmpty) {
+                                    setState(() {
+                                      _showErrorMessage = true;
+                                      _passwordsMismatch = false; // Reset password mismatch error
+                                    });
+                                  } else if (password == confirmPassword) {
+                                    bool isRegistered = await viewModel.register(login, email, password);
+                                    if(isRegistered) {
+                                      Fluttertoast.showToast(
+                                          msg: "Successful registration",
+                                          toastLength: Toast.LENGTH_SHORT
+                                      );
+                                      if(!context.mounted) return;
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => const MenuPage())
+                                      );
+                                    }
+                                    setState(() {
+                                      _showErrorMessage = false; // Reset error message
+                                      _passwordsMismatch = false; // Reset password mismatch error
+                                    });
+                                  } else {
+                                    setState(() {
+                                      _passwordsMismatch = true;
+                                      _showErrorMessage = false; // Reset error message
+                                    });
+                                    print('Password mismatch');
+                                  }
+                                },
+                                child: const Text(
+                                    'Register',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold
+                                  )
+                                ),
+                              );
+                            }
+                        ),
+                        const SizedBox(height: 25.0),
+                        const Text("Already have an account?"),
+                        const SizedBox(height: 8.0),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0x6D8E44AD),
+                                minimumSize: Size(screenWidth-150, 50)
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const LoginPage()),
+                              );
+                            },
+                            child: const Text(
+                                'Login',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold
+                                ))
+                        ),
+                      ],
+                    ),
+                  ),
+                )
             )
           ],
         ),
-      ),
+      )
+
     );
   }
 }
