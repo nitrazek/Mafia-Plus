@@ -75,17 +75,17 @@ public class GameService {
     }
 
     @Transactional
-    public void endGame(Long gameId) throws IllegalAccessException {
+    public void endGame(Long gameId) {
 
         Optional<Game> fetchedGame = gameRepository.findById(gameId);
         if (fetchedGame.isEmpty())
-            throw new IllegalAccessException("Game does not exist.");
+            throw new IllegalArgumentException("Game does not exist.");
 
         Game game = fetchedGame.get();
 
         Optional<Room> fetchedRoom = roomRepository.findByGameId(gameId);
         if (fetchedRoom.isEmpty())
-            throw new IllegalAccessException("Room does not exist.");
+            throw new IllegalArgumentException("Room does not exist.");
 
         Room room = fetchedRoom.get();
 
@@ -121,10 +121,13 @@ public class GameService {
         Round round = fetchedRound.get();
 
         Voting createdVoting = new Voting();
-        createdVoting = votingRepository.save(createdVoting);
-        round.setVotingCity(createdVoting);
+        createdVoting.setType("city");
+        createdVoting.setRound(round);
+        round.setVoting(createdVoting);
 
+        createdVoting = votingRepository.save(createdVoting);
         round = roundRepository.save(round);
+
         Room room = round.getGame().getRoom();
         simpMessagingTemplate.convertAndSend("/topic/" + room.getId() + "/round-start", new RoundDTO(round));
     }
