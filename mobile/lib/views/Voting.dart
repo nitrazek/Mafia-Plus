@@ -54,7 +54,8 @@ class VotingBody extends StatelessWidget {
         Navigator.pushReplacement(
           context,
           PageTransition(
-            type: PageTransitionType.fade, // Wybierz typ animacji
+            type: PageTransitionType.fade,
+            duration: Duration(milliseconds: 1500),
             child: VotingResultsPage(),
           ),
         );

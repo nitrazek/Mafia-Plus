@@ -29,8 +29,6 @@ class RoomPageState extends State<RoomPage> {
     if(viewModel.room == null) {
       viewModel.setRoom(widget.room);
       viewModel.connectWebSocket();
-      viewModel.room?.accountUsernames.add('gracz');
-      viewModel.room?.accountUsernames.add('gracz2');
     }
   }
 
