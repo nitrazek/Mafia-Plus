@@ -11,76 +11,65 @@ class VotingPage extends StatefulWidget {
 }
 
 class _VotingPageState extends State<VotingPage> {
-  late VotingViewModel viewModel;
+  final WebSocketClient webSocketClient = WebSocketClient();
 
   @override
   void initState() {
     super.initState();
-    viewModel = VotingViewModel();
-    viewModel.connectWebSocket();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => viewModel,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Voting'),
-        ),
-        body: VotingBody(),
-      ),
-    );
-  }
-}
-
-class VotingBody extends StatelessWidget {
-  final WebSocketClient webSocketClient = WebSocketClient();
-
-  @override
-  Widget build(BuildContext context) {
-    if(context.watch<VotingViewModel>().votingFinished) {
-      print("elo");
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    context.read<VotingViewModel>().votingFinished.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => VotingResultsPage()));
       });
-    }
-    return Consumer<VotingViewModel>(
-      builder: (context, viewModel, child) {
-        List<Player> players = viewModel.getPlayers();
-        Map<String, int> votesCount = viewModel.getVotesCount();
-
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView.builder(
-            itemCount: players.length - 1,
-            itemBuilder: (context, index) {
-              List<Widget> elements = [];
-              for (Player player in players) {
-                if(player.nickname == webSocketClient.username) continue;
-                elements.add(
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                    child: PlayerButton(
-                      player: player,
-                      onPressed: () => viewModel.vote(player.nickname),
-                      votesCount: votesCount[player.nickname] ?? 0,
-                    )
-                  )
-                );
-              }
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: elements,
-              );
-            },
-          )
-        );
-      },
-    );
+    });
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Voting'),
+      ),
+      body: Consumer<VotingViewModel>(
+        builder: (context, viewModel, child) {
+          List<Player> players = viewModel.getPlayers();
+          Map<String, int> votesCount = viewModel.getVotesCount();
+
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView.builder(
+              itemCount: players.length - 1,
+              itemBuilder: (context, index) {
+                List<Widget> elements = [];
+                for (Player player in players) {
+                  if(player.nickname == webSocketClient.username) continue;
+                  elements.add(
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: PlayerButton(
+                        player: player,
+                        onPressed: () => viewModel.vote(player.nickname),
+                        votesCount: votesCount[player.nickname] ?? 0,
+                      )
+                    )
+                  );
+                }
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: elements,
+                );
+              },
+            )
+          );
+        },
+      )
+    );
+  }
 }
 
 class PlayerButton extends StatelessWidget {

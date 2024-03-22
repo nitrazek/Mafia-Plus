@@ -46,9 +46,9 @@ class _JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
                 String accessCode = widget.lobbyCodeController.text;
                 final viewModel = context.read<JoinPrivateRoomViewModel>();
                 await viewModel.joinRoom(accessCode,
-                    (room) {
+                    () {
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => RoomPage(room))
+                          MaterialPageRoute(builder: (context) => RoomPage())
                       );
                     },
                     () {

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'package:mobile/models/VotingResult.dart';
 import 'package:mobile/models/VotingSummary.dart';
-import 'package:mobile/utils/CustomHttpClient.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
@@ -15,27 +14,23 @@ import '../models/Round.dart';
 class WebSocketClient {
   static WebSocketClient? _instance;
   StompClient? _stompClient;
-  late int roomId;
+  final List<void Function({Map<String, String>? unsubscribeHeaders})> _unsubscribeFunctions = [];
   late String username;
   late String password;
 
   final String baseUrl = "ws://${Constants.baseUrl}";
 
-  final _roomUpdate = StreamController<Room>();
+  final _roomUpdate = StreamController<Room>.broadcast();
   Stream<Room> get roomUpdate => _roomUpdate.stream;
-  Room? lastRoomUpdate;
 
-  final _gameStartUpdate = StreamController<GameStart>();
+  final _gameStartUpdate = StreamController<GameStart>.broadcast();
   Stream<GameStart> get gameStartUpdate => _gameStartUpdate.stream;
-  GameStart? lastGameStartUpdate;
 
-  final _roundStartUpdate = StreamController<Round>();
+  final _roundStartUpdate = StreamController<Round>.broadcast();
   Stream<Round> get roundStartUpdate => _roundStartUpdate.stream;
-  Round? lastRoundStartUpdate;
 
   final _votingSummaryUpdate = StreamController<VotingSummary>.broadcast();
   Stream<VotingSummary> get votingSummaryUpdate => _votingSummaryUpdate.stream;
-  VotingSummary? lastVotingSummary;
 
   WebSocketClient._internal();
 
@@ -58,42 +53,38 @@ class WebSocketClient {
     StompConfig config = StompConfig(
         url: "$baseUrl/ws",
         onConnect: (StompFrame frame) {
-          _stompClient?.subscribe(
+          _unsubscribeFunctions.add(_stompClient!.subscribe(
             destination: "/topic/$roomId/room",
             callback: (frame) {
               Map<String, dynamic> roomJson = jsonDecode(frame.body!);
               Room room = Room.fromJson(roomJson);
-              lastRoomUpdate = room;
               _roomUpdate.add(room);
             }
-          );
-          _stompClient?.subscribe(
+          ));
+          _unsubscribeFunctions.add(_stompClient!.subscribe(
               destination: "/user/queue/game-start",
               callback: (frame) {
                 Map<String, dynamic> gameStartJson = jsonDecode(frame.body!);
                 GameStart gameStart = GameStart.fromJson(gameStartJson);
-                lastGameStartUpdate = gameStart;
                 _gameStartUpdate.add(gameStart);
               }
-          );
-          _stompClient?.subscribe(
+          ));
+          _unsubscribeFunctions.add(_stompClient!.subscribe(
               destination: "/topic/$roomId/round-start",
               callback: (frame) {
                 Map<String, dynamic> roundStartJson = jsonDecode(frame.body!);
                 Round round = Round.fromJson(roundStartJson);
-                lastRoundStartUpdate = round;
                 _roundStartUpdate.add(round);
               }
-          );
-          _stompClient?.subscribe(
+          ));
+          _unsubscribeFunctions.add(_stompClient!.subscribe(
             destination: "/topic/$roomId/voting-summary",
             callback: (frame) {
               Map<String, dynamic> votingSummaryJson = jsonDecode(frame.body!);
               VotingSummary votingSummary = VotingSummary.fromJson(votingSummaryJson);
-              lastVotingSummary = votingSummary;
               _votingSummaryUpdate.add(votingSummary);
             }
-          );
+          ));
           connectionCompleter.complete();
         },
         onDisconnect: (StompFrame frame) {
@@ -110,8 +101,15 @@ class WebSocketClient {
     return connectionCompleter.future;
   }
 
-  void dispose() {
-    _roomUpdate.close();
+  void unsubscribeAll() {
+    for(var unsubscribeFn in _unsubscribeFunctions) {
+      unsubscribeFn(unsubscribeHeaders: {});
+    }
+    _unsubscribeFunctions.clear();
+  }
+
+  void disconnect() {
+    unsubscribeAll();
     _stompClient?.deactivate();
   }
 }

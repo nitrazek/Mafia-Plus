@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/state/GameState.dart';
+import 'package:mobile/state/RoomState.dart';
+import 'package:mobile/state/RoundState.dart';
+import 'package:mobile/state/VotingState.dart';
 import 'package:mobile/viewModels/WinnerRoleViewModel.dart';
 import 'package:mobile/views/GameHistory.dart';
 import 'package:mobile/viewModels/JoinPrivateRoomViewModel.dart';
@@ -17,6 +21,7 @@ import 'package:mobile/viewModels/GameHistoryViewModel.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 
 void main() {
+  RoomState(); GameState(); RoundState(); VotingState();
   runApp(const MyApp());
 }
 
