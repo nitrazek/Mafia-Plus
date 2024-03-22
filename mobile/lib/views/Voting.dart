@@ -65,7 +65,7 @@ class _VotingPageState extends State<VotingPage> {
                       padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: Row(
                         children: [
-                          Expanded( // Dodanie Expanded
+                          Expanded(
                             child: PlayerButton(
                               player: player,
                               onPressed: () => viewModel.vote(player.nickname),
