@@ -36,56 +36,97 @@ class _VotingPageState extends State<VotingPage> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('What\'s your gut feeling? \n      Who\'s the mafia?',
-          style: TextStyle(fontSize: 28,),),
+        title: Text(
+          'What\'s your gut feeling?\nWho\'s the mafia?',
+          style: TextStyle(fontSize: 28,),
+        ),
         centerTitle: true,
         automaticallyImplyLeading: false,
         toolbarHeight: 100,
-        backgroundColor: MyStyles.appBarColor,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              colors: [
+                Color(0xFF8E44AD),
+                Color(0xFFc8a2d8),
+              ],
+            ),
+          ),
+        ),
       ),
-      backgroundColor: MyStyles.backgroundColor,
-      body: Consumer<VotingViewModel>(
-        builder: (context, viewModel, child) {
-          List<Player> players = viewModel.getPlayers();
-          Map<String, int> votesCount = viewModel.getVotesCount();
-
-          return Padding(
+      backgroundColor: Colors.transparent, // Set background color to transparent
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF8E44AD),
+              Color(0xFFc8a2d8),
+            ],
+          ),
+        ),
+        child: Center(
+          child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: ListView.builder(
-              itemCount: players.length - 1,
-              itemBuilder: (context, index) {
-                List<Widget> elements = [];
-                for (Player player in players) {
-                  if (player.nickname == webSocketClient.username) continue;
-                  elements.add(
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: PlayerButton(
-                              player: player,
-                              onPressed: () => viewModel.vote(player.nickname),
-                              votesCount: votesCount[player.nickname] ?? 0,
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x6D8E44AD),
+                    blurRadius: 20,
+                    offset: Offset(0, 10),
+                  )
+                ],
+              ),
+              child: Consumer<VotingViewModel>(
+                builder: (context, viewModel, child) {
+                  List<Player> players = viewModel.getPlayers();
+                  Map<String, int> votesCount = viewModel.getVotesCount();
+
+                  return ListView.builder(
+                    itemCount: players.length - 1,
+                    itemBuilder: (context, index) {
+                      List<Widget> elements = [];
+                      for (Player player in players) {
+                        if (player.nickname == webSocketClient.username) continue;
+                        elements.add(
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 8.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: PlayerButton(
+                                    player: player,
+                                    onPressed: () => viewModel.vote(player.nickname),
+                                    votesCount: votesCount[player.nickname] ?? 0,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
+                        );
+                      }
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: elements,
+                      );
+                    },
                   );
-                }
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: elements,
-                );
-              },
+                },
+              ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
@@ -145,23 +186,24 @@ class _PlayerButtonState extends State<PlayerButton> {
               duration: Duration(milliseconds: 500),
               opacity: _isButtonPressed ? 0.0 : 1.0,
               child: Container(
-                padding: EdgeInsets.all(8.0), // Opcjonalne wewnętrzne odstępy
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Colors.white, // Kolor dolnego obramowania
-                      width: 2.0, // Grubość dolnego obramowania
+                  padding: EdgeInsets.all(8.0), // Opcjonalne wewnętrzne odstępy
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.black, // Kolor dolnego obramowania
+                        width: 2.0, // Grubość dolnego obramowania
+                      ),
                     ),
                   ),
-                ),
-                child: Text(
-                  widget.player.nickname,
-                  textAlign: TextAlign.center,
-                  style: MyStyles.backgroundTextStyle,
-                )
-
-                ),
+                  child: Text(
+                    widget.player.nickname,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  )
               ),
+            ),
           ],
         ),
       ),
