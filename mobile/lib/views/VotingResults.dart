@@ -50,7 +50,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
     borderRadius: BorderRadius.circular(20.0),
     ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
@@ -62,10 +62,11 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
               for (var voteInfo in context.watch<VotingViewModel>().votingSummary?.results ?? [])
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 10.0),
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.all(20.0),
+                  transform: Matrix4.rotationZ(0.05),
                   decoration: BoxDecoration(
-                    color: Colors.grey, // Tutaj zmień na dowolny inny kolor tła
-                    borderRadius: BorderRadius.circular(30.0), // Zaokrąglone krawędzie
+                    color: const Color(0xA569BD),
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
