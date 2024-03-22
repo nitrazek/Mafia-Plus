@@ -18,132 +18,101 @@ class VotingResultsPage extends StatefulWidget {
 
 class _VotingResultsPageState extends State<VotingResultsPage> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    bool temp = true;
+
     if(context.watch<VotingViewModel>().room == null) {
-      Timer(Duration(seconds: 800000), () {
+      Timer(Duration(seconds: 8), () {
         Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => MenuPage())
         );
       });
     } else {
-      Timer(Duration(seconds: 8000000), () {
+      Timer(Duration(seconds: 8), () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => RoomPage()),
         );
       });
     }
+
     return Scaffold(
       backgroundColor: Color(0xFF8E44AD),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-    child: Center(
-    child: Container(
-    padding: EdgeInsets.all(50.0),
-    decoration: BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(20.0),
-    ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Voting results',
-                style: const TextStyle(
-                    fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
-              for (var voteInfo in context.watch<VotingViewModel>().votingSummary?.results ?? [])
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 10.0),
-                  padding: EdgeInsets.all(20.0),
-                  transform: Matrix4.rotationZ(0.05),
-                  decoration: BoxDecoration(
-                    color: const Color(0xA569BD),
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        voteInfo.username,
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+      body: Padding(
+        padding: const EdgeInsets.all(25.0),
+        child: Center(
+          child: Container(
+            padding: EdgeInsets.all(40.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Stack(
+                  children: [
+                    Text(
+                      'Voting Results',
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        foreground: Paint()
+                          ..style = PaintingStyle.stroke
+                          ..strokeWidth = 2
+                          ..color = Colors.black,
                       ),
-                      Text(
-                        'Votes: ${voteInfo.voteCount}',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Voting Results',
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.transparent,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-            ],
+                SizedBox(height: 20),
+                // Using ListView.builder for dynamic content
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: context.watch<VotingViewModel>().votingSummary?.results.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    // Toggle temp value for each container
+                    temp = !temp;
+                    var voteInfo = context.watch<VotingViewModel>().votingSummary?.results[index];
+                    return Container(
+                      margin: EdgeInsets.symmetric(vertical: 10.0),
+                      padding: EdgeInsets.all(20.0),
+                      transform: temp ? Matrix4.rotationZ(0.05) : Matrix4.rotationZ(-0.05),
+                      decoration: BoxDecoration(
+                        color: Colors.purpleAccent,
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            voteInfo!.username,
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            'Votes: ${voteInfo.voteCount}',
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
-        )
-    )
-        )
+        ),
+      ),
     );
   }
 }
-
-// class VotingResultsBody extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     if(context.watch<VotingViewModel>().room == null) {
-//       Timer(Duration(seconds: 8), () {
-//         Navigator.push(
-//             context,
-//             MaterialPageRoute(builder: (context) => MenuPage())
-//         );
-//       });
-//     } else {
-//       Timer(Duration(seconds: 8), () {
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(builder: (context) => RoomPage(context.watch<VotingViewModel>().room!)),
-//         );
-//       });
-//     }
-//     return Scaffold( // Kolor tła
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             Text(
-//               'Voting results',
-//               style: const TextStyle(
-//                   fontSize: 20, fontWeight: FontWeight.bold),
-//             ),
-//             SizedBox(height: 20),
-//             for (var voteInfo in context.watch<VotingViewModel>().votingSummary?.results ?? [])
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Text(
-//                     voteInfo.username,
-//                     style: const TextStyle(
-//                         fontSize: 20, fontWeight: FontWeight.bold),
-//                   ),
-//                   Text(
-//                     'Votes: ${voteInfo.voteCount}',
-//                     style: const TextStyle(
-//                         fontSize: 20, fontWeight: FontWeight.bold),
-//                   ),
-//                 ],
-//               ),
-//           ],
-//         ),
-//       )
-//     );
-//   }
-// }
