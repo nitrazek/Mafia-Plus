@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/services/WebSocketClient.dart';
 import 'package:mobile/views/VotingResults.dart';
@@ -12,6 +14,7 @@ class VotingPage extends StatefulWidget {
 
 class _VotingPageState extends State<VotingPage> {
   final WebSocketClient webSocketClient = WebSocketClient();
+  StreamSubscription<void>? _votingFinishedSubscription;
 
   @override
   void initState() {
@@ -21,7 +24,7 @@ class _VotingPageState extends State<VotingPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    context.read<VotingViewModel>().votingFinished.listen((_) {
+    _votingFinishedSubscription ??= context.read<VotingViewModel>().votingFinished.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => VotingResultsPage()));
       });
