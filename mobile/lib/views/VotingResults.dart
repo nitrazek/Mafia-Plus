@@ -38,77 +38,89 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
     }
 
     return Scaffold(
-      backgroundColor: Color(0xFF8E44AD),
-      body: Padding(
-        padding: const EdgeInsets.all(25.0),
-        child: Center(
-          child: Container(
-            padding: EdgeInsets.all(40.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Stack(
-                  children: [
-                    Text(
-                      'Voting Results',
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        foreground: Paint()
-                          ..style = PaintingStyle.stroke
-                          ..strokeWidth = 2
-                          ..color = Colors.black,
+      backgroundColor: Colors.transparent, // Set background color to transparent
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF8E44AD),
+              Color(0xFFc8a2d8),
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Center(
+            child: Container(
+              padding: EdgeInsets.all(40.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Stack(
+                    children: [
+                      Text(
+                        'Voting Results',
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          foreground: Paint()
+                            ..style = PaintingStyle.stroke
+                            ..strokeWidth = 2
+                            ..color = Colors.black,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Voting Results',
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.transparent,
+                      Text(
+                        'Voting Results',
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.transparent,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                // Using ListView.builder for dynamic content
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: context.watch<VotingViewModel>().votingSummary?.results.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    // Toggle temp value for each container
-                    temp = !temp;
-                    var voteInfo = context.watch<VotingViewModel>().votingSummary?.results[index];
-                    return Container(
-                      margin: EdgeInsets.symmetric(vertical: 10.0),
-                      padding: EdgeInsets.all(20.0),
-                      transform: temp ? Matrix4.rotationZ(0.05) : Matrix4.rotationZ(-0.05),
-                      decoration: BoxDecoration(
-                        color: Colors.purpleAccent,
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            voteInfo!.username,
-                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            'Votes: ${voteInfo.voteCount}',
-                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ],
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  // Using ListView.builder for dynamic content
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: context.watch<VotingViewModel>().votingSummary?.results.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      // Toggle temp value for each container
+                      temp = !temp;
+                      var voteInfo = context.watch<VotingViewModel>().votingSummary?.results[index];
+                      return Container(
+                        margin: EdgeInsets.symmetric(vertical: 10.0),
+                        padding: EdgeInsets.all(20.0),
+                        transform: temp ? Matrix4.rotationZ(0.05) : Matrix4.rotationZ(-0.05),
+                        decoration: BoxDecoration(
+                          color: Colors.purpleAccent,
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              voteInfo!.username,
+                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              'Votes: ${voteInfo.voteCount}',
+                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
