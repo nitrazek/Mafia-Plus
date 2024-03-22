@@ -24,21 +24,9 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-    if(context.watch<VotingViewModel>().room == null) {
-      Timer(Duration(seconds: 8), () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MenuPage())
-        );
-      });
-    } else {
-      Timer(Duration(seconds: 8), () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => RoomPage()),
-        );
-      });
-    }
+    Timer(Duration(seconds: 8), () {
+      Navigator.pop(context);
+    });
     return Scaffold( // Kolor tła
         body: Padding(
           padding: const EdgeInsets.all(16.0),

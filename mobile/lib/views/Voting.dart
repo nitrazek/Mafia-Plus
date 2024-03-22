@@ -23,7 +23,7 @@ class _VotingPageState extends State<VotingPage> {
     super.didChangeDependencies();
     context.read<VotingViewModel>().votingFinished.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => VotingResultsPage()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => VotingResultsPage()));
       });
     });
   }

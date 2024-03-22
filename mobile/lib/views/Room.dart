@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/models/Room.dart';
@@ -13,6 +15,7 @@ class RoomPage extends StatefulWidget {
 }
 
 class RoomPageState extends State<RoomPage> {
+  StreamSubscription<void>? _gameStartedSubscription;
 
   @override
   void initState() {
@@ -23,11 +26,17 @@ class RoomPageState extends State<RoomPage> {
   void didChangeDependencies()
   {
     super.didChangeDependencies();
-    context.read<RoomViewModel>().gameStarted.listen((_) {
+    _gameStartedSubscription ??= context.read<RoomViewModel>().gameStarted.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserRolePage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => UserRolePage()));
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _gameStartedSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -73,22 +82,17 @@ class RoomPageState extends State<RoomPage> {
                       onPressed: () {
                         int roomId = context.read<RoomViewModel>().room?.id ?? 0;
                         context.read<RoomViewModel>().startGame(
-                            roomId,
-                                (){
-                              Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (context) => UserRolePage())
+                          roomId,
+                          () {},
+                          () {
+                            if (context.read<RoomViewModel>().messageError.isNotEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(context.watch<RoomViewModel>().messageError),
+                                ),
                               );
-
-                            },
-                                (){
-                              if (context.read<RoomViewModel>().messageError.isNotEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(context.watch<RoomViewModel>().messageError),
-                                  ),
-                                );
-                              }
                             }
+                          }
                         );
                       },
                       child: const Text('Start game'),

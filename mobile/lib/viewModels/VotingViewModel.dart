@@ -37,7 +37,6 @@ class VotingViewModel extends ChangeNotifier {
     _players = _room!.accountUsernames.map(
       (username) => Player(nickname: username, canVote: true)
     ).toList();
-    _votesCount = { for (var player in _players) player.nickname : 0 };
     notifyListeners();
   }
 
@@ -50,6 +49,7 @@ class VotingViewModel extends ChangeNotifier {
   void _updateVotingSummary() {
     if(_votingState.currentVotingSummary == null) return;
     _votingSummary = _votingState.currentVotingSummary!;
+    _votedPlayer = null;
     _votingFinished.add(null);
     notifyListeners();
   }
@@ -69,7 +69,6 @@ class VotingViewModel extends ChangeNotifier {
     if (player?.canVote ?? false) {
       print('Głos oddany na gracza: $playerNickname');
       await _gameService.addVote(_votingId!, playerNickname);
-      _votesCount[playerNickname] = (_votesCount[playerNickname] ?? 0) + 1;
       notifyListeners();
     } else {
       print('Nie można głosować na $playerNickname');
