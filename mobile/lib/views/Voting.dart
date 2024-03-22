@@ -14,92 +14,79 @@ class VotingPage extends StatefulWidget {
 }
 
 class _VotingPageState extends State<VotingPage> {
-  late VotingViewModel viewModel;
+  final WebSocketClient webSocketClient = WebSocketClient();
 
   @override
   void initState() {
     super.initState();
-    viewModel = VotingViewModel();
-    viewModel.connectWebSocket();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => viewModel,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('What\'s your gut feeling? \n      Who\'s the mafia?',
-            style: TextStyle(fontSize: 28,),),
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-          toolbarHeight: 100,
-          backgroundColor: MyStyles.appBarColor,
-        ),
-          backgroundColor: MyStyles.backgroundColor,
-        body: VotingBody(),
-      ),
-    );
-  }
-}
-
-class VotingBody extends StatelessWidget {
-  final WebSocketClient webSocketClient = WebSocketClient();
-
-  @override
-  Widget build(BuildContext context) {
-    if (context.watch<VotingViewModel>().votingFinished) {
-      print("elo");
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
-        Navigator.pushReplacement(
-          context,
-          PageTransition(
-            type: PageTransitionType.fade,
-            duration: Duration(milliseconds: 1500),
-            child: VotingResultsPage(),
-          ),
-        );
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    context.read<VotingViewModel>().votingFinished.listen((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(context, PageTransition(
+          type: PageTransitionType.fade,
+          duration: Duration(milliseconds: 1500),
+          child: VotingResultsPage(),
+        ));
       });
-    }
-    return Consumer<VotingViewModel>(
-      builder: (context, viewModel, child) {
-        List<Player> players = viewModel.getPlayers();
-        Map<String, int> votesCount = viewModel.getVotesCount();
+    });
+  }
 
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView.builder(
-            itemCount: players.length - 1,
-            itemBuilder: (context, index) {
-              List<Widget> elements = [];
-              for (Player player in players) {
-                if (player.nickname == webSocketClient.username) continue;
-                elements.add(
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                    child: Row(
-                      children: [
-                    Expanded( // Dodanie Expanded
-                      child: PlayerButton(
-                      player: player,
-                        onPressed: () => viewModel.vote(player.nickname),
-                        votesCount: votesCount[player.nickname] ?? 0,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('What\'s your gut feeling? \n      Who\'s the mafia?',
+          style: TextStyle(fontSize: 28,),),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        toolbarHeight: 100,
+        backgroundColor: MyStyles.appBarColor,
+      ),
+      backgroundColor: MyStyles.backgroundColor,
+      body: Consumer<VotingViewModel>(
+        builder: (context, viewModel, child) {
+          List<Player> players = viewModel.getPlayers();
+          Map<String, int> votesCount = viewModel.getVotesCount();
+
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView.builder(
+              itemCount: players.length - 1,
+              itemBuilder: (context, index) {
+                List<Widget> elements = [];
+                for (Player player in players) {
+                  if (player.nickname == webSocketClient.username) continue;
+                  elements.add(
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        children: [
+                          Expanded( // Dodanie Expanded
+                            child: PlayerButton(
+                              player: player,
+                              onPressed: () => viewModel.vote(player.nickname),
+                              votesCount: votesCount[player.nickname] ?? 0,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                      ],
-                    ),
-                  ),
+                  );
+                }
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: elements,
                 );
-              }
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: elements,
-              );
-            },
-          ),
-        );
-      },
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }
