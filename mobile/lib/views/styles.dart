@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 class MyStyles {
-  static Color backgroundColor = Color(0xFF212121);
+  static Color backgroundColor = Colors.white;
 
   static Color appBarColor = Color(0xFF8E44AD);
 
+  static Color purple = Color(0xFF8E44AD);
   static Color lightPurple = Color(0xA569BD);
+  static Color lightestPurple = Color(0xc8a2d8);
 
+  static Color grey = Color(0xFF212121);
   static Color green = Color(0x80DB80);
   static Color red = Color(0xB22222);
 
