@@ -181,17 +181,16 @@ class _PlayerButtonState extends State<PlayerButton> {
                 child: Icon(Icons.person, size: 35.0, color: Colors.white),
               ),
             ),
-            // Tekst gracza
             AnimatedOpacity(
               duration: Duration(milliseconds: 500),
               opacity: _isButtonPressed ? 0.0 : 1.0,
               child: Container(
-                  padding: EdgeInsets.all(8.0), // Opcjonalne wewnętrzne odstępy
+                  padding: EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
-                        color: Colors.black, // Kolor dolnego obramowania
-                        width: 2.0, // Grubość dolnego obramowania
+                        color: Colors.black,
+                        width: 2.0,
                       ),
                     ),
                   ),
