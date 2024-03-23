@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 class MyStyles {
   static Color backgroundColor = Colors.white;
 
-  static Color appBarColor = Color(0xFF8E44AD);
+  static Color appBarColor = const Color(0xFF8E44AD);
 
-  static Color purple = Color(0xFF8E44AD);
-  static Color lightPurple = Color(0xA569BD);
-  static Color lightestPurple = Color(0xc8a2d8);
+  static Color purple = const Color(0xFF8E44AD);
+  static Color lightPurple = const Color(0xFFA569BD);
+  static Color lightestPurple = const Color(0xFFC8A2D8);
 
-  static Color grey = Color(0xFF212121);
-  static Color green = Color(0x80DB80);
-  static Color red = Color(0xB22222);
+  static Color grey = const Color(0xFF212121);
+  static Color green = const Color(0xFF80DB80);
+  static Color red = const Color(0xFFB22222);
 
   // style dla inputów
   static InputDecoration inputStyle = InputDecoration(
@@ -21,17 +21,17 @@ class MyStyles {
       borderRadius: BorderRadius.circular(10.0),
       borderSide: BorderSide.none,
     ),
-    contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+    contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
     hintText: 'Enter text',
-    hintStyle: TextStyle(color: Colors.grey),
+    hintStyle: const TextStyle(color: Colors.grey),
   );
 
   // przyciski
   static ButtonStyle buttonStyle = ButtonStyle(
-    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF8E44AD)),
+    backgroundColor: MaterialStateProperty.all<Color>(purple),
     foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
     textStyle: MaterialStateProperty.all<TextStyle>(
-      TextStyle(fontSize: 20.0),
+      const TextStyle(fontSize: 20.0),
     ),
     shape: MaterialStateProperty.all<OutlinedBorder>(
       RoundedRectangleBorder(
@@ -39,28 +39,28 @@ class MyStyles {
       ),
     ),
     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-      EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+      const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
     ),
     elevation: MaterialStateProperty.all<double>(5.0), // Dodanie cienia
     shadowColor: MaterialStateProperty.all<Color>(Colors.grey), // Kolor cienia
   );
 
   // napisy
-  static TextStyle backgroundTextStyle = TextStyle(
+  static TextStyle backgroundTextStyle = const TextStyle(
     color: Colors.white,
     fontSize: 24.0,
   );
 
   // napisy na przyciskach
-  static TextStyle buttonTextStyle = TextStyle(
+  static TextStyle buttonTextStyle = const TextStyle(
     color: Colors.white,
     fontSize: 16.0,
   );
 
 
   // napisy na inputach
-  static TextStyle inputTextStyle = TextStyle(
-    color: backgroundColor,
+  static TextStyle inputTextStyle = const TextStyle(
+    color: Colors.black,
     fontSize: 16.0,
   );
 }
