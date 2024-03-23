@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +17,16 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> with RouteAware {
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  late double screenWidth;
+
+  @override
+  void initState() {
+    super.initState();
+    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+    Size size = view.physicalSize;
+    screenWidth = size.width;
+  }
 
   @override
   void didChangeDependencies() {
@@ -34,7 +46,6 @@ class LoginPageState extends State<LoginPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mafia+'),
@@ -46,7 +57,7 @@ class LoginPageState extends State<LoginPage> with RouteAware {
           children: [
             Image.asset(
               'assets/images/mafialogo.png',
-                width: screenWidth * 0.65,
+                width: screenWidth * 0.2,
             ),
             const SizedBox(height: 16.0),
             const Text(
