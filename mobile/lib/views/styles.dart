@@ -19,7 +19,7 @@ class MyStyles {
     fillColor: Colors.white,
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10.0),
-      borderSide: BorderSide.none,
+      borderSide: const BorderSide(color: Colors.black, width: 2),
     ),
     contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
     hintText: 'Enter text',
