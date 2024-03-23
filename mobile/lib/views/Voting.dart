@@ -34,7 +34,8 @@ class _VotingPageState extends State<VotingPage> {
       appBar: AppBar(
         title: const Text('Voting'),
       ),
-      body: Consumer<VotingViewModel>(
+      body:SingleChildScrollView(
+      child: Consumer<VotingViewModel>(
         builder: (context, viewModel, child) {
           List<Player> players = viewModel.getPlayers();
           Map<String, int> votesCount = viewModel.getVotesCount();
@@ -42,6 +43,8 @@ class _VotingPageState extends State<VotingPage> {
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
               itemCount: players.length - 1,
               itemBuilder: (context, index) {
                 List<Widget> elements = [];
@@ -67,6 +70,7 @@ class _VotingPageState extends State<VotingPage> {
             )
           );
         },
+      )
       )
     );
   }
