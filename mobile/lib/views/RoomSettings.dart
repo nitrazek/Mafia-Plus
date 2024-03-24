@@ -63,7 +63,7 @@ class _RoomSettingsPageState extends State<RoomSettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             const SizedBox(
-              height: 40,
+              height: 20,
             ),
             const Padding(
               padding: EdgeInsets.all(20),
@@ -80,10 +80,7 @@ class _RoomSettingsPageState extends State<RoomSettingsPage> {
             Expanded(
               child: Container(
                   decoration: BoxDecoration(
-                      color: MyStyles.backgroundColor,
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(40),
-                          topRight: Radius.circular(40))),
+                      color: MyStyles.backgroundColor,),
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Column(
@@ -154,7 +151,7 @@ class _RoomSettingsPageState extends State<RoomSettingsPage> {
                               onSwipe: () {},
                             )
                         ),
-                        const SizedBox(height: 170,),
+                        const SizedBox(height: 120,),
                         ElevatedButton(
                           style: MyStyles.buttonStyle,
                           onPressed: () async {
