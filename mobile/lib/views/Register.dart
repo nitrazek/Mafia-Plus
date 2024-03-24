@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/RegisterViewModel.dart';
 import 'Menu.dart';
 import 'Login.dart';
+import 'styles.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -59,12 +60,12 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
       resizeToAvoidBottomInset: false,
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             colors: [
-              Color(0xFF8E44AD),
-              Color(0xFFc8a2d8)
+              MyStyles.appBarColor,
+              MyStyles.lightestPurple
             ]
           )
         ),
@@ -83,9 +84,9 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
             ),
             Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(40), topRight: Radius.circular(40))
+                  decoration: BoxDecoration(
+                    color: MyStyles.backgroundColor,
+                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(40), topRight: Radius.circular(40))
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(30),
@@ -94,7 +95,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                         const SizedBox(height: 35,),
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: MyStyles.backgroundColor,
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: const [BoxShadow(
                               color: Color(0x6D8E44AD),
@@ -169,8 +170,8 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                             _passwordsMismatch
                                 ? 'Please make sure your password match.'
                                 : 'Add login, password and email',
-                            style: const TextStyle(
-                              color: Colors.red,
+                            style: TextStyle(
+                              color: MyStyles.red,
                               fontSize: 18.0,
                             ),
                           ),
@@ -181,10 +182,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                         Consumer<RegisterViewModel>(
                             builder: (context, viewModel, child) {
                               return ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0x6D8E44AD),
-                                    minimumSize: Size(screenWidth-150, 50)
-                                ),
+                                style: MyStyles.buttonStyle,
                                 onPressed: () async {
                                   String login = _loginController.text;
                                   String email = _emailController.text;
@@ -236,10 +234,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                         const Text("Already have an account?"),
                         const SizedBox(height: 8.0),
                         ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0x6D8E44AD),
-                                minimumSize: Size(screenWidth-150, 50)
-                            ),
+                            style:MyStyles.buttonStyle,
                             onPressed: () {
                               Navigator.push(
                                 context,
