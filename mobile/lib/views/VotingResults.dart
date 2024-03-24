@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobile/viewModels/RoomViewModel.dart';
 import 'package:mobile/views/Menu.dart';
+import 'package:mobile/views/Winner.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 
@@ -19,7 +20,7 @@ class VotingResultsPage extends StatefulWidget {
 class _VotingResultsPageState extends State<VotingResultsPage> {
   @override
   Widget build(BuildContext context) {
-    bool temp = true;
+    bool temp = false ;
 
     if(context.watch<VotingViewModel>().room == null) {
       Timer(Duration(seconds: 8), () {
@@ -29,7 +30,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
         );
       });
     } else {
-      Timer(Duration(seconds: 8), () {
+      Timer(Duration(seconds: 80  ), () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => RoomPage()),
@@ -38,7 +39,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.transparent, // Set background color to transparent
+      backgroundColor: Colors.transparent,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -59,6 +60,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20.0),
               ),
+              child:SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -96,9 +98,9 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
                       temp = !temp;
                       var voteInfo = context.watch<VotingViewModel>().votingSummary?.results[index];
                       return Container(
-                        margin: EdgeInsets.symmetric(vertical: 10.0),
+                        margin: EdgeInsets.symmetric(vertical: 15.0),
                         padding: EdgeInsets.all(20.0),
-                        transform: temp ? Matrix4.rotationZ(0.05) : Matrix4.rotationZ(-0.05),
+                        transform: temp ? Matrix4.rotationZ(0.03) : Matrix4.rotationZ(-0.03),
                         decoration: BoxDecoration(
                           color: Colors.purpleAccent,
                           borderRadius: BorderRadius.circular(30.0),
@@ -120,6 +122,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
                     },
                   ),
                 ],
+              ),
               ),
             ),
           ),
