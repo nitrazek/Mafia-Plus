@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 
 class VotingPage extends StatefulWidget {
-  const VotingPage({Key? key}) : super(key: key);
+  const VotingPage({super.key});
 
   @override
   _VotingPageState createState() => _VotingPageState();
@@ -15,6 +15,7 @@ class VotingPage extends StatefulWidget {
 
 class _VotingPageState extends State<VotingPage> {
   final WebSocketClient webSocketClient = WebSocketClient();
+  StreamSubscription<void>? _votingFinishedSubscription;
 
   @override
   void initState() {
@@ -24,7 +25,7 @@ class _VotingPageState extends State<VotingPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    context.read<VotingViewModel>().votingFinished.listen((_) {
+    _votingFinishedSubscription ??= context.read<VotingViewModel>().votingFinished.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(context, PageTransition(
           type: PageTransitionType.fade,
@@ -33,6 +34,12 @@ class _VotingPageState extends State<VotingPage> {
         ));
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _votingFinishedSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -204,7 +211,7 @@ class _PlayerButtonState extends State<PlayerButton> {
             ),
           ],
         ),
-      )
+      ),
     );
   }
 }

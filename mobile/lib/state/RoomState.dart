@@ -5,15 +5,10 @@ import '../models/Room.dart';
 
 class RoomState extends ChangeNotifier {
   static RoomState? _instance;
-  final WebSocketClient webSocketClient = WebSocketClient();
   Room? _currentRoom;
   Room? get currentRoom => _currentRoom;
 
-  RoomState._internal() {
-    webSocketClient.roomUpdate.listen((room) {
-      setRoom(room);
-    });
-  }
+  RoomState._internal();
 
   factory RoomState() {
     _instance ??= RoomState._internal();
