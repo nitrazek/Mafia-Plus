@@ -32,6 +32,12 @@ class _VotingPageState extends State<VotingPage> {
   }
 
   @override
+  void dispose() {
+    _votingFinishedSubscription?.cancel();
+    super.dispose();
+  }
+  
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
