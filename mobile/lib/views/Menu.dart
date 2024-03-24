@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/views/GameHistory.dart';
 import 'Login.dart';
 import 'PublicRooms.dart';
 import 'JoinPrivateRoom.dart';
@@ -90,7 +91,13 @@ class MenuPageState extends State<MenuPage> {
                 ElevatedButton(
                   onPressed: () {
                     context.read<MenuViewModel>().gameHistory(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const GameHistoryPage()),
+                    );
                   },
+
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 60),
                     textStyle: const TextStyle(fontSize: 32.0),
