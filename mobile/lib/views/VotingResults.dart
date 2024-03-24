@@ -38,7 +38,6 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
       body: Container(
         decoration:  BoxDecoration(
           gradient: LinearGradient(
@@ -68,7 +67,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: MyStyles.backgroundColor,
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: SingleChildScrollView(
@@ -85,7 +84,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
                                 margin: EdgeInsets.symmetric(vertical: 10.0),
                                 padding: EdgeInsets.all(15.0),
                                 decoration: BoxDecoration(
-                                  color: MyStyles.purple,
+                                  color: MyStyles.lightPurple,
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 child: Row(
