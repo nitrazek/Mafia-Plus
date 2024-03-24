@@ -19,14 +19,14 @@ class _UserRolePageState extends State<UserRolePage> {
   void initState() {
     super.initState();
     // Start a timer to automatically navigate to the voting page after 3 seconds
-    // Future.delayed(Duration(seconds: 3), () {
-    //   if (!buttonPressed) {
-    //     Navigator.push(
-    //       context,
-    //       MaterialPageRoute(builder: (context) => VotingPage()),
-    //     );
-    //   }
-    // });
+    Future.delayed(Duration(seconds: 3), () {
+      if (!buttonPressed) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => VotingPage()),
+        );
+      }
+    });
   }
 
   @override
