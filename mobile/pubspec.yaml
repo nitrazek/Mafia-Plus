@@ -17,6 +17,7 @@ dependencies:
   fluttertoast: ^8.2.4
   page_transition: ^2.0.9
   lottie: ^2.4.0
+  lite_rolling_switch: ^1.0.1
 
 
 
