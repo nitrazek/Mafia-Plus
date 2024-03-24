@@ -32,6 +32,17 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
         backgroundColor: MyStyles.appBarColor,
         automaticallyImplyLeading: false,
         title:  Text('Public Rooms'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              colors: [
+                MyStyles.appBarColor,
+                MyStyles.lightestPurple,
+              ],
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0),
