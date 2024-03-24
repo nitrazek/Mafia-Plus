@@ -55,121 +55,125 @@ class RoomPageState extends State<RoomPage> {
             ),
           ],
         ),
-        body: Column(
+        body: Stack(
           children: [
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  Text(
-                    'Players: ${context.watch<RoomViewModel>().room?.accountUsernames.length}',
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  if (context.watch<RoomViewModel>().isHost)
-                    ElevatedButton(
-                      onPressed: () {
-                        int roomId = context.read<RoomViewModel>().room?.id ?? 0;
-                        context.read<RoomViewModel>().startGame(
-                            roomId,
-                                (){
-                              Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (context) => UserRolePage())
-                              );
+            Column(
+              children: [
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20),
+                      Text(
+                        'Players: ${context.watch<RoomViewModel>().room?.accountUsernames.length}',
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 20),
+                      if (context.watch<RoomViewModel>().isHost)
+                        ElevatedButton(
+                          onPressed: () {
+                            int roomId = context.read<RoomViewModel>().room?.id ?? 0;
+                            context.read<RoomViewModel>().startGame(
+                                roomId,
+                                    (){
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context) => UserRolePage())
+                                  );
 
-                            },
-                                (){
-                              if (context.read<RoomViewModel>().messageError.isNotEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(context.watch<RoomViewModel>().messageError),
-                                  ),
-                                );
-                              }
-                            }
-                        );
-                      },
-                      child: const Text('Start game'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        foregroundColor: Colors.white,
-                        textStyle: const TextStyle(fontSize: 18),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                      ),
-                    ),
-                  const SizedBox(height: 10),
-                  if (context.watch<RoomViewModel>().isHost)
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RoomSettingsPage(),
-                          ),
-                        );
-                      },
-                      child: const Text('Settings'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                        textStyle: const TextStyle(fontSize: 18),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                      ),
-                    ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<RoomViewModel>().leaveRoom(
-                              () {
-                            Navigator.pop(context);
+                                },
+                                    (){
+                                  if (context.read<RoomViewModel>().messageError.isNotEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(context.watch<RoomViewModel>().messageError),
+                                      ),
+                                    );
+                                  }
+                                }
+                            );
                           },
-                              () {}
-                      );
-                    },
-                    child: const Text('Exit'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      textStyle: const TextStyle(fontSize: 18),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'AccesCode: ${context.read<RoomViewModel>().room?.accessCode}',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  if (context.read<RoomViewModel>().room?.roomSettings.isPublic == false)
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Room is PRIVATE 🔐',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                  if (context.read<RoomViewModel>().room?.roomSettings.isPublic == true)
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Room is PUBLIC 🔓',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                          child: const Text('Start game'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                            foregroundColor: Colors.white,
+                            textStyle: const TextStyle(fontSize: 18),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                          ),
                         ),
-                      ],
-                    ),
-                  const SizedBox(height: 20),
-                ],
-              ),
+                      const SizedBox(height: 10),
+                      if (context.watch<RoomViewModel>().isHost)
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RoomSettingsPage(),
+                              ),
+                            );
+                          },
+                          child: const Text('Settings'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                            textStyle: const TextStyle(fontSize: 18),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                          ),
+                        ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          context.read<RoomViewModel>().leaveRoom(
+                                  () {
+                                Navigator.pop(context);
+                              },
+                                  () {}
+                          );
+                        },
+                        child: const Text('Exit'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                          textStyle: const TextStyle(fontSize: 18),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'AccesCode: ${context.read<RoomViewModel>().room?.accessCode}',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 20),
+                      if (context.read<RoomViewModel>().room?.roomSettings.isPublic == false)
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Room is PRIVATE 🔐',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                      if (context.read<RoomViewModel>().room?.roomSettings.isPublic == true)
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Room is PUBLIC 🔓',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ],
             ),
             Positioned(
               top: 20,
@@ -186,7 +190,7 @@ class RoomPageState extends State<RoomPage> {
                 ),
               ),
             ),
-          ],
+          ]
         ),
         drawer: Drawer(
           child: ListView(
