@@ -1,17 +1,17 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import '../models/Room.dart';
-import '../services/WebSocketClient.dart';
-import '../models/VotingSummary.dart';
-import '../services/network/GameService.dart';
-
+import 'package:mobile/state/RoomState.dart';
+import 'package:mobile/state/RoundState.dart';
 import '../models/Room.dart';
 import '../models/VotingSummary.dart';
-import '../services/WebSocketClient.dart';
 import '../services/network/GameService.dart';
+import '../state/VotingState.dart';
 
 class VotingViewModel extends ChangeNotifier {
+  final RoomState _roomState = RoomState();
+  final RoundState _roundState = RoundState();
+  final VotingState _votingState = VotingState();
   final GameService _gameService = GameService();
-  final WebSocketClient webSocketClient = WebSocketClient();
   VotingSummary? _votingSummary;
   VotingSummary? get votingSummary => _votingSummary;
   List<Player> _players = []; // Lista użytkowników
@@ -22,14 +22,35 @@ class VotingViewModel extends ChangeNotifier {
   int? _votingId=0;
   Room? _room;
   Room? get room => _room;
-  bool _votingFinished = false;
-  bool get votingFinished => _votingFinished;
+  final _votingFinished = StreamController<void>.broadcast();
+  Stream<void> get votingFinished => _votingFinished.stream;
 
   VotingViewModel() {
-    _players = webSocketClient.lastRoomUpdate!.accountUsernames.map(
-      (username) => Player(nickname: username, canVote: true)).toList();
-    _votesCount = Map<String, int>.fromIterable(_players, key: (player) => player.nickname, value: (player) => 0);
-    _votingId = webSocketClient.lastRoundStartUpdate?.votingCityId;
+    _roomState.addListener(_updatePlayers); _updatePlayers();
+    _roundState.addListener(_updateVoting); _updateVoting();
+    _votingState.addListener(_updateVotingSummary);
+  }
+
+  void _updatePlayers() {
+    if(_roomState.currentRoom == null) return;
+    _room = _roomState.currentRoom!;
+    _players = _room!.accountUsernames.map(
+      (username) => Player(nickname: username, canVote: true)
+    ).toList();
+    _votesCount = { for (var player in _players) player.nickname : 0 };
+    notifyListeners();
+  }
+
+  void _updateVoting() {
+    if(_roundState.currentRound == null) return;
+    _votingId = _roundState.currentRound!.votingCityId;
+    notifyListeners();
+  }
+
+  void _updateVotingSummary() {
+    if(_votingState.currentVotingSummary == null) return;
+    _votingSummary = _votingState.currentVotingSummary!;
+    _votingFinished.add(null);
     notifyListeners();
   }
 
@@ -74,26 +95,6 @@ class VotingViewModel extends ChangeNotifier {
     }
 
     return playerWithMostVotes;
-  }
-
-  void setVotingResults(VotingSummary value)
-  {
-    _votingSummary = value;
-    _votingFinished = true;
-    print("elop");
-    notifyListeners();
-  }
-  void setRoom(Room value)
-  {
-    _room=value;
-    notifyListeners();
-  }
-
-  void connectWebSocket() {
-    if(webSocketClient.lastVotingSummary != null) { setVotingResults(webSocketClient.lastVotingSummary!); }
-    if(webSocketClient.lastRoomUpdate != null) { setRoom(webSocketClient.lastRoomUpdate!); }
-
-    webSocketClient.votingSummaryUpdate.listen((votingSummary) { setVotingResults(votingSummary); });
   }
 }
 

@@ -5,65 +5,122 @@ import 'Room.dart';
 import 'styles.dart';
 
 class JoinPrivateRoomPage extends StatefulWidget {
-  TextEditingController lobbyCodeController = TextEditingController();
+  const JoinPrivateRoomPage({super.key});
 
   @override
-  _JoinPrivateRoomState createState() => _JoinPrivateRoomState();
+  JoinPrivateRoomState createState() => JoinPrivateRoomState();
 }
 
-class _JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
+class JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
+  List<TextEditingController> codeControllers = List.generate(7, (index) => TextEditingController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyStyles.backgroundColor,
-      appBar: AppBar(
-          backgroundColor: MyStyles.appBarColor,
-        title:  Text('Join Room',style: MyStyles.backgroundTextStyle,)
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            colors: [MyStyles.purple, MyStyles.lightestPurple],
+          ),
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: TextField(
-                controller: widget.lobbyCodeController,
-                style: MyStyles.buttonTextStyle,
-                decoration: const InputDecoration(
-                  hintText: 'Enter the Room Code',
-                  border: InputBorder.none,
-                ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const SizedBox(height: 40),
+            Center(
+              child: Image.asset(
+                'assets/images/mafialogo.png',
+                width: MediaQuery.of(context).size.width * 0.40,
               ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                String accessCode = widget.lobbyCodeController.text;
-                final viewModel = context.read<JoinPrivateRoomViewModel>();
-                await viewModel.joinRoom(accessCode,
-                    (room) {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => RoomPage(room))
-                      );
-                    },
-                    () {
-                      if (viewModel.messageError.isNotEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(viewModel.messageError),
-                          ),
-                        );
-                      }
-                    }
-                );
-              },
-              style: MyStyles.buttonStyle,
-              child: Text('Join', style: MyStyles.buttonTextStyle,),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Text(
+                "Join Room",
+                style: TextStyle(color: MyStyles.backgroundColor, fontSize: 35),
+              ),
+            ),
+
+            Expanded(
+              flex: 2,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: MyStyles.backgroundColor,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(30),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        "Enter the Room Code to join",
+                        style: TextStyle(color: MyStyles.purple, fontSize: 20),
+                      ),
+                      const SizedBox(height: 15,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: List.generate(7, (index) {
+                          return SizedBox(
+                            width: 40,
+                            child: TextField(
+                              controller: codeControllers[index],
+                              textAlign: TextAlign.center,
+                              style: MyStyles.inputTextStyle,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(color: Colors.black, width: 2),
+                                ),
+                                counterText: "",
+                              ),
+                              keyboardType: TextInputType.number,
+                              maxLength: 1,
+                              onChanged: (value) {
+                                if (value.length == 1 && index < 6) {
+                                  FocusScope.of(context).nextFocus();
+                                }
+                              },
+                            ),
+                          );
+                        }),
+                      ),
+                      const SizedBox(height: 8),
+                      const SizedBox(height: 27),
+                      ElevatedButton(
+                        style: MyStyles.buttonStyle,
+                        onPressed: () async {
+                          String accessCode = codeControllers.map((controller) => controller.text).join();
+                          final viewModel = context.read<JoinPrivateRoomViewModel>();
+                          await viewModel.joinRoom(
+                            accessCode,
+                            () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => RoomPage()));
+                            },
+                            () {
+                              if (viewModel.messageError.isNotEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(viewModel.messageError),
+                                ));
+                              }
+                            },
+                          );
+                        },
+                        child: Text(
+                          'Join',
+                          style: MyStyles.buttonTextStyle,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
