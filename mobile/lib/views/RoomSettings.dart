@@ -89,7 +89,7 @@ class _RoomSettingsPageState extends State<RoomSettingsPage> {
                     child: Column(
                       children: <Widget>[
                         const SizedBox(
-                          height: 25,
+                          height: 45,
                         ),
                         const Text(
                           'Max players:',
@@ -125,7 +125,7 @@ class _RoomSettingsPageState extends State<RoomSettingsPage> {
                             },
                           ),
                         ),
-                        const SizedBox(height: 50,),
+                        const SizedBox(height: 90,),
                         const Text(
                           'Room type:',
                           style: TextStyle(fontSize: 20),
@@ -154,7 +154,7 @@ class _RoomSettingsPageState extends State<RoomSettingsPage> {
                               onSwipe: () {},
                             )
                         ),
-                        const SizedBox(height: 90,),
+                        const SizedBox(height: 170,),
                         ElevatedButton(
                           style: MyStyles.buttonStyle,
                           onPressed: () async {
