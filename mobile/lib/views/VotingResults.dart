@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mobile/viewModels/RoomViewModel.dart';
 import 'package:mobile/views/Menu.dart';
+import 'package:mobile/views/Winner.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 
@@ -18,11 +18,6 @@ class VotingResultsPage extends StatefulWidget {
 
 class _VotingResultsPageState extends State<VotingResultsPage> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
 
     if(context.watch<VotingViewModel>().room == null) {
@@ -33,7 +28,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
         );
       });
     } else {
-      Timer(const Duration(seconds: 8), () {
+      Timer(const Duration(seconds: 1800), () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const RoomPage()),
@@ -44,13 +39,13 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              MyStyles.purple,
-              MyStyles.lightestPurple,
+              Color(0xFF8E44AD),
+              Color(0xFFc8a2d8),
             ],
           ),
         ),
@@ -62,7 +57,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
               style: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Colors.white, // Changed to white color
               ),
             ),
             Expanded(
@@ -89,7 +84,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
                                 margin: EdgeInsets.symmetric(vertical: 10.0),
                                 padding: EdgeInsets.all(15.0),
                                 decoration: BoxDecoration(
-                                  color: MyStyles.purple,
+                                  color: Colors.purpleAccent,
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 child: Row(
@@ -122,57 +117,3 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
     );
   }
 }
-
-// class VotingResultsBody extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     if(context.watch<VotingViewModel>().room == null) {
-//       Timer(Duration(seconds: 8), () {
-//         Navigator.push(
-//             context,
-//             MaterialPageRoute(builder: (context) => MenuPage())
-//         );
-//       });
-//     } else {
-//       Timer(Duration(seconds: 8), () {
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(builder: (context) => RoomPage(context.watch<VotingViewModel>().room!)),
-//         );
-//       });
-//     }
-//     return Scaffold( // Kolor tła
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             Text(
-//               'Voting results',
-//               style: const TextStyle(
-//                   fontSize: 20, fontWeight: FontWeight.bold),
-//             ),
-//             SizedBox(height: 20),
-//             for (var voteInfo in context.watch<VotingViewModel>().votingSummary?.results ?? [])
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Text(
-//                     voteInfo.username,
-//                     style: const TextStyle(
-//                         fontSize: 20, fontWeight: FontWeight.bold),
-//                   ),
-//                   Text(
-//                     'Votes: ${voteInfo.voteCount}',
-//                     style: const TextStyle(
-//                         fontSize: 20, fontWeight: FontWeight.bold),
-//                   ),
-//                 ],
-//               ),
-//           ],
-//         ),
-//       )
-//     );
-//   }
-// }
