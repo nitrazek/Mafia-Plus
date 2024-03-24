@@ -20,7 +20,7 @@ class VotingResultsPage extends StatefulWidget {
 class _VotingResultsPageState extends State<VotingResultsPage> {
   @override
   Widget build(BuildContext context) {
-    bool temp = false ;
+    bool temp = true;
 
     if(context.watch<VotingViewModel>().room == null) {
       Timer(Duration(seconds: 8), () {
