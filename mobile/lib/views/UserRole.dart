@@ -21,7 +21,7 @@ class _UserRolePageState extends State<UserRolePage> {
     // Start a timer to automatically navigate to the voting page after 3 seconds
     Future.delayed(Duration(seconds: 3), () {
       if (!buttonPressed) {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => VotingPage()),
         );

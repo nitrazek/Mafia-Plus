@@ -8,6 +8,7 @@ class MyStyles {
   static Color purple = const Color(0xFF8E44AD);
   static Color lightPurple = const Color(0xFFA569BD);
   static Color lightestPurple = const Color(0xFFC8A2D8);
+  static Color purpleLowOpacity = const Color(0x6D8E44AD);
 
   static Color grey = const Color(0xFF212121);
   static Color green = const Color(0xFF80DB80);

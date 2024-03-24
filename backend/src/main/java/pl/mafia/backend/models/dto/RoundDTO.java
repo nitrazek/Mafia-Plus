@@ -7,10 +7,10 @@ import pl.mafia.backend.models.db.Round;
 @Data
 public class RoundDTO {
     @NonNull Long id;
-    @NonNull Long votingCityId;
+    @NonNull Long votingId;
 
     public RoundDTO(Round round) {
         this.id = round.getId();
-        this.votingCityId = round.getVotingCity().getId();
+        this.votingId = round.getVoting().getId();
     }
 }

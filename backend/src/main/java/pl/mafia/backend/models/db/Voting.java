@@ -18,6 +18,15 @@ public class Voting {
     @SequenceGenerator(name = "voting_sequence", sequenceName = "VOTING_SEQ", allocationSize = 1)
     private Long id;
 
+    @Column(nullable = false)
+    private String type;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_round", unique = true)
+    private Round round;
+
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
