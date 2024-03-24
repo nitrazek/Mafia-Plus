@@ -62,7 +62,7 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.white
+                color: Colors.black
               ),
             ),
             const SizedBox(height: 25.0),
@@ -72,11 +72,15 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
                   //context.read<PublicRoomsViewModel>().pressed(room);
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: MyStyles.lightPurple,
+                  primary: MyStyles.purple,
                   minimumSize: const Size(double.infinity, 60),
                   textStyle: const TextStyle(fontSize: 32.0),
+                  shape:
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    )
                 ),
-                child: Text(room.id.toString()),
+                child: Text(room.hostUsername.toString()),
               ),
           ],
         ),
