@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/Views/styles.dart';
 import 'package:mobile/views/Menu.dart';
 import 'package:mobile/views/Winner.dart';
 import 'package:provider/provider.dart';
@@ -39,13 +40,13 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF8E44AD),
-              Color(0xFFc8a2d8),
+              MyStyles.purple,
+              MyStyles.lightestPurple,
             ],
           ),
         ),
@@ -84,7 +85,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
                                 margin: EdgeInsets.symmetric(vertical: 10.0),
                                 padding: EdgeInsets.all(15.0),
                                 decoration: BoxDecoration(
-                                  color: Colors.purpleAccent,
+                                  color: MyStyles.purple,
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 child: Row(
