@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/Views/styles.dart';
 import 'package:mobile/views/Menu.dart';
 import 'package:mobile/views/Winner.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,6 @@ class VotingResultsPage extends StatefulWidget {
 class _VotingResultsPageState extends State<VotingResultsPage> {
   @override
   Widget build(BuildContext context) {
-    bool transformChanger = true;
 
     if(context.watch<VotingViewModel>().room == null) {
       Timer(const Duration(seconds: 8), () {
@@ -29,7 +29,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
         );
       });
     } else {
-      Timer(const Duration(seconds: 80  ), () {
+      Timer(const Duration(seconds: 8), () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const RoomPage()),
@@ -40,91 +40,79 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF8E44AD),
-              Color(0xFFc8a2d8),
+              MyStyles.purple,
+              MyStyles.lightestPurple,
             ],
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.all(40.0),
-              decoration: BoxDecoration(
+        child: Column(
+          children: [
+            const SizedBox(height: 80),
+            const Text(
+              'Voting Results',
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              child:SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Stack(
-                    children: [
-                      Text(
-                        'Voting Results',
-                        style: TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                          foreground: Paint()
-                            ..style = PaintingStyle.stroke
-                            ..strokeWidth = 2
-                            ..color = Colors.black,
-                        ),
-                      ),
-                      const Text(
-                        'Voting Results',
-                        style: TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.transparent,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  // Using ListView.builder for dynamic content
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: context.watch<VotingViewModel>().votingSummary?.results.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      // Toggle temp value for each container
-                      transformChanger = !transformChanger;
-                      var voteInfo = context.watch<VotingViewModel>().votingSummary?.results[index];
-                      return Container(
-                        margin: EdgeInsets.symmetric(vertical: 15.0),
-                        padding: EdgeInsets.all(20.0),
-                        transform: transformChanger ? Matrix4.rotationZ(0.03) : Matrix4.rotationZ(-0.03),
-                        decoration: BoxDecoration(
-                          color: Colors.purpleAccent,
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              voteInfo!.username,
-                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              'Votes: ${voteInfo.voteCount}',
-                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
               ),
             ),
-          ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: context.watch<VotingViewModel>().votingSummary?.results.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              var voteInfo = context.watch<VotingViewModel>().votingSummary?.results[index];
+                              return Container(
+                                margin: EdgeInsets.symmetric(vertical: 10.0),
+                                padding: EdgeInsets.all(15.0),
+                                decoration: BoxDecoration(
+                                  color: MyStyles.purple,
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      voteInfo!.username,
+                                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      'Votes: ${voteInfo.voteCount}',
+                                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 450),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
