@@ -29,7 +29,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
         );
       });
     } else {
-      Timer(const Duration(seconds: 1800), () {
+      Timer(const Duration(seconds: 8), () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const RoomPage()),
