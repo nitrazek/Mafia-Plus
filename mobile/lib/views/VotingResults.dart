@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mobile/viewModels/RoomViewModel.dart';
 import 'package:mobile/views/Menu.dart';
 import 'package:mobile/views/Winner.dart';
 import 'package:provider/provider.dart';
@@ -20,20 +19,20 @@ class VotingResultsPage extends StatefulWidget {
 class _VotingResultsPageState extends State<VotingResultsPage> {
   @override
   Widget build(BuildContext context) {
-    bool temp = true;
+    bool transformChanger = true;
 
     if(context.watch<VotingViewModel>().room == null) {
-      Timer(Duration(seconds: 8), () {
+      Timer(const Duration(seconds: 8), () {
         Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MenuPage())
+            MaterialPageRoute(builder: (context) => const MenuPage())
         );
       });
     } else {
-      Timer(Duration(seconds: 80  ), () {
+      Timer(const Duration(seconds: 80  ), () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => RoomPage()),
+          MaterialPageRoute(builder: (context) => const RoomPage()),
         );
       });
     }
@@ -41,7 +40,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -55,7 +54,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
           padding: const EdgeInsets.all(25.0),
           child: Center(
             child: Container(
-              padding: EdgeInsets.all(40.0),
+              padding: const EdgeInsets.all(40.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20.0),
@@ -78,7 +77,7 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
                             ..color = Colors.black,
                         ),
                       ),
-                      Text(
+                      const Text(
                         'Voting Results',
                         style: TextStyle(
                           fontSize: 40,
@@ -88,19 +87,19 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   // Using ListView.builder for dynamic content
                   ListView.builder(
                     shrinkWrap: true,
                     itemCount: context.watch<VotingViewModel>().votingSummary?.results.length,
                     itemBuilder: (BuildContext context, int index) {
                       // Toggle temp value for each container
-                      temp = !temp;
+                      transformChanger = !transformChanger;
                       var voteInfo = context.watch<VotingViewModel>().votingSummary?.results[index];
                       return Container(
                         margin: EdgeInsets.symmetric(vertical: 15.0),
                         padding: EdgeInsets.all(20.0),
-                        transform: temp ? Matrix4.rotationZ(0.03) : Matrix4.rotationZ(-0.03),
+                        transform: transformChanger ? Matrix4.rotationZ(0.03) : Matrix4.rotationZ(-0.03),
                         decoration: BoxDecoration(
                           color: Colors.purpleAccent,
                           borderRadius: BorderRadius.circular(30.0),
