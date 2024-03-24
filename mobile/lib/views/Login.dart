@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/LoginViewModel.dart';
 import 'Menu.dart';
 import 'Register.dart';
+import 'styles.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -50,12 +51,12 @@ class LoginPageState extends State<LoginPage> with RouteAware {
         resizeToAvoidBottomInset: false,
         body: Container(
           width: double.infinity,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   colors: [
-                    Color(0xFF8E44AD),
-                    Color(0xFFc8a2d8)
+                    MyStyles.purple,
+                    MyStyles.lightestPurple
                   ]
               )
           ),
@@ -81,9 +82,9 @@ class LoginPageState extends State<LoginPage> with RouteAware {
               ),
               Expanded(
                   child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(40), topRight: Radius.circular(40))
+                    decoration: BoxDecoration(
+                      color: MyStyles.backgroundColor,
+                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(40), topRight: Radius.circular(40))
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(30),
@@ -135,10 +136,7 @@ class LoginPageState extends State<LoginPage> with RouteAware {
                           Consumer<LoginViewModel>(
                               builder: (context, viewModel, child) {
                                 return ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0x6D8E44AD),
-                                      minimumSize: Size(screenWidth-150, 50)
-                                    ),
+                                    style: MyStyles.buttonStyle,
                                     onPressed: () async {
                                       bool isLogged = await viewModel.login(
                                           _loginController.text,
@@ -170,10 +168,7 @@ class LoginPageState extends State<LoginPage> with RouteAware {
                           const Text("Don't have an account?"),
                           const SizedBox(height: 8.0),
                           ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0x6D8E44AD),
-                                minimumSize: Size(screenWidth-150, 50)
-                            ),
+                            style: MyStyles.buttonStyle,
                             onPressed: () {
                               Navigator.push(
                                 context,
