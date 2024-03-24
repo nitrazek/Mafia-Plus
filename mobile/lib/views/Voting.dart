@@ -36,7 +36,6 @@ class _VotingPageState extends State<VotingPage> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -205,7 +204,7 @@ class _PlayerButtonState extends State<PlayerButton> {
             ),
           ],
         ),
-      ),
+      )
     );
   }
 }
