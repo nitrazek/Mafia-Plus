@@ -96,7 +96,7 @@ class _RoomSettingsPageState extends State<RoomSettingsPage> {
                           style: TextStyle(fontSize: 20),
                         ),
                         const SizedBox(
-                          height: 5,
+                          height: 10,
                         ),
                         SliderTheme(
                           data: SliderThemeData(
