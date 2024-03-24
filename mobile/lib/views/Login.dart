@@ -95,10 +95,10 @@ class LoginPageState extends State<LoginPage> with RouteAware {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(20),
-                              boxShadow: const [BoxShadow(
-                                color: Color(0x6D8E44AD),
+                              boxShadow: [BoxShadow(
+                                color: MyStyles.purpleLowOpacity,
                                 blurRadius: 20,
-                                offset: Offset(0, 10)
+                                offset: const Offset(0, 10)
                               )]
                             ),
                             child: Column(
