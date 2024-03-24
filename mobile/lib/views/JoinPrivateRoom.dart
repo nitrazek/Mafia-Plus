@@ -71,7 +71,15 @@ class JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
                               controller: codeControllers[index],
                               textAlign: TextAlign.center,
                               style: MyStyles.inputTextStyle,
-                              decoration: MyStyles.inputStyle,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(color: Colors.black, width: 2),
+                                ),
+                                counterText: "",
+                              ),
                               keyboardType: TextInputType.number,
                               maxLength: 1,
                               onChanged: (value) {
