@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/Views/Menu.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/views/Voting.dart';
 import 'package:mobile/views/VotingResults.dart';
@@ -21,7 +20,7 @@ class _UserRolePageState extends State<UserRolePage> {
     // Start a timer to automatically navigate to the voting page after 3 seconds
     Future.delayed(Duration(seconds: 3), () {
       if (!buttonPressed) {
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => VotingPage()),
         );
@@ -31,8 +30,7 @@ class _UserRolePageState extends State<UserRolePage> {
 
   @override
   Widget build(BuildContext context) {
-    String role = context.watch<WinnerRoleViewModel>().userRole;
-    // String role = 'mafia';
+    String role = 'mafia';
     Color textColor = role == 'mafia' ? Colors.red : Colors.green;
 
     return Scaffold(
@@ -48,44 +46,54 @@ class _UserRolePageState extends State<UserRolePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 100),
+            const SizedBox(height: 50),
             Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                  padding: const EdgeInsets.all(55.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        'Your role is: $role',
-                        style: TextStyle(color: textColor, fontSize: 24),
-                      ),
-                      role == 'mafia'
-                          ? Image.asset(
-                              'assets/images/mafia.png',
-                              width: 300,
-                            )
-                          : Image.asset(
-                              'assets/images/citizen.png',
-                              width: 300,
-                            ),
-                      ElevatedButton(
-                        style: MyStyles.buttonStyle,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => VotingResultsPage()),
-                          );
-                        },
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 35.0),
                         child: Text(
-                          "Voting",
-                          style: MyStyles.buttonTextStyle,
+                          'Your role is: $role',
+                          style: TextStyle(color: textColor, fontSize: 30),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 55.0),
+                        child: role == 'mafia'
+                            ? Image.asset(
+                          'assets/images/mafia.png',
+                          width: 180,
+                        )
+                            : Image.asset(
+                          'assets/images/citizen.png',
+                          width: 180,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        child: ElevatedButton(
+                          style: MyStyles.buttonStyle,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VotingPage(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Voting",
+                            style: MyStyles.buttonTextStyle,
+                          ),
                         ),
                       ),
                     ],
