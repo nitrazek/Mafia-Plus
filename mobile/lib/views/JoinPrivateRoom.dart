@@ -101,7 +101,7 @@ class JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
                           await viewModel.joinRoom(
                             accessCode,
                             () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => RoomPage()));
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RoomPage()));
                             },
                             () {
                               if (viewModel.messageError.isNotEmpty) {
