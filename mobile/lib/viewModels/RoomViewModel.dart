@@ -5,14 +5,16 @@ import 'package:mobile/services/network/RoomService.dart';
 import 'package:mobile/models/Room.dart';
 import 'package:mobile/services/WebSocketClient.dart';
 import 'package:mobile/state/RoomState.dart';
+import 'package:mobile/state/AccountState.dart';
 import '../state/GameState.dart';
 
 class RoomViewModel extends ChangeNotifier {
+  final AccountState _accountState = AccountState();
   final RoomState _roomState = RoomState();
   final GameState _gameState = GameState();
-  final WebSocketClient _webSocketClient = WebSocketClient();
   final RoomService _roomService = RoomService();
   final GameService _gameService = GameService();
+  final WebSocketClient _webSocketClient = WebSocketClient();
 
   String messageError = "";
 
@@ -39,7 +41,7 @@ class RoomViewModel extends ChangeNotifier {
   void _updateRoom() {
     if(_roomState.currentRoom == null) return;
     _room = _roomState.currentRoom!;
-    _isHost = _room!.hostUsername == _webSocketClient.username;
+    _isHost = _room!.hostUsername == _accountState.currentAccount!.username;
     notifyListeners();
   }
 
