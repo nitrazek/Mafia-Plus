@@ -8,6 +8,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pl.mafia.backend.models.dto.AccountDetails;
+import pl.mafia.backend.services.GameService;
 import pl.mafia.backend.services.VotingService;
 
 @RestController
@@ -17,8 +18,10 @@ public class VotingController {
     private SimpMessagingTemplate messagingTemplate;
     @Autowired
     private VotingService votingService;
+    @Autowired
+    private GameService gameService;
 
-    @PostMapping("/vote/{votingId}")
+    @PostMapping("/{votingId}/vote")
     public ResponseEntity<?> saveVote(
             @PathVariable Long votingId,
             @AuthenticationPrincipal AccountDetails accountDetails,

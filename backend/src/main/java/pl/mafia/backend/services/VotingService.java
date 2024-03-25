@@ -4,9 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
-import pl.mafia.backend.models.db.Account;
-import pl.mafia.backend.models.db.Vote;
-import pl.mafia.backend.models.db.Voting;
+import pl.mafia.backend.models.db.*;
 import pl.mafia.backend.models.dto.VotingResult;
 import pl.mafia.backend.models.dto.VotingSummary;
 import pl.mafia.backend.repositories.AccountRepository;
@@ -25,6 +23,8 @@ public class VotingService {
     private VoteRepository voteRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private GameService gameService;
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
@@ -88,7 +88,13 @@ public class VotingService {
             voting.setAccount(mostVotedAccounts.isEmpty() ? null : mostVotedAccounts.get(0));
 
         voting = votingRepository.save(voting);
+
+        Game game = voting.getRound().getGame();
+        Room room = game.getRoom();
         //Do ustalenia co wysyłamy
-        messagingTemplate.convertAndSend("/topic/" + voting.getAccount().getRoom().getId() + "/voting-summary", new VotingSummary(votingResults));
+        messagingTemplate.convertAndSend("/topic/" + room.getId() + "/voting-summary", new VotingSummary(votingResults));
+
+        gameService.endGame(game.getId());
+        messagingTemplate.convertAndSend("/topic/" + room.getId() + "/game-end", "");
     }
 }
