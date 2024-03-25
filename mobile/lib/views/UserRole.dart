@@ -30,7 +30,9 @@ class _UserRolePageState extends State<UserRolePage> {
 
   @override
   Widget build(BuildContext context) {
-    String role = 'mafia';
+    // String role = 'mafia';
+    // String role = 'citizen';
+    String role = context.watch<WinnerRoleViewModel>().userRole;
     Color textColor = role == 'mafia' ? Colors.red : Colors.green;
 
     return Scaffold(
@@ -63,23 +65,23 @@ class _UserRolePageState extends State<UserRolePage> {
                         padding: const EdgeInsets.symmetric(vertical: 35.0),
                         child: Text(
                           'Your role is: $role',
-                          style: TextStyle(color: textColor, fontSize: 30),
+                          style: TextStyle(color: textColor, fontSize: 36),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 55.0),
+                        padding: const EdgeInsets.symmetric(vertical: 65.0),
                         child: role == 'mafia'
                             ? Image.asset(
                           'assets/images/mafia.png',
-                          width: 180,
+                          width: 90,
                         )
                             : Image.asset(
                           'assets/images/citizen.png',
-                          width: 180,
+                          width: 110,
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        padding: const EdgeInsets.symmetric(vertical: 50.0),
                         child: ElevatedButton(
                           style: MyStyles.buttonStyle,
                           onPressed: () {
