@@ -20,23 +20,9 @@ class VotingResultsPage extends StatefulWidget {
 class _VotingResultsPageState extends State<VotingResultsPage> {
   @override
   Widget build(BuildContext context) {
-
-    if(context.watch<VotingViewModel>().room == null) {
-      Timer(const Duration(seconds: 8), () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const MenuPage())
-        );
-      });
-    } else {
-      Timer(const Duration(seconds: 8), () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const RoomPage()),
-        );
-      });
-    }
-
+    Timer(const Duration(seconds: 8), () {
+      Navigator.pop(context);
+    });
     return Scaffold(
       body: Container(
         decoration:  BoxDecoration(
