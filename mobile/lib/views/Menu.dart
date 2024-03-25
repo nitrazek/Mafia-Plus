@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mobile/state/AccountState.dart';
 import 'package:mobile/views/GameHistory.dart';
 import 'package:mobile/views/styles.dart';
 import 'PublicRooms.dart';
@@ -16,6 +17,8 @@ class MenuPage extends StatefulWidget {
 }
 
 class MenuPageState extends State<MenuPage> {
+  final AccountState _accountState = AccountState();
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -27,11 +30,11 @@ class MenuPageState extends State<MenuPage> {
           flexibleSpace: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topLeft, // Start direction
-                end: Alignment.bottomRight, // End direction
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
                 colors: [
-                  MyStyles.purple, // Start Color
-                  MyStyles.lightestPurple, // End Color
+                  MyStyles.purple,
+                  MyStyles.lightestPurple,
                 ],
               ),
             ),
@@ -55,10 +58,17 @@ class MenuPageState extends State<MenuPage> {
             children: [
               const SizedBox(height: 25.0),
               Text(
-                '{user}, welcome to the family!',
-                style: MyStyles.textStyle,
+                'Welcome to the family!',
+                textAlign: TextAlign.center,
+                style: MyStyles.menuTitleStyle,
               ),
-              const SizedBox(height: 65.0),
+              const SizedBox(height: 15.0),
+              Text(
+                _accountState.currentAccount!.username,
+                textAlign: TextAlign.center,
+                style: MyStyles.menuUsernameStyle,
+              ),
+              const SizedBox(height: 45.0),
               Expanded(
                 child: GridView.count(
                   crossAxisCount: 2,

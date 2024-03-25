@@ -5,6 +5,7 @@ class MyStyles {
 
   static Color appBarColor = const Color(0xFF8E44AD);
 
+  static Color darkPurple = const Color(0xFF77176E);
   static Color purple = const Color(0xFF8E44AD);
   static Color lightPurple = const Color(0xFFA569BD);
   static Color lightestPurple = const Color(0xFFC8A2D8);
@@ -68,9 +69,15 @@ class MyStyles {
     fontSize: 24.0,
   );
 
-  static TextStyle textStyle = TextStyle(
-    color: purple,
-    fontSize: 24.0,
+  static TextStyle menuTitleStyle = const TextStyle(
+    color: Colors.black,
+    fontSize: 32.0,
+    fontWeight: FontWeight.bold
+  );
+
+  static TextStyle menuUsernameStyle = TextStyle(
+    color: darkPurple,
+    fontSize: 32.0,
     fontWeight: FontWeight.bold
   );
 

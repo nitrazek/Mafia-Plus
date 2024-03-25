@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/services/network/AccountService.dart';
+import 'package:mobile/state/AccountState.dart';
+
+import '../models/Account.dart';
 
 class RegisterViewModel extends ChangeNotifier {
-
+  final AccountState _accountState = AccountState();
   final AccountService _accountService = AccountService();
 
   bool _loading = false;
@@ -16,7 +19,8 @@ class RegisterViewModel extends ChangeNotifier {
   Future<bool> register(String login, String email, String password) async {
     _setLoading(true);
     try {
-      await _accountService.register(login, email, password);
+      Account account = await _accountService.register(login, email, password);
+      _accountState.setAccount(account);
       _setLoading(false);
       return true;
     } catch(e) {

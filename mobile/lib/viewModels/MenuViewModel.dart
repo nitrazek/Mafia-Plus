@@ -3,24 +3,28 @@ import 'package:mobile/services/WebSocketClient.dart';
 import 'package:mobile/services/network/AccountService.dart';
 import 'package:mobile/services/network/RoomService.dart';
 import 'package:mobile/models/Room.dart';
+import 'package:mobile/state/AccountState.dart';
 import 'package:mobile/state/RoomState.dart';
 
 class MenuViewModel extends ChangeNotifier {
+  final AccountState _accountState = AccountState();
+  final RoomState _roomState = RoomState();
+
   final AccountService _accountService = AccountService();
   final RoomService _roomService = RoomService();
+
   final WebSocketClient _webSocketClient = WebSocketClient();
-  final RoomState _roomState = RoomState();
-  String _nickname = "Testowy123";
 
-  String get nickname => _nickname;
+  late String _username;
+  String get username => _username;
 
-  String messageError = "";
-
-  void joinRoom(BuildContext context) {
-    notifyListeners();
+  MenuViewModel() {
+    _accountState.addListener(_updateUsername); _updateUsername();
   }
 
-  void showPublicRoomsList(BuildContext context) {
+  void _updateUsername() {
+    if(_accountState.currentAccount == null) return;
+    _username = _accountState.currentAccount!.username;
     notifyListeners();
   }
 
@@ -29,35 +33,20 @@ class MenuViewModel extends ChangeNotifier {
       Room room = await _roomService.createRoom();
       await _webSocketClient.connect(room.id);
       _roomState.setRoom(room);
-      // Tutaj możesz wykonać odpowiednie akcje po udanym zapytaniu, np. ukryć ładowanie
-      // lub zaktualizować stan ViewModel, jeśli to konieczne
-      onSuccess.call(); // Wywołaj funkcję onSuccess, jeśli została dostarczona
+      onSuccess.call();
     } catch (e) {
-      // Tutaj możesz obsłużyć błędy, np. pokazać komunikat o błędzie użytkownikowi
       print("Error creating room: $e");
-      onError.call(); // Wywołaj funkcję onError, jeśli została dostarczona
+      onError.call();
     }
-  }
-
-
-
-  void gameHistory(BuildContext context) {
-
-    notifyListeners();
-  }
-
-  void settings(BuildContext context) {
-
-    notifyListeners();
   }
 
   Future<void> logout(void Function() onSuccess, void Function() onError) async {
     try {
       _accountService.logout();
+      _accountState.setAccount(null);
       onSuccess.call();
     } on Exception catch (e) {
       onError.call();
     }
-    notifyListeners();
   }
 }
