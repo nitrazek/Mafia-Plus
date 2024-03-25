@@ -21,7 +21,10 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
   @override
   Widget build(BuildContext context) {
     Timer(const Duration(seconds: 8), () {
-      Navigator.pop(context);
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => WinnerPage()),
+      );
     });
     return Scaffold(
       body: Container(
