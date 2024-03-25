@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:mobile/models/VotingSummary.dart';
 import 'package:mobile/state/GameState.dart';
 import 'package:mobile/state/RoomState.dart';

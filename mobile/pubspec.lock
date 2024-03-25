@@ -452,10 +452,10 @@ packages:
     dependency: "direct main"
     description:
       name: provider
-      sha256: "9a96a0a19b594dbc5bf0f1f27d2bc67d5f95957359b461cd9feb44ed6ae75096"
+      sha256: c8a055ee5ce3fd98d6fc872478b03823ffdb448699c6ebdbbc71d59b596fd48c
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.1"
+    version: "6.1.2"
   pub_semver:
     dependency: transitive
     description:
@@ -553,10 +553,10 @@ packages:
     dependency: "direct main"
     description:
       name: stomp_dart_client
-      sha256: "2a9913eeab59e1b811a4ad84b3575abcd3c8205925f920679966b948fff78fa2"
+      sha256: "10ecb6255a95eec78c3b064512fc8700cd2af9506cedafe3694e9662773dd1d5"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   stream_channel:
     dependency: transitive
     description:
