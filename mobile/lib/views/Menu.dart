@@ -174,13 +174,13 @@ class MenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
-      style: MyStyles.buttonStyle,
+      style: MyStyles.menuItemStyle,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, size: 100),
           const SizedBox(height: 5),
-          Text(title, style: MyStyles.buttonTextStyle)
+          Text(title)
         ],
       ),
     );

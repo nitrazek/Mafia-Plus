@@ -46,6 +46,22 @@ class MyStyles {
     shadowColor: MaterialStateProperty.all<Color>(Colors.grey), // Kolor cienia
   );
 
+  static ButtonStyle menuItemStyle = ButtonStyle(
+    backgroundColor: MaterialStateProperty.all<Color>(purple),
+    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+    textStyle: MaterialStateProperty.all<TextStyle>(buttonTextStyle),
+    shape: MaterialStateProperty.all<OutlinedBorder>(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+    ),
+    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+      const EdgeInsets.all(12.0),
+    ),
+    elevation: MaterialStateProperty.all<double>(5.0), // Dodanie cienia
+    shadowColor: MaterialStateProperty.all<Color>(Colors.grey), // Kolor cienia
+  );
+
   // napisy
   static TextStyle backgroundTextStyle = const TextStyle(
     color: Colors.white,
