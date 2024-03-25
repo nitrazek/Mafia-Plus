@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'Login.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mobile/views/GameHistory.dart';
+import 'package:mobile/views/styles.dart';
 import 'PublicRooms.dart';
 import 'JoinPrivateRoom.dart';
 import 'Room.dart';
 import 'package:mobile/viewModels/MenuViewModel.dart';
 import 'package:provider/provider.dart';
-import 'package:mobile/models/Room.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -18,113 +19,170 @@ class MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () async => false,
-        child: Scaffold(
-          appBar: AppBar(
-              automaticallyImplyLeading: false, title: const Text('Menu')),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 25.0),
-                const Text(
-                  'Welcome!',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 25.0),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => JoinPrivateRoomPage()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize:
-                        Size(MediaQuery.of(context).size.width - 25.0, 60),
-                    textStyle: const TextStyle(fontSize: 32.0),
-                  ),
-                  child: const Text('Enter room code'),
-                ),
-                const SizedBox(height: 20.0),
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<MenuViewModel>().showPublicRoomsList(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PublicRoomsPage()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize:
-                        Size(MediaQuery.of(context).size.width - 25.0, 60),
-                    textStyle: const TextStyle(fontSize: 32.0),
-                  ),
-                  child: const Text('Public rooms list'),
-                ),
-                const SizedBox(height: 20.0),
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<MenuViewModel>().createRoom(
-                        () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => RoomPage())
-                          );
-                        },
-                        () { print("Error"); }
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 60),
-                    textStyle: const TextStyle(fontSize: 32.0),
-                  ),
-                  child: const Text('Create new room'),
-                ),
-                const SizedBox(height: 20.0),
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<MenuViewModel>().gameHistory(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 60),
-                    textStyle: const TextStyle(fontSize: 32.0),
-                  ),
-                  child: const Text('Game history'),
-                ),
-                const SizedBox(height: 20.0),
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<MenuViewModel>().settings(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 60),
-                    textStyle: const TextStyle(fontSize: 32.0),
-                  ),
-                  child: const Text('Settings'),
-                ),
-                const SizedBox(height: 20.0),
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<MenuViewModel>().logout(
-                        () { Navigator.pop(context); },
-                        (Exception e) { print("Logout error: $e"); }
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 60),
-                    textStyle: const TextStyle(fontSize: 32.0),
-                  ),
-                  child: const Text('Log out'),
-                ),
-              ],
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Mafia+'),
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft, // Start direction
+                end: Alignment.bottomRight, // End direction
+                colors: [
+                  MyStyles.purple, // Start Color
+                  MyStyles.lightestPurple, // End Color
+                ],
+              ),
             ),
           ),
-        ));
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(7.0),
+              child: Image.asset(
+                'assets/images/mafialogo.png',
+                fit: BoxFit.contain,
+                height: 20
+              ),
+            )
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 25.0),
+              Text(
+                '{user}, welcome to the family!',
+                style: MyStyles.textStyle,
+              ),
+              const SizedBox(height: 65.0),
+              Expanded(
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 15,
+                  crossAxisSpacing: 15,
+                  children: [
+                    MenuItem(
+                      icon: Icons.add,
+                      title: 'Create new room',
+                      onPressed: () {
+                        context.read<MenuViewModel>().createRoom(
+                          () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const RoomPage()
+                              )
+                            );
+                          },
+                          () {
+                            Fluttertoast.showToast(
+                              msg: 'Creating room error'
+                            );
+                          }
+                        );
+                      }
+                    ),
+                    MenuItem(
+                      icon: Icons.lock_open,
+                      title: 'Enter room code',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const JoinPrivateRoomPage()
+                          )
+                        );
+                      }
+                    ),
+                    MenuItem(
+                      icon: Icons.public,
+                      title: 'Public rooms',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PublicRoomsPage()
+                          )
+                        );
+                      }
+                    ),
+                    MenuItem(
+                      icon: Icons.history,
+                      title: 'Game history',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const GameHistoryPage()
+                          )
+                        );
+                      }
+                    ),
+                    MenuItem(
+                      icon: Icons.settings,
+                      title: 'Settings',
+                      onPressed: () {
+                        Fluttertoast.showToast(
+                          msg: 'No settings to show',
+                        );
+                      }
+                    ),
+                    MenuItem(
+                      icon: Icons.logout,
+                      title: 'Logout',
+                      onPressed: () {
+                        context.read<MenuViewModel>().logout(
+                          () {
+                            Navigator.pop(context);
+                          },
+                          () {
+                            Fluttertoast.showToast(
+                              msg: 'Logout error'
+                            );
+                          }
+                        );
+                      }
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      )
+    );
+  }
+}
+
+class MenuItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final void Function() onPressed;
+
+  const MenuItem({
+    required this.icon,
+    required this.title,
+    required this.onPressed,
+    super.key}
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: MyStyles.buttonStyle,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 100),
+          const SizedBox(height: 5),
+          Text(title, style: MyStyles.buttonTextStyle)
+        ],
+      ),
+    );
   }
 }

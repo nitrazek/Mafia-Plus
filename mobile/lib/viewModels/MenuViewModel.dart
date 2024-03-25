@@ -51,12 +51,12 @@ class MenuViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> logout(void Function() onSuccess, void Function(Exception e) onError) async {
+  Future<void> logout(void Function() onSuccess, void Function() onError) async {
     try {
       _accountService.logout();
       onSuccess.call();
     } on Exception catch (e) {
-      onError.call(e);
+      onError.call();
     }
     notifyListeners();
   }

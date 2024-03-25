@@ -52,6 +52,12 @@ class MyStyles {
     fontSize: 24.0,
   );
 
+  static TextStyle textStyle = TextStyle(
+    color: purple,
+    fontSize: 24.0,
+    fontWeight: FontWeight.bold
+  );
+
   // napisy na przyciskach
   static TextStyle buttonTextStyle = const TextStyle(
     color: Colors.white,
