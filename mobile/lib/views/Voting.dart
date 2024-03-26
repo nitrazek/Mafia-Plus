@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/services/WebSocketClient.dart';
+import 'package:mobile/state/AccountState.dart';
 import 'package:mobile/views/VotingResults.dart';
 import 'package:mobile/views/styles.dart';
 import 'package:page_transition/page_transition.dart';
@@ -16,7 +17,7 @@ class VotingPage extends StatefulWidget {
 }
 
 class _VotingPageState extends State<VotingPage> {
-  final WebSocketClient webSocketClient = WebSocketClient();
+  final AccountState _accountState = AccountState();
   StreamSubscription<void>? _votingFinishedSubscription;
 
   @override
@@ -105,7 +106,7 @@ class _VotingPageState extends State<VotingPage> {
                     itemBuilder: (context, index) {
                       List<Widget> elements = [];
                       for (Player player in players) {
-                        if (player.nickname == webSocketClient.username) continue;
+                        if (player.nickname == _accountState.currentAccount!.username) continue;
                         elements.add(
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 8.0),

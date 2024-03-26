@@ -5,6 +5,7 @@ class MyStyles {
 
   static Color appBarColor = const Color(0xFF8E44AD);
 
+  static Color darkPurple = const Color(0xFF77176E);
   static Color purple = const Color(0xFF8E44AD);
   static Color lightPurple = const Color(0xFFA569BD);
   static Color lightestPurple = const Color(0xFFC8A2D8);
@@ -46,10 +47,38 @@ class MyStyles {
     shadowColor: MaterialStateProperty.all<Color>(Colors.grey), // Kolor cienia
   );
 
+  static ButtonStyle menuItemStyle = ButtonStyle(
+    backgroundColor: MaterialStateProperty.all<Color>(purple),
+    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+    textStyle: MaterialStateProperty.all<TextStyle>(buttonTextStyle),
+    shape: MaterialStateProperty.all<OutlinedBorder>(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+    ),
+    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+      const EdgeInsets.all(12.0),
+    ),
+    elevation: MaterialStateProperty.all<double>(5.0), // Dodanie cienia
+    shadowColor: MaterialStateProperty.all<Color>(Colors.grey), // Kolor cienia
+  );
+
   // napisy
   static TextStyle backgroundTextStyle = const TextStyle(
     color: Colors.white,
     fontSize: 24.0,
+  );
+
+  static TextStyle menuTitleStyle = const TextStyle(
+    color: Colors.black,
+    fontSize: 32.0,
+    fontWeight: FontWeight.bold
+  );
+
+  static TextStyle menuUsernameStyle = TextStyle(
+    color: darkPurple,
+    fontSize: 32.0,
+    fontWeight: FontWeight.bold
   );
 
   // napisy na przyciskach
