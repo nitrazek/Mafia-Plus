@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/state/AccountState.dart';
@@ -31,8 +32,8 @@ class _VotingPageState extends State<VotingPage> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(context, PageTransition(
           type: PageTransitionType.fade,
-          duration: Duration(milliseconds: 1500),
-          child: VotingResultsPage(),
+          duration: const Duration(milliseconds: 1500),
+          child: const VotingResultsPage(),
         ));
       });
     });
@@ -65,13 +66,13 @@ class _VotingPageState extends State<VotingPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 35),
-                Text(
+                const SizedBox(height: 35),
+                const Text(
                   'What\'s your gut feeling?\nWho\'s the mafia?',
                   style: TextStyle(fontSize: 28, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(16.0),
@@ -87,37 +88,27 @@ class _VotingPageState extends State<VotingPage> {
                     ),
                     child: Consumer<VotingViewModel>(
                       builder: (context, viewModel, child) {
-                        List<Player> players = viewModel.getPlayers();
-                        Map<String, int> votesCount = viewModel.getVotesCount();
                         return ListView.builder(
-                          itemCount: players.length - 1,
+                          itemCount: viewModel.players.length,
                           itemBuilder: (context, index) {
-                            List<Widget> elements = [];
-                            for (Player player in players) {
-                              if (player.nickname == _accountState.currentAccount!.username) continue;
-                              elements.add(
-                                Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: PlayerButton(
-                                          player: player,
-                                          onPressed: () => viewModel.vote(player.nickname),
-                                          votesCount: votesCount[player.nickname] ?? 0,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
+                            Player player = viewModel.players[index];
+                            if (player.nickname == _accountState.currentAccount!.username) {
+                              return const SizedBox.shrink();
                             }
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: elements,
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: PlayerButton(
+                                      player: player,
+                                      onPressed: () => viewModel.vote(player.nickname)
+                                    ),
+                                  ),
+                                ],
+                              ),
                             );
-                          },
+                          }
                         );
                       },
                     ),
@@ -135,12 +126,10 @@ class _VotingPageState extends State<VotingPage> {
 class PlayerButton extends StatefulWidget {
   final Player player;
   final VoidCallback onPressed;
-  final int votesCount;
 
   PlayerButton({
     required this.player,
-    required this.onPressed,
-    required this.votesCount,
+    required this.onPressed
   });
 
   @override
@@ -155,11 +144,7 @@ class _PlayerButtonState extends State<PlayerButton> {
     return SizedBox(
       child: GestureDetector(
         onTap: widget.player.canVote &&
-            widget.player.nickname !=
-                context
-                    .watch<VotingViewModel>()
-                    .votedPlayer
-                    ?.nickname
+            context.watch<VotingViewModel>().votedPlayer == null
             ? () {
           setState(() {
             _isButtonPressed = !_isButtonPressed;

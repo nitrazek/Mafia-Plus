@@ -14,11 +14,11 @@ class VotingViewModel extends ChangeNotifier {
   final GameService _gameService = GameService();
   VotingSummary? _votingSummary;
   VotingSummary? get votingSummary => _votingSummary;
-  List<Player> _players = []; // Lista użytkowników
+  List<Player> _players = [];
+  List<Player> get players => _players;
   Player? _votedPlayer;
   Player? get votedPlayer => _votedPlayer;
   late Map<String, String> _roles; // Change key type to String
-  Map<String, int> _votesCount = {};
   int? _votingId=0;
   Room? _room;
   Room? get room => _room;
@@ -54,19 +54,11 @@ class VotingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Player> getPlayers() {
-    return _players;
-  }
-
-  Map<String, int> getVotesCount() {
-    return _votesCount;
-  }
-
   void vote(String playerNickname) async {
     Player? player = _players.firstWhere((p) => p.nickname == playerNickname, orElse: () => Player(nickname: '', canVote: false));
     _votedPlayer = player;
 
-    if (player?.canVote ?? false) {
+    if (player.canVote) {
       print('Głos oddany na gracza: $playerNickname');
       await _gameService.addVote(_votingId!, playerNickname);
       notifyListeners();
@@ -75,25 +67,6 @@ class VotingViewModel extends ChangeNotifier {
     }
 
     notifyListeners();
-  }
-
-  int getVotesForPlayer(String playerNickname) {
-    return _votesCount[playerNickname] ?? 0;
-  }
-
-  Player? getPlayerWithMostVotes() {
-    int maxVotes = 0;
-    Player? playerWithMostVotes;
-
-    for (Player player in _players) {
-      int votes = _votesCount[player.nickname] ?? 0;
-      if (votes > maxVotes) {
-        maxVotes = votes;
-        playerWithMostVotes = player;
-      }
-    }
-
-    return playerWithMostVotes;
   }
 }
 
