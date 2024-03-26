@@ -218,13 +218,12 @@ class RoomPageState extends State<RoomPage> {
                   // Obsługa naciśnięcia na gospodarza
                 },
               ),
-              for (String uzytkownik in context.watch<RoomViewModel>().room!.accountUsernames)
-                ListTile(
-                  title: Text(uzytkownik),
-                  onTap: () {
-                    // Obsługa naciśnięcia na innych graczy
-                  },
-                ),
+              ...context.watch<RoomViewModel>().room!.accountUsernames.where((uzytkownik) => uzytkownik != context.watch<RoomViewModel>().room!.hostUsername).map((uzytkownik) => ListTile(
+                title: Text(uzytkownik),
+                onTap: () {
+                  // Obsługa naciśnięcia na innych graczy
+                },
+              )).toList(),
             ],
           ),
         ),
