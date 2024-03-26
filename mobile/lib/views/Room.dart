@@ -40,13 +40,8 @@ class RoomPageState extends State<RoomPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Przykładowi użytkownicy
-    // List<String> sampleUsers = ['User1', 'User2', 'User3', 'User4'];
-
     return WillPopScope(
-      onWillPop: () async {
-        return Future.value(false);
-      },
+      onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Room'),
@@ -58,12 +53,12 @@ class RoomPageState extends State<RoomPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => RoomSettingsPage())
+                    MaterialPageRoute(builder: (context) => RoomSettingsPage()),
                   );
                 },
                 child: const Icon(
                   Icons.settings,
-                  size: 30,
+                  size: 30
                 ),
               ),
             ),
@@ -96,7 +91,7 @@ class RoomPageState extends State<RoomPage> {
                   ],
                 ),
                 child: Padding(
-                  padding:  const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -109,22 +104,15 @@ class RoomPageState extends State<RoomPage> {
                       const SizedBox(height: 10),
                       Text(
                         'Invite your friends and start the game!',
-                        style:  TextStyle(fontSize: 28, color: MyStyles.appBarColor, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 28, color: MyStyles.appBarColor, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 80),
                       Text(
-                        'Players:  ${context.watch<RoomViewModel>().room?.accountUsernames.length}',
-                        style:  TextStyle(fontSize: 28, color: MyStyles.appBarColor, fontWeight: FontWeight.bold),
+                        'Players: ${context.watch<RoomViewModel>().room?.accountUsernames.length}',
+                        style: TextStyle(fontSize: 28, color: MyStyles.appBarColor, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
-                      Text(
-                        'AccesCode: ${context.read<RoomViewModel>().room?.accessCode}',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 20),
-                      // Wyświetlenie przycisku "Start Game" tylko dla gospodarza
-
                       if (context.watch<RoomViewModel>().isHost)
                         ElevatedButton(
                           onPressed: () {
@@ -143,8 +131,8 @@ class RoomPageState extends State<RoomPage> {
                                 }
                             );
                           },
-                          child: const Text('Start game'),
                           style: MyStyles.buttonStyle,
+                          child: const Text('Start game'),
                         ),
                       const SizedBox(height: 10),
                       ElevatedButton(
@@ -156,8 +144,8 @@ class RoomPageState extends State<RoomPage> {
                                   () {}
                           );
                         },
-                        child: const Text('Exit'),
                         style: MyStyles.buttonStyle,
+                        child: const Text('Exit'),
                       ),
                       const SizedBox(height: 20),
                       if (context.read<RoomViewModel>().room?.roomSettings.isPublic == false)
@@ -183,6 +171,10 @@ class RoomPageState extends State<RoomPage> {
                           ],
                         ),
                       const SizedBox(height: 20),
+                      Text(
+                        'AccesCode: ${context.read<RoomViewModel>().room?.accessCode}',
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      )
                     ],
                   ),
                 ),
@@ -190,8 +182,8 @@ class RoomPageState extends State<RoomPage> {
             ),
           ),
         ),
-
         drawer: Drawer(
+          surfaceTintColor: Colors.white,
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
@@ -199,7 +191,7 @@ class RoomPageState extends State<RoomPage> {
                 decoration: BoxDecoration(
                   color: MyStyles.purple,
                 ),
-                child: Text(
+                child: const Text(
                   'Players in room',
                   style: TextStyle(
                     color: Colors.white,
