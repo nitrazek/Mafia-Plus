@@ -1,11 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/models/Room.dart';
 import 'RoomSettings.dart';
 import 'package:mobile/viewModels/RoomViewModel.dart';
 import 'UserRole.dart';
+import 'styles.dart';
 
 class RoomPage extends StatefulWidget {
   const RoomPage({super.key});
@@ -16,7 +16,6 @@ class RoomPage extends StatefulWidget {
 
 class RoomPageState extends State<RoomPage> {
   StreamSubscription<void>? _gameStartedSubscription;
-
   @override
   void initState() {
     super.initState();
@@ -41,6 +40,9 @@ class RoomPageState extends State<RoomPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Przykładowi użytkownicy
+    // List<String> sampleUsers = ['User1', 'User2', 'User3', 'User4'];
+
     return WillPopScope(
       onWillPop: () async {
         return Future.value(false);
@@ -48,7 +50,7 @@ class RoomPageState extends State<RoomPage> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Room'),
-          backgroundColor: Colors.blue,
+          backgroundColor: MyStyles.appBarColor,
           actions: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -64,21 +66,62 @@ class RoomPageState extends State<RoomPage> {
             ),
           ],
         ),
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                Center(
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                MyStyles.purple,
+                MyStyles.lightestPurple,
+              ],
+            ),
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: MyStyles.purpleLowOpacity,
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding:  const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 20),
+                      Image.asset(
+                        'assets/images/mafialogo.png',
+                        width: 150,
+                        height: 150,
+                      ),
+                      const SizedBox(height: 10),
                       Text(
-                        'Players: ${context.watch<RoomViewModel>().room?.accountUsernames.length}',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                        'Invite your friends and start the game!',
+                        style:  TextStyle(fontSize: 28, color: MyStyles.appBarColor, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 80),
+                      Text(
+                        'Players:  ${context.watch<RoomViewModel>().room?.accountUsernames.length}',
+                        style:  TextStyle(fontSize: 28, color: MyStyles.appBarColor, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
+                      Text(
+                        'AccesCode: ${context.read<RoomViewModel>().room?.accessCode}',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 20),
+                      // Wyświetlenie przycisku "Start Game" tylko dla gospodarza
+
                       if (context.watch<RoomViewModel>().isHost)
                         ElevatedButton(
                           onPressed: () {
@@ -98,33 +141,7 @@ class RoomPageState extends State<RoomPage> {
                             );
                           },
                           child: const Text('Start game'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orange,
-                            foregroundColor: Colors.white,
-                            textStyle: const TextStyle(fontSize: 18),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                          ),
-                        ),
-                      const SizedBox(height: 10),
-                      if (context.watch<RoomViewModel>().isHost)
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RoomSettingsPage(),
-                              ),
-                            );
-                          },
-                          child: const Text('Settings'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            foregroundColor: Colors.white,
-                            textStyle: const TextStyle(fontSize: 18),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                          ),
+                          style: MyStyles.buttonStyle,
                         ),
                       const SizedBox(height: 10),
                       ElevatedButton(
@@ -137,18 +154,7 @@ class RoomPageState extends State<RoomPage> {
                           );
                         },
                         child: const Text('Exit'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          foregroundColor: Colors.white,
-                          textStyle: const TextStyle(fontSize: 18),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'AccesCode: ${context.read<RoomViewModel>().room?.accessCode}',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: MyStyles.buttonStyle,
                       ),
                       const SizedBox(height: 20),
                       if (context.read<RoomViewModel>().room?.roomSettings.isPublic == false)
@@ -177,32 +183,18 @@ class RoomPageState extends State<RoomPage> {
                     ],
                   ),
                 ),
-              ],
-            ),
-            Positioned(
-              top: 20,
-              right: 20,
-              child: GestureDetector(
-                onTap: () {
-                  // Otwieranie chatu
-                  print('Open chat');
-                },
-                child: const Icon(
-                  Icons.chat,
-                  size: 40,
-                  color: Colors.blue,
-                ),
               ),
             ),
-          ]
+          ),
         ),
+
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              const DrawerHeader(
+              DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: MyStyles.purple,
                 ),
                 child: Text(
                   'Players in room',
@@ -236,7 +228,7 @@ class RoomPageState extends State<RoomPage> {
             ],
           ),
         ),
-      )
+      ),
     );
   }
 }
