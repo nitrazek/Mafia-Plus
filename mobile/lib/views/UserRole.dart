@@ -20,7 +20,7 @@ class _UserRolePageState extends State<UserRolePage> {
     // Start a timer to automatically navigate to the voting page after 3 seconds
     Future.delayed(Duration(seconds: 3), () {
       if (!buttonPressed) {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => VotingPage()),
         );
@@ -78,24 +78,6 @@ class _UserRolePageState extends State<UserRolePage> {
                             : Image.asset(
                           'assets/images/citizen.png',
                           width: 110,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 50.0),
-                        child: ElevatedButton(
-                          style: MyStyles.buttonStyle,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VotingPage(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            "Voting",
-                            style: MyStyles.buttonTextStyle,
-                          ),
                         ),
                       ),
                     ],
