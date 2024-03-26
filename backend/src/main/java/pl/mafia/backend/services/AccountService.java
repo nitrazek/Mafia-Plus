@@ -47,7 +47,7 @@ public class AccountService {
         return new AccountDetails(account.get());
     }
 
-    public void login(AccountDetails loginRequest, HttpServletRequest request, HttpServletResponse response) {
+    public AccountDetails login(AccountDetails loginRequest, HttpServletRequest request, HttpServletResponse response) {
         Authentication authenticationRequest =
                 UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getUsername(), loginRequest.getPassword());
         Authentication authenticationResponse = authenticationManager.authenticate(authenticationRequest);
@@ -56,11 +56,15 @@ public class AccountService {
         context.setAuthentication(authenticationResponse);
         securityContextHolderStrategy.setContext(context);
         securityContextRepository.saveContext(context, request, response);
+
+        Optional<Account> account = accountRepository.findByUsername(loginRequest.getUsername());
+        if(account.isEmpty()) throw new BadCredentialsException("Wrong credentials");
+        return new AccountDetails(account.get());
     }
 
-    public void register(AccountDetails registerRequest, HttpServletRequest request, HttpServletResponse response) {
+    public AccountDetails register(AccountDetails registerRequest, HttpServletRequest request, HttpServletResponse response) {
         userDetailsManager.createUser(registerRequest);
-        login(registerRequest, request, response);
+        return login(registerRequest, request, response);
     }
 
     public void logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
