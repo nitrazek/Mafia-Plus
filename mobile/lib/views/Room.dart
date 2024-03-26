@@ -56,7 +56,10 @@ class RoomPageState extends State<RoomPage> {
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
                 onTap: () {
-                  // Ustawienia ogólne aplikacji
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RoomSettingsPage())
+                  );
                 },
                 child: const Icon(
                   Icons.settings,
