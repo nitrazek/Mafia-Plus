@@ -59,7 +59,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Voting results'), findsOneWidget);
+    expect(find.text('Voting Results'), findsOneWidget);
     for (var i = 0; i < votingSummary.results.length; i++) {
       final result = votingSummary.results[i];
       expect(find.text(result.username), findsOneWidget);

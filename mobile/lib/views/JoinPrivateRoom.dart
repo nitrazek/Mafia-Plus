@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/JoinPrivateRoomViewModel.dart';
 import 'Room.dart';
@@ -17,6 +18,7 @@ class JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -80,7 +82,6 @@ class JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
                                 ),
                                 counterText: "",
                               ),
-                              keyboardType: TextInputType.number,
                               maxLength: 1,
                               onChanged: (value) {
                                 if (value.length == 1 && index < 6) {
@@ -101,14 +102,10 @@ class JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
                           await viewModel.joinRoom(
                             accessCode,
                             () {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RoomPage()));
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RoomPage()));
                             },
-                            () {
-                              if (viewModel.messageError.isNotEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: Text(viewModel.messageError),
-                                ));
-                              }
+                            (errorMsg) {
+                              Fluttertoast.showToast(msg: errorMsg);
                             },
                           );
                         },

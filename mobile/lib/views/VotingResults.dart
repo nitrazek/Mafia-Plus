@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/views/Menu.dart';
 import 'package:mobile/views/Winner.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 
@@ -21,7 +22,12 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
   @override
   Widget build(BuildContext context) {
     Timer(const Duration(seconds: 8), () {
-      Navigator.pop(context);
+      Navigator.pushReplacement(
+          context, PageTransition(
+          type: PageTransitionType.fade,
+          duration: Duration(seconds: 3),
+      child: WinnerPage()),
+      );
     });
     return Scaffold(
       body: Container(

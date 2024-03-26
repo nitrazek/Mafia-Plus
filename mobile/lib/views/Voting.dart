@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mobile/services/WebSocketClient.dart';
 import 'package:mobile/state/AccountState.dart';
 import 'package:mobile/views/VotingResults.dart';
 import 'package:mobile/views/styles.dart';
@@ -48,95 +47,87 @@ class _VotingPageState extends State<VotingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'What\'s your gut feeling?\nWho\'s the mafia?',
-          style: TextStyle(fontSize: 28,),
-        ),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        toolbarHeight: 100,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              colors: [
-                Color(0xFF8E44AD),
-                Color(0xFFc8a2d8),
-              ],
-            ),
-          ),
-        ),
-      ),
-      backgroundColor: Colors.transparent, // Set background color to transparent
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF8E44AD),
-              Color(0xFFc8a2d8),
+              MyStyles.purple,
+              MyStyles.lightestPurple,
             ],
           ),
         ),
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x6D8E44AD),
-                    blurRadius: 20,
-                    offset: Offset(0, 10),
-                  )
-                ],
-              ),
-              child: Consumer<VotingViewModel>(
-                builder: (context, viewModel, child) {
-                  List<Player> players = viewModel.getPlayers();
-                  Map<String, int> votesCount = viewModel.getVotesCount();
-
-                  return ListView.builder(
-                    itemCount: players.length - 1,
-                    itemBuilder: (context, index) {
-                      List<Widget> elements = [];
-                      for (Player player in players) {
-                        if (player.nickname == _accountState.currentAccount!.username) continue;
-                        elements.add(
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: PlayerButton(
-                                    player: player,
-                                    onPressed: () => viewModel.vote(player.nickname),
-                                    votesCount: votesCount[player.nickname] ?? 0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 35),
+                Text(
+                  'What\'s your gut feeling?\nWho\'s the mafia?',
+                  style: TextStyle(fontSize: 28, color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [BoxShadow(
+                          color: MyStyles.purpleLowOpacity,
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        )
+                      ],
+                    ),
+                    child: Consumer<VotingViewModel>(
+                      builder: (context, viewModel, child) {
+                        List<Player> players = viewModel.getPlayers();
+                        Map<String, int> votesCount = viewModel.getVotesCount();
+                        return ListView.builder(
+                          itemCount: players.length - 1,
+                          itemBuilder: (context, index) {
+                            List<Widget> elements = [];
+                            for (Player player in players) {
+                              if (player.nickname == _accountState.currentAccount!.username) continue;
+                              elements.add(
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: PlayerButton(
+                                          player: player,
+                                          onPressed: () => viewModel.vote(player.nickname),
+                                          votesCount: votesCount[player.nickname] ?? 0,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
+                              );
+                            }
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: elements,
+                            );
+                          },
                         );
-                      }
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: elements,
-                      );
-                    },
-                  );
-                },
-              ),
+                      },
+                    ),
+                  ),
+                ),
+              ]
             ),
           ),
-        ),
-      ),
+        )
+      )
     );
   }
 }
@@ -186,7 +177,7 @@ class _PlayerButtonState extends State<PlayerButton> {
               alignment: _isButtonPressed ? Alignment.center : Alignment.centerLeft,
               child: CircleAvatar(
                 radius: 30.0,
-                backgroundColor: _isButtonPressed ? Colors.red : MyStyles.buttonStyle.backgroundColor!.resolve({}),
+                backgroundColor: _isButtonPressed ? MyStyles.red : MyStyles.buttonStyle.backgroundColor!.resolve({}),
                 child: Icon(Icons.person, size: 35.0, color: Colors.white),
               ),
             ),

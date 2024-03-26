@@ -17,31 +17,28 @@ class JoinPrivateRoomViewModel extends ChangeNotifier {
   final WebSocketClient _webSocketClient = WebSocketClient();
   final RoomState _roomState = RoomState();
 
-  String inputCodeError = "";
-  String messageError = "";
+  final RegExp accessCodeRegex = RegExp(r'^[a-zA-Z0-9]*$');
 
-  Future<void> joinRoom(String accessCode, void Function() onSuccess, void Function() onError) async {
+  Future<void> joinRoom(String accessCode, void Function() onSuccess, void Function(String errorMsg) onError) async {
     _setLoading(true);
-    inputCodeError = "";
-    messageError = "";
 
     if (accessCode.isNotEmpty) {
       try {
+        if(!accessCodeRegex.hasMatch(accessCode)) {
+          onError.call("Access code should contain only alpha-numeric characters");
+          return;
+        }
         Room room = await _roomService.joinRoomByAccessCode(accessCode);
         await _webSocketClient.connect(room.id);
         _roomState.setRoom(room);
         onSuccess.call();
       }
-      catch (e) {
-        messageError = "Wrong code";
-        notifyListeners();
-        onError.call();
+      catch (_) {
+        onError.call("Wrong code");
       }
     }
     else {
-      inputCodeError = "Code is empty.";
-      notifyListeners();
-      onError.call();
+      onError.call("Code is empty");
     }
   }
 }
