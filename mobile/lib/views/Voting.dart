@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mobile/services/WebSocketClient.dart';
+import 'package:mobile/state/AccountState.dart';
 import 'package:mobile/views/VotingResults.dart';
 import 'package:mobile/views/styles.dart';
 import 'package:page_transition/page_transition.dart';
@@ -9,14 +9,14 @@ import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 
 class VotingPage extends StatefulWidget {
-  const VotingPage({Key? key});
+  const VotingPage({super.key});
 
   @override
   _VotingPageState createState() => _VotingPageState();
 }
 
 class _VotingPageState extends State<VotingPage> {
-  final WebSocketClient webSocketClient = WebSocketClient();
+  final AccountState _accountState = AccountState();
   StreamSubscription<void>? _votingFinishedSubscription;
 
   @override
@@ -28,7 +28,7 @@ class _VotingPageState extends State<VotingPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _votingFinishedSubscription ??= context.read<VotingViewModel>().votingFinished.listen((_) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(context, PageTransition(
           type: PageTransitionType.fade,
           duration: Duration(milliseconds: 1500),
@@ -89,13 +89,12 @@ class _VotingPageState extends State<VotingPage> {
                       builder: (context, viewModel, child) {
                         List<Player> players = viewModel.getPlayers();
                         Map<String, int> votesCount = viewModel.getVotesCount();
-
                         return ListView.builder(
-                          itemCount: players.length,
+                          itemCount: players.length - 1,
                           itemBuilder: (context, index) {
                             List<Widget> elements = [];
                             for (Player player in players) {
-                              if (player.nickname == webSocketClient.username) continue;
+                              if (player.nickname == _accountState.currentAccount!.username) continue;
                               elements.add(
                                 Padding(
                                   padding: EdgeInsets.symmetric(vertical: 8.0),
@@ -124,11 +123,11 @@ class _VotingPageState extends State<VotingPage> {
                     ),
                   ),
                 ),
-              ],
+              ]
             ),
           ),
-        ),
-      ),
+        )
+      )
     );
   }
 }

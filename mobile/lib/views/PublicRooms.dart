@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/models/Room.dart';
 import 'package:mobile/viewModels/PublicRoomsViewModel.dart';
+import 'styles.dart';
 
 class PublicRoomsPage extends StatefulWidget {
   const PublicRoomsPage({super.key});
@@ -26,9 +27,22 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
     List<Room> publicRooms = context.watch<PublicRoomsViewModel>().publicRooms;
 
     return Scaffold(
+      backgroundColor: MyStyles.backgroundColor,
       appBar: AppBar(
+        backgroundColor: MyStyles.appBarColor,
         automaticallyImplyLeading: false,
-        title: const Text('Public Rooms'),
+        title:  Text('Public Rooms'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              colors: [
+                MyStyles.appBarColor,
+                MyStyles.lightestPurple,
+              ],
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -36,8 +50,10 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 25.0),
+
             ElevatedButton(
               onPressed: _refreshRooms,
+              style:MyStyles.buttonStyle,
               child: const Text('Refresh'),
             ),
             const SizedBox(height: 25.0),
@@ -46,6 +62,7 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
+                color: Colors.black
               ),
             ),
             const SizedBox(height: 25.0),
@@ -55,10 +72,15 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
                   //context.read<PublicRoomsViewModel>().pressed(room);
                 },
                 style: ElevatedButton.styleFrom(
+                  primary: MyStyles.purple,
                   minimumSize: const Size(double.infinity, 60),
                   textStyle: const TextStyle(fontSize: 32.0),
+                  shape:
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    )
                 ),
-                child: Text(room.id.toString()),
+                child: Text(room.hostUsername.toString()),
               ),
           ],
         ),

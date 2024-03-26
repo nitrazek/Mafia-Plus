@@ -202,7 +202,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                                           toastLength: Toast.LENGTH_SHORT
                                       );
                                       if(!context.mounted) return;
-                                      Navigator.push(
+                                      Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(builder: (context) => const MenuPage())
                                       );
@@ -236,10 +236,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                         ElevatedButton(
                             style:MyStyles.buttonStyle,
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const LoginPage()),
-                              );
+                              Navigator.pop(context);
                             },
                             child: const Text(
                                 'Login',
