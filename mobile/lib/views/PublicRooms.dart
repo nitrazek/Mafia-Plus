@@ -72,7 +72,7 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
                   //context.read<PublicRoomsViewModel>().pressed(room);
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: MyStyles.purple,
+                  backgroundColor: MyStyles.purple,
                   minimumSize: const Size(double.infinity, 60),
                   textStyle: const TextStyle(fontSize: 32.0),
                   shape:
