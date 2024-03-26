@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,8 +15,12 @@ class WinnerPage extends StatefulWidget {
 class _WinnerPageState extends State<WinnerPage> {
   @override
   Widget build(BuildContext context) {
+    Timer(const Duration(seconds: 8), () {
+      Navigator.pop(context,);
+    });
     String userRole = context.watch<WinnerRoleViewModel>().userRole;
     Color textColor = userRole == 'mafia' ? Colors.red : Colors.green;
+    String roleName = userRole == 'mafia' ? 'Mafia' : 'Citizen';
 
     String imagePath = userRole == 'mafia' ? 'assets/images/Mafias.png' : 'assets/images/Citizens.png';
 
@@ -76,30 +82,11 @@ class _WinnerPageState extends State<WinnerPage> {
                         ),
                         SizedBox(height: 20),
                         Text(
-                          userRole,
+                          roleName,
                           style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold, color: textColor),
                         ),
 
                         SizedBox(height: 150),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => MenuPage()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-                            backgroundColor: MyStyles.lightPurple,
-                          ),
-                          child: Text(
-                            'Back to Menu',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ),
                       ],
                     ),
                   ),
