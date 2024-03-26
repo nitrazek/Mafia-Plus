@@ -32,21 +32,8 @@ public class Round {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_voting_city", unique = true)
-    private Voting votingCity;
-
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_voting_mafia", unique = true)
-    private Voting votingMafia;
-
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_voting_reward", unique = true)
-    private Voting votingReward;
+    @OneToOne(mappedBy = "round", fetch = FetchType.LAZY)
+    private Voting voting;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

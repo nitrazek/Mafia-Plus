@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/services/WebSocketClient.dart';
+import 'package:mobile/state/AccountState.dart';
 import 'package:mobile/views/VotingResults.dart';
 import 'package:mobile/views/styles.dart';
 import 'package:page_transition/page_transition.dart';
@@ -7,14 +10,15 @@ import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 
 class VotingPage extends StatefulWidget {
-  const VotingPage({Key? key}) : super(key: key);
+  const VotingPage({super.key});
 
   @override
   _VotingPageState createState() => _VotingPageState();
 }
 
 class _VotingPageState extends State<VotingPage> {
-  final WebSocketClient webSocketClient = WebSocketClient();
+  final AccountState _accountState = AccountState();
+  StreamSubscription<void>? _votingFinishedSubscription;
 
   @override
   void initState() {
@@ -24,7 +28,7 @@ class _VotingPageState extends State<VotingPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    context.read<VotingViewModel>().votingFinished.listen((_) {
+    _votingFinishedSubscription ??= context.read<VotingViewModel>().votingFinished.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(context, PageTransition(
           type: PageTransitionType.fade,
@@ -36,6 +40,11 @@ class _VotingPageState extends State<VotingPage> {
   }
 
   @override
+  void dispose() {
+    _votingFinishedSubscription?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,7 +106,7 @@ class _VotingPageState extends State<VotingPage> {
                     itemBuilder: (context, index) {
                       List<Widget> elements = [];
                       for (Player player in players) {
-                        if (player.nickname == webSocketClient.username) continue;
+                        if (player.nickname == _accountState.currentAccount!.username) continue;
                         elements.add(
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 8.0),

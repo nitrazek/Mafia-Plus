@@ -2,6 +2,7 @@ package pl.mafia.backend.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jdk.javadoc.doclet.Reporter;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
@@ -41,8 +42,7 @@ public class AccountController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody AccountDetails registerRequest, HttpServletRequest request, HttpServletResponse response) {
         try {
-            accountService.register(registerRequest, request, response);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(accountService.register(registerRequest, request, response));
         } catch(IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
         } catch(Exception ex) {
@@ -53,8 +53,7 @@ public class AccountController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AccountDetails loginRequest, HttpServletRequest request, HttpServletResponse response) {
         try {
-            accountService.login(loginRequest, request, response);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(accountService.login(loginRequest, request, response));
         } catch(IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch(BadCredentialsException ex) {

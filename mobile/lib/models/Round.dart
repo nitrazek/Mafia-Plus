@@ -10,14 +10,14 @@ class Round {
   factory Round.fromJson(Map<String, dynamic> json) {
     return Round(
       id: json['id'],
-      votingCityId: json['votingCityId']
+      votingCityId: json['votingId']
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'votingCityId': votingCityId
+      'votingId': votingCityId
     };
   }
 }
