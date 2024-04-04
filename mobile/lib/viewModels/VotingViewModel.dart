@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobile/state/RoomState.dart';
-import 'package:mobile/state/RoundState.dart';
 import '../models/Room.dart';
 import '../models/VotingSummary.dart';
 import '../services/network/GameService.dart';
@@ -9,7 +8,6 @@ import '../state/VotingState.dart';
 
 class VotingViewModel extends ChangeNotifier {
   final RoomState _roomState = RoomState();
-  final RoundState _roundState = RoundState();
   final VotingState _votingState = VotingState();
   final GameService _gameService = GameService();
   VotingSummary? _votingSummary;
@@ -27,8 +25,7 @@ class VotingViewModel extends ChangeNotifier {
 
   VotingViewModel() {
     _roomState.addListener(_updatePlayers); _updatePlayers();
-    _roundState.addListener(_updateVoting); _updateVoting();
-    _votingState.addListener(_updateVotingSummary);
+    _votingState.addListener(_updateVoting); _updateVoting();
   }
 
   void _updatePlayers() {
@@ -41,8 +38,8 @@ class VotingViewModel extends ChangeNotifier {
   }
 
   void _updateVoting() {
-    if(_roundState.currentRound == null) return;
-    _votingId = _roundState.currentRound!.votingCityId;
+    if(_votingState.currentVoting == null) return;
+    _votingId = _votingState.currentVoting!.id;
     notifyListeners();
   }
 

@@ -16,18 +16,13 @@ class RoomPage extends StatefulWidget {
 
 class RoomPageState extends State<RoomPage> {
   StreamSubscription<void>? _gameStartedSubscription;
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
-  void didChangeDependencies()
-  {
+  void didChangeDependencies() {
     super.didChangeDependencies();
     _gameStartedSubscription ??= context.read<RoomViewModel>().gameStarted.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => UserRolePage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const UserRolePage()));
       });
     });
   }

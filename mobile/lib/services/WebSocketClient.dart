@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:mobile/models/VotingStart.dart';
 import 'package:mobile/models/VotingSummary.dart';
 import 'package:mobile/state/GameState.dart';
 import 'package:mobile/state/RoomState.dart';
-import 'package:mobile/state/RoundState.dart';
 import 'package:mobile/state/AccountState.dart';
 import 'package:mobile/state/VotingState.dart';
 import 'package:stomp_dart_client/stomp.dart';
@@ -36,7 +36,6 @@ class WebSocketClient {
   final AccountState _accountState = AccountState();
   final RoomState _roomState = RoomState();
   final GameState _gameState = GameState();
-  final RoundState _roundState = RoundState();
   final VotingState _votingState = VotingState();
 
   WebSocketClient._internal();
@@ -75,11 +74,11 @@ class WebSocketClient {
             }
           ));
           _unsubscribeFunctions.add(_stompClient!.subscribe(
-            destination: "/topic/$roomId/round-start",
+            destination: "/user/queue/voting-start",
             callback: (frame) {
-              Map<String, dynamic> roundStartJson = jsonDecode(frame.body!);
-              Round round = Round.fromJson(roundStartJson);
-              _roundState.setRound(round);
+              Map<String, dynamic> votingStartJson = jsonDecode(frame.body!);
+              VotingStart votingStart = VotingStart.fromJson(votingStartJson);
+              _votingState.setVoting(votingStart);
             }
           ));
           _unsubscribeFunctions.add(_stompClient!.subscribe(
@@ -94,7 +93,7 @@ class WebSocketClient {
             destination: "/topic/$roomId/game-end",
             callback: (frame) {
               _gameState.setGame(null);
-              _roundState.setRound(null);
+              _votingState.setVoting(null);
               _votingState.setVotingSummary(null);
             }
           ));

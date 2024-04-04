@@ -20,21 +20,26 @@ public class Game {
     @SequenceGenerator(name = "game_sequence", sequenceName = "GAME_SEQ", allocationSize = 1)
     private Long id;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToOne(mappedBy = "game", fetch = FetchType.LAZY)
-    private Room room;
-
     @Column(nullable = false)
     private Timestamp createTimestamp;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToMany(mappedBy = "games")
+    @OneToOne(mappedBy = "game", fetch = FetchType.LAZY)
+    private Room room;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
+    private List<Round> rounds = new ArrayList<>();
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @ManyToMany(mappedBy = "games", fetch = FetchType.LAZY)
     private List<Account> accounts = new ArrayList<>();
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "game")
-    private List<Round> rounds = new ArrayList<>();
+    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
+    private List<Player> players = new ArrayList<>();
 }
