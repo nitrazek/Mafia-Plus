@@ -18,11 +18,11 @@ class _WinnerPageState extends State<WinnerPage> {
     Timer(const Duration(seconds: 8), () {
       Navigator.pop(context,);
     });
-    String userRole = context.watch<WinnerRoleViewModel>().userRole;
-    Color textColor = userRole == 'mafia' ? Colors.red : Colors.green;
-    String roleName = userRole == 'mafia' ? 'Mafia' : 'Citizen';
+    String winnerRole = context.watch<WinnerRoleViewModel>().winnerRole;
+    Color textColor = winnerRole == 'mafia' ? Colors.red : Colors.green;
+    String roleName = winnerRole == 'mafia' ? 'Mafia' : 'Citizen';
 
-    String imagePath = userRole == 'mafia' ? 'assets/images/Mafias.png' : 'assets/images/Citizens.png';
+    String imagePath = winnerRole == 'mafia' ? 'assets/images/Mafias.png' : 'assets/images/Citizens.png';
 
     return Scaffold(
       body: Container(

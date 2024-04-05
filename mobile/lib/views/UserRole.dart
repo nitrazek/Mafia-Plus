@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/views/Voting.dart';
 import 'package:mobile/views/VotingResults.dart';
+import 'package:mobile/views/Winner.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/WinnerRoleViewModel.dart';
 import 'package:mobile/models/Room.dart';
@@ -22,7 +23,7 @@ class _UserRolePageState extends State<UserRolePage> {
       if (!buttonPressed) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => VotingPage()),
+          MaterialPageRoute(builder: (context) => WinnerPage()),
         );
       }
     });
