@@ -1,22 +1,22 @@
 import 'package:mobile/models/VotingResult.dart';
 
 class VotingSummary {
-  final List<VotingResult> results;
+  final List<VotingResult> votingResults;
 
   VotingSummary({
-    required this.results
+    required this.votingResults
   });
 
   factory VotingSummary.fromJson(Map<String, dynamic> json) {
-    List<dynamic> resultsJson = json['results'];
+    List<dynamic> resultsJson = json['votingResults'];
     return VotingSummary(
-      results: resultsJson.map((resultJson) => VotingResult.fromJson(resultJson)).toList()
+      votingResults: resultsJson.map((resultJson) => VotingResult.fromJson(resultJson)).toList()
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'results': results
+      'votingResults': votingResults
     };
   }
 }

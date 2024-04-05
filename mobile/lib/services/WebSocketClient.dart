@@ -13,6 +13,7 @@ import 'package:mobile/utils/Constants.dart' as Constants;
 import '../models/GameStart.dart';
 import '../models/Room.dart';
 import '../models/Round.dart';
+import '../models/VotingEnd.dart';
 
 class WebSocketClient {
   static WebSocketClient? _instance;
@@ -90,11 +91,18 @@ class WebSocketClient {
             }
           ));
           _unsubscribeFunctions.add(_stompClient!.subscribe(
+              destination: "/topic/$roomId/voting-end",
+              callback: (frame) {
+                Map<String, dynamic> votingEndJson = jsonDecode(frame.body!);
+                VotingEnd votingEnd = VotingEnd.fromJson(votingEndJson);
+                _votingState.setVotingEnd(votingEnd);
+              }
+          ));
+          _unsubscribeFunctions.add(_stompClient!.subscribe(
             destination: "/topic/$roomId/game-end",
             callback: (frame) {
               _gameState.setGame(null);
               _votingState.setVoting(null);
-              _votingState.setVotingSummary(null);
             }
           ));
           connectionCompleter.complete();

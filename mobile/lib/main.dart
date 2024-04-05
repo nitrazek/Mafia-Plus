@@ -3,6 +3,7 @@ import 'package:mobile/state/GameState.dart';
 import 'package:mobile/state/RoomState.dart';
 import 'package:mobile/state/VotingState.dart';
 import 'package:mobile/viewModels/UserRoleViewModel.dart';
+import 'package:mobile/viewModels/VotingResultsViewModel.dart';
 import 'package:mobile/viewModels/WinnerViewModel.dart';
 import 'package:mobile/views/GameHistory.dart';
 import 'package:mobile/viewModels/JoinPrivateRoomViewModel.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => RoomViewModel()),
         ChangeNotifierProvider(create: (context) => UserRoleViewModel()),
         ChangeNotifierProvider(create: (context) => VotingViewModel()),
+        ChangeNotifierProvider(create: (context) => VotingResultsViewModel()),
         ChangeNotifierProvider(create: (context) => WinnerViewModel())
       ],
       child: const MaterialApp(

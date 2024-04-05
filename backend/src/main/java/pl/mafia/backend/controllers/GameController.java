@@ -43,16 +43,4 @@ public class GameController {
             return ResponseEntity.status(HttpStatus .INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
-
-    @PostMapping("/end/{gameId}")
-    public ResponseEntity<?> endGame(@PathVariable Long gameId, @AuthenticationPrincipal AccountDetails accountDetails) {
-        try {
-            gameService.endGame(gameId);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
-    }
 }

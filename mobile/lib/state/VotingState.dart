@@ -1,18 +1,26 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:mobile/models/VotingSummary.dart';
 
 import '../models/Round.dart';
+import '../models/VotingEnd.dart';
 import '../models/VotingStart.dart';
-import '../services/WebSocketClient.dart';
 
 class VotingState extends ChangeNotifier {
   static VotingState? _instance;
 
-  VotingSummary? _currentVotingSummary;
-  VotingSummary? get currentVotingSummary => _currentVotingSummary;
+  final StreamController<void> _votingFinished = StreamController.broadcast();
+  Stream<void> get votingFinished => _votingFinished.stream;
 
   VotingStart? _currentVoting;
   VotingStart? get currentVoting => _currentVoting;
+
+  VotingSummary? _currentVotingSummary;
+  VotingSummary? get currentVotingSummary => _currentVotingSummary;
+
+  VotingEnd? _currentVotingEnd;
+  VotingEnd? get currentVotingEnd => _currentVotingEnd;
 
   VotingState._internal();
 
@@ -26,8 +34,15 @@ class VotingState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setVotingSummary(VotingSummary? votingSummary) {
+  void setVotingSummary(VotingSummary votingSummary) {
     _currentVotingSummary = votingSummary;
+    _votingFinished.add(null);
+    notifyListeners();
+  }
+
+  void setVotingEnd(VotingEnd votingEnd) {
+    _currentVotingEnd = votingEnd;
+    _votingFinished.add(null);
     notifyListeners();
   }
 }

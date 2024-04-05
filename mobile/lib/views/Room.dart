@@ -167,7 +167,7 @@ class RoomPageState extends State<RoomPage> {
                         ),
                       const SizedBox(height: 20),
                       Text(
-                        'AccesCode: ${context.read<RoomViewModel>().room?.accessCode}',
+                        'AccessCode: ${context.read<RoomViewModel>().room?.accessCode}',
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       )
                     ],
