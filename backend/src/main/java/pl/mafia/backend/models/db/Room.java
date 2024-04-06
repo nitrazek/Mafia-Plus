@@ -33,6 +33,8 @@ public class Room {
     @Column(name = "access_code", nullable = false)
     private String accessCode;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToOne(mappedBy = "room", fetch = FetchType.LAZY)
     private RoomSettings roomSettings;
 

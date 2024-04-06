@@ -17,13 +17,7 @@ class VotingPage extends StatefulWidget {
 }
 
 class _VotingPageState extends State<VotingPage> {
-  final AccountState _accountState = AccountState();
   StreamSubscription<void>? _votingFinishedSubscription;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void didChangeDependencies() {
@@ -89,20 +83,17 @@ class _VotingPageState extends State<VotingPage> {
                     child: Consumer<VotingViewModel>(
                       builder: (context, viewModel, child) {
                         return ListView.builder(
-                          itemCount: viewModel.players.length,
+                          itemCount: viewModel.playerUsernames?.length,
                           itemBuilder: (context, index) {
-                            Player player = viewModel.players[index];
-                            if (player.nickname == _accountState.currentAccount!.username) {
-                              return const SizedBox.shrink();
-                            }
+                            String playerUsername = viewModel.playerUsernames![index];
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8.0),
                               child: Row(
                                 children: [
                                   Expanded(
                                     child: PlayerButton(
-                                      player: player,
-                                      onPressed: () => viewModel.vote(player.nickname)
+                                      playerUsername: playerUsername,
+                                      onPressed: () => viewModel.vote(playerUsername)
                                     ),
                                   ),
                                 ],
@@ -124,35 +115,31 @@ class _VotingPageState extends State<VotingPage> {
 }
 
 class PlayerButton extends StatefulWidget {
-  final Player player;
+  final String playerUsername;
   final VoidCallback onPressed;
 
   PlayerButton({
-    required this.player,
+    required this.playerUsername,
     required this.onPressed
   });
 
   @override
-  _PlayerButtonState createState() => _PlayerButtonState();
+  PlayerButtonState createState() => PlayerButtonState();
 }
 
-class _PlayerButtonState extends State<PlayerButton> {
+class PlayerButtonState extends State<PlayerButton> {
   bool _isButtonPressed = false;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       child: GestureDetector(
-        onTap: widget.player.canVote &&
-            context.watch<VotingViewModel>().votedPlayer == null
-            ? () {
+        onTap: context.watch<VotingViewModel>().votedPlayer == null ? () {
           setState(() {
             _isButtonPressed = !_isButtonPressed;
           });
-
           widget.onPressed();
-        }
-            : null,
+        } : null,
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -170,8 +157,8 @@ class _PlayerButtonState extends State<PlayerButton> {
               duration: Duration(milliseconds: 500),
               opacity: _isButtonPressed ? 0.0 : 1.0,
               child: Container(
-                  padding: EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: const BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
                         color: Colors.black,
@@ -180,9 +167,9 @@ class _PlayerButtonState extends State<PlayerButton> {
                     ),
                   ),
                   child: Text(
-                    widget.player.nickname,
+                    widget.playerUsername,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                     ),
                   )

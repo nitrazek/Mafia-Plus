@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/state/GameState.dart';
 
-class WinnerRoleViewModel extends ChangeNotifier{
+class WinnerViewModel extends ChangeNotifier {
   final GameState _gameState = GameState();
 
   String _userRole = '';
   String get userRole => _userRole;
 
-  WinnerRoleViewModel() {
+  WinnerViewModel() {
     _gameState.addListener(_updateRole); _updateRole();
   }
 

@@ -6,6 +6,7 @@ import 'package:mobile/models/RoomSettings.dart';
 import 'package:mobile/models/VotingResult.dart';
 import 'package:mobile/models/VotingSummary.dart';
 import 'package:mobile/viewModels/RoomViewModel.dart';
+import 'package:mobile/viewModels/VotingResultsViewModel.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 import 'package:mobile/views/VotingResults.dart';
 import 'package:mockito/annotations.dart';
@@ -15,18 +16,18 @@ import 'package:provider/provider.dart';
 
 import 'VotingResultsTest.mocks.dart';
 
-@GenerateMocks([VotingViewModel, RoomViewModel])
+@GenerateMocks([VotingResultsViewModel, RoomViewModel])
 void main() {
-  late MockVotingViewModel mockVotingViewModel;
+  late MockVotingResultsViewModel mockVotingResultsViewModel;
   late MockRoomViewModel mockRoomViewModel;
 
   setUp(() {
-    mockVotingViewModel = MockVotingViewModel();
+    mockVotingResultsViewModel = MockVotingResultsViewModel();
     mockRoomViewModel = MockRoomViewModel();
   });
 
   testWidgets('VotingResults updates when VotingViewModel updates votingSummary', (WidgetTester tester) async {
-    VotingSummary votingSummary = VotingSummary(results: [
+    VotingSummary votingSummary = VotingSummary(votingResults: [
       VotingResult(username: "user1", voteCount: 1),
       VotingResult(username: "user2", voteCount: 2),
       VotingResult(username: "user3", voteCount: 3),
@@ -41,8 +42,7 @@ void main() {
         numberOfPlayers: 10
       )
     );
-    when(mockVotingViewModel.votingSummary).thenReturn(votingSummary);
-    when(mockVotingViewModel.room).thenReturn(room);
+    when(mockVotingResultsViewModel.votingSummary).thenReturn(votingSummary);
     when(mockRoomViewModel.room).thenReturn(room);
     when(mockRoomViewModel.isHost).thenReturn(true);
     when(mockRoomViewModel.gameStarted).thenAnswer((_) => StreamController<void>.broadcast().stream);
@@ -50,8 +50,8 @@ void main() {
     await tester.pumpWidget(
       ChangeNotifierProvider<RoomViewModel>(
         create: (_) => mockRoomViewModel,
-        child: ChangeNotifierProvider<VotingViewModel>(
-          create: (_) => mockVotingViewModel,
+        child: ChangeNotifierProvider<VotingResultsViewModel>(
+          create: (_) => mockVotingResultsViewModel,
           child: const MaterialApp(
             home: VotingResultsPage(),
           ),
@@ -60,8 +60,8 @@ void main() {
     );
 
     expect(find.text('Voting Results'), findsOneWidget);
-    for (var i = 0; i < votingSummary.results.length; i++) {
-      final result = votingSummary.results[i];
+    for (var i = 0; i < votingSummary.votingResults.length; i++) {
+      final result = votingSummary.votingResults[i];
       expect(find.text(result.username), findsOneWidget);
       expect(find.text('Votes: ${result.voteCount}'), findsOneWidget);
     }

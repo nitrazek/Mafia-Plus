@@ -16,18 +16,13 @@ class RoomPage extends StatefulWidget {
 
 class RoomPageState extends State<RoomPage> {
   StreamSubscription<void>? _gameStartedSubscription;
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
-  void didChangeDependencies()
-  {
+  void didChangeDependencies() {
     super.didChangeDependencies();
     _gameStartedSubscription ??= context.read<RoomViewModel>().gameStarted.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => UserRolePage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const UserRolePage()));
       });
     });
   }
@@ -172,7 +167,7 @@ class RoomPageState extends State<RoomPage> {
                         ),
                       const SizedBox(height: 20),
                       Text(
-                        'AccesCode: ${context.read<RoomViewModel>().room?.accessCode}',
+                        'AccessCode: ${context.read<RoomViewModel>().room?.accessCode}',
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       )
                     ],
