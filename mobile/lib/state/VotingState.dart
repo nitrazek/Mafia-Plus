@@ -34,13 +34,13 @@ class VotingState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setVotingSummary(VotingSummary votingSummary) {
+  void setVotingSummary(VotingSummary? votingSummary) {
     _currentVotingSummary = votingSummary;
     _votingFinished.add(null);
     notifyListeners();
   }
 
-  void setVotingEnd(VotingEnd votingEnd) {
+  void setVotingEnd(VotingEnd? votingEnd) {
     _currentVotingEnd = votingEnd;
     _votingFinished.add(null);
     notifyListeners();
