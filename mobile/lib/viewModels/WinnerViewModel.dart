@@ -21,7 +21,7 @@ class WinnerViewModel extends ChangeNotifier {
   }
 
   void _checkWinner(){
-    _winnerRole=_gameState.gameFinished!.gameEnd;
+    _winnerRole=_gameState.currentGameEnd!.winnerRole;
     notifyListeners();
   }
 }
