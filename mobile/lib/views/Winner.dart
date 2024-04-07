@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../viewModels/WinnerViewModel.dart';
 import '../views/Menu.dart';
 import '../views/styles.dart';
-import '../viewModels/WinnerRoleViewModel.dart';
+import '../viewModels/UserRoleViewModel.dart';
 
 class WinnerPage extends StatefulWidget {
   @override
@@ -18,7 +19,7 @@ class _WinnerPageState extends State<WinnerPage> {
     Timer(const Duration(seconds: 8), () {
       Navigator.pop(context,);
     });
-    String winnerRole = context.watch<WinnerRoleViewModel>().winnerRole;
+    String winnerRole = context.watch<WinnerViewModel>().winnerRole;
     Color textColor = winnerRole == 'mafia' ? Colors.red : Colors.green;
     String roleName = winnerRole == 'mafia' ? 'Mafia' : 'Citizen';
 

@@ -1,39 +1,40 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/views/Voting.dart';
-import 'package:mobile/views/VotingResults.dart';
-import 'package:mobile/views/Winner.dart';
 import 'package:provider/provider.dart';
-import 'package:mobile/viewModels/WinnerRoleViewModel.dart';
-import 'package:mobile/models/Room.dart';
+import 'package:mobile/viewModels/UserRoleViewModel.dart';
 
 class UserRolePage extends StatefulWidget {
+  const UserRolePage({super.key});
+
   @override
-  _UserRolePageState createState() => _UserRolePageState();
+  UserRolePageState createState() => UserRolePageState();
 }
 
-class _UserRolePageState extends State<UserRolePage> {
-  bool buttonPressed = false;
+class UserRolePageState extends State<UserRolePage> {
+  StreamSubscription<void>? _votingStartedSubscription;
 
   @override
-  void initState() {
-    super.initState();
-    // Start a timer to automatically navigate to the voting page after 3 seconds
-    Future.delayed(Duration(seconds: 3), () {
-      if (!buttonPressed) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => WinnerPage()),
-        );
-      }
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _votingStartedSubscription ??= context.read<UserRoleViewModel>().votingStarted.listen((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const VotingPage()));
+      });
     });
   }
 
   @override
+  void dispose() {
+    _votingStartedSubscription?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // String role = 'mafia';
-    // String role = 'citizen';
-    String role = context.watch<WinnerRoleViewModel>().userRole;
+    String role = context.watch<UserRoleViewModel>().role;
     Color textColor = role == 'mafia' ? Colors.red : Colors.green;
 
     return Scaffold(

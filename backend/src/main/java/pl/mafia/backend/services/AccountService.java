@@ -38,13 +38,11 @@ public class AccountService {
     private SecurityContextLogoutHandler securityContextLogoutHandler;
 
     @Transactional(readOnly = true)
-    public AccountDetails getAccountByUsername(String username) {
-        Optional<Account> account = accountRepository.findByUsername(username);
-
-        if(account.isEmpty())
+    public Account getAccount(String username) {
+        Optional<Account> fetchedAccount = accountRepository.findByUsername(username);
+        if(fetchedAccount.isEmpty())
             throw new IllegalArgumentException("Account does not exist.");
-
-        return new AccountDetails(account.get());
+        return fetchedAccount.get();
     }
 
     public AccountDetails login(AccountDetails loginRequest, HttpServletRequest request, HttpServletResponse response) {
@@ -57,9 +55,8 @@ public class AccountService {
         securityContextHolderStrategy.setContext(context);
         securityContextRepository.saveContext(context, request, response);
 
-        Optional<Account> account = accountRepository.findByUsername(loginRequest.getUsername());
-        if(account.isEmpty()) throw new BadCredentialsException("Wrong credentials");
-        return new AccountDetails(account.get());
+        Account account = getAccount(loginRequest.getUsername());
+        return new AccountDetails(account);
     }
 
     public AccountDetails register(AccountDetails registerRequest, HttpServletRequest request, HttpServletResponse response) {
@@ -72,32 +69,23 @@ public class AccountService {
     }
 
     @Transactional
-    public AccountDetails changeNickname(Long accountId, String username) {
-        Optional<Account> accountById = accountRepository.findById(accountId);
-
-        if(accountById.isEmpty())
-            throw new IllegalArgumentException("Account does not exist.");
-
-        Account account = accountById.get();
-        account.setUsername(username);
-        Account accountAfterUpdate = accountRepository.save(account);
-        return new AccountDetails(accountAfterUpdate);
+    public AccountDetails changeUsername(String prevUsername, String newUsername) {
+        Account account = getAccount(prevUsername);
+        account.setUsername(newUsername);
+        Account updatedAccount = accountRepository.save(account);
+        return new AccountDetails(updatedAccount);
     }
 
     @Transactional
-    public AccountDetails changePassword(Long accountId, String previousPassword, String newPassword) {
-        Optional<Account> accountById = accountRepository.findById(accountId);
+    public AccountDetails changePassword(String username, String previousPassword, String newPassword) {
+        Account account = getAccount(username);
 
-        if(accountById.isEmpty())
-            throw new IllegalArgumentException("Account does not exist.");
-
-        Account account = accountById.get();
         if (!BCrypt.checkpw(previousPassword, account.getPassword()))
             throw new BadCredentialsException("Wrong password.");
 
         String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         account.setPassword(hashedPassword);
-        Account accountAfterUpdate = accountRepository.save(account);
-        return new AccountDetails(accountAfterUpdate);
+        Account updatedAccount = accountRepository.save(account);
+        return new AccountDetails(updatedAccount);
     }
 }

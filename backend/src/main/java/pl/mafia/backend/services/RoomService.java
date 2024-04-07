@@ -15,6 +15,7 @@ import pl.mafia.backend.repositories.RoomRepository;
 import pl.mafia.backend.repositories.RoomSettingsRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static pl.mafia.backend.repositories.specifications.RoomSpecifications.isRoomPublic;
@@ -35,6 +36,19 @@ public class RoomService {
                 .stream()
                 .map(RoomDTO::new)
                 .toList();
+    }
+
+    public boolean isHost(String username, long roomId) throws IllegalAccessException {
+        Optional<Room> fetchedRoom = roomRepository.findById(roomId);
+        if (fetchedRoom.isEmpty())
+            throw new IllegalArgumentException("Room does not exists.");
+        Room room = fetchedRoom.get();
+
+        Optional<Account> fetchedAccount = accountRepository.findByUsername(username);
+        if (fetchedAccount.isEmpty())
+            throw new IllegalAccessException("Account does not exists.");
+
+        return Objects.equals(room.getHost().getUsername(), username);
     }
 
     @Transactional
