@@ -10,6 +10,7 @@ import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:mobile/utils/Constants.dart' as Constants;
+import '../models/GameEnd.dart';
 import '../models/GameStart.dart';
 import '../models/Room.dart';
 import '../models/Round.dart';
@@ -69,6 +70,8 @@ class WebSocketClient {
           _unsubscribeFunctions.add(_stompClient!.subscribe(
             destination: "/user/queue/game-start",
             callback: (frame) {
+              _gameState.setGame(null);
+              _gameState.setGameEnd(null);
               Map<String, dynamic> gameStartJson = jsonDecode(frame.body!);
               GameStart gameStart = GameStart.fromJson(gameStartJson);
               _gameState.setGame(gameStart);
@@ -77,6 +80,9 @@ class WebSocketClient {
           _unsubscribeFunctions.add(_stompClient!.subscribe(
             destination: "/user/queue/voting-start",
             callback: (frame) {
+              _votingState.setVoting(null);
+              _votingState.setVotingSummary(null);
+              _votingState.setVotingEnd(null);
               Map<String, dynamic> votingStartJson = jsonDecode(frame.body!);
               VotingStart votingStart = VotingStart.fromJson(votingStartJson);
               _votingState.setVoting(votingStart);
@@ -101,8 +107,9 @@ class WebSocketClient {
           _unsubscribeFunctions.add(_stompClient!.subscribe(
             destination: "/topic/$roomId/game-end",
             callback: (frame) {
-              _gameState.setGame(null);
-              _votingState.setVoting(null);
+              Map<String, dynamic> gameEndJson = jsonDecode(frame.body!);
+              GameEnd gameEnd = GameEnd.fromJson(gameEndJson);
+              _gameState.setGameEnd(gameEnd);
             }
           ));
           connectionCompleter.complete();
