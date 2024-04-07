@@ -8,12 +8,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import pl.mafia.backend.models.db.*;
-import pl.mafia.backend.models.dto.RoundDTO;
-import pl.mafia.backend.models.dto.VotingStart;
-import pl.mafia.backend.models.dto.VotingSummary;
+import pl.mafia.backend.models.dto.*;
 import pl.mafia.backend.repositories.*;
 import pl.mafia.backend.websockets.WebSocketListener;
-import pl.mafia.backend.models.dto.GameStartDTO;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -145,7 +142,7 @@ public class GameService {
     }
 
     @Transactional
-    public void endGame(Long gameId, String winner) {
+    public void endGame(Long gameId, String winnerRole) {
         Game game = getGame(gameId);
 
         Optional<Room> fetchedRoom = roomRepository.findByGameId(gameId);
@@ -157,6 +154,9 @@ public class GameService {
         game.setRoom(null);
         roomRepository.save(room);
         gameRepository.save(game);
+
+        String destination = "/topic/" + room.getId() + "/game-end";
+        simpMessagingTemplate.convertAndSend(destination, new GameEnd(winnerRole));
     }
 
     @Transactional
