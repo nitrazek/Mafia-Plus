@@ -9,20 +9,22 @@ import '../views/styles.dart';
 import '../viewModels/UserRoleViewModel.dart';
 
 class WinnerPage extends StatefulWidget {
+  const WinnerPage({super.key});
+
   @override
-  _WinnerPageState createState() => _WinnerPageState();
+  WinnerPageState createState() => WinnerPageState();
 }
 
-class _WinnerPageState extends State<WinnerPage> {
+class WinnerPageState extends State<WinnerPage> {
   @override
   Widget build(BuildContext context) {
     Timer(const Duration(seconds: 8), () {
-      Navigator.pop(context,);
+      Navigator.pop(context);
     });
+
     String winnerRole = context.watch<WinnerViewModel>().winnerRole;
     Color textColor = winnerRole == 'mafia' ? Colors.red : Colors.green;
     String roleName = winnerRole == 'mafia' ? 'Mafia' : 'Citizen';
-
     String imagePath = winnerRole == 'mafia' ? 'assets/images/Mafias.png' : 'assets/images/Citizens.png';
 
     return Scaffold(
