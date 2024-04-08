@@ -7,7 +7,7 @@ import 'dart:async' as _i3;
 import 'dart:ui' as _i4;
 
 import 'package:mobile/viewModels/RoomViewModel.dart' as _i5;
-import 'package:mobile/viewModels/VotingViewModel.dart' as _i2;
+import 'package:mobile/viewModels/VotingResultsViewModel.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i6;
 
@@ -24,11 +24,12 @@ import 'package:mockito/src/dummies.dart' as _i6;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-/// A class which mocks [VotingViewModel].
+/// A class which mocks [VotingResultsViewModel].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockVotingViewModel extends _i1.Mock implements _i2.VotingViewModel {
-  MockVotingViewModel() {
+class MockVotingResultsViewModel extends _i1.Mock
+    implements _i2.VotingResultsViewModel {
+  MockVotingResultsViewModel() {
     _i1.throwOnMissingStub(this);
   }
 
@@ -43,42 +44,6 @@ class MockVotingViewModel extends _i1.Mock implements _i2.VotingViewModel {
         Invocation.getter(#hasListeners),
         returnValue: false,
       ) as bool);
-
-  @override
-  List<_i2.Player> getPlayers() => (super.noSuchMethod(
-        Invocation.method(
-          #getPlayers,
-          [],
-        ),
-        returnValue: <_i2.Player>[],
-      ) as List<_i2.Player>);
-
-  @override
-  Map<String, int> getVotesCount() => (super.noSuchMethod(
-        Invocation.method(
-          #getVotesCount,
-          [],
-        ),
-        returnValue: <String, int>{},
-      ) as Map<String, int>);
-
-  @override
-  void vote(String? playerNickname) => super.noSuchMethod(
-        Invocation.method(
-          #vote,
-          [playerNickname],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  int getVotesForPlayer(String? playerNickname) => (super.noSuchMethod(
-        Invocation.method(
-          #getVotesForPlayer,
-          [playerNickname],
-        ),
-        returnValue: 0,
-      ) as int);
 
   @override
   void addListener(_i4.VoidCallback? listener) => super.noSuchMethod(

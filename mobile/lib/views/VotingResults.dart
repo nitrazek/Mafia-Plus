@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
+import 'package:mobile/viewModels/VotingResultsViewModel.dart';
 import 'package:mobile/views/Menu.dart';
 import 'package:mobile/views/Winner.dart';
 import 'package:page_transition/page_transition.dart';
@@ -15,20 +16,34 @@ import 'Room.dart';
 class VotingResultsPage extends StatefulWidget {
   const VotingResultsPage({super.key});
   @override
-  _VotingResultsPageState createState() => _VotingResultsPageState();
+  VotingResultsPageState createState() => VotingResultsPageState();
 }
 
-class _VotingResultsPageState extends State<VotingResultsPage> {
+class VotingResultsPageState extends State<VotingResultsPage> {
+  StreamSubscription<void>? _votingFinishedSubscription;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _votingFinishedSubscription ??= context.read<VotingViewModel>().votingFinished.listen((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(context, PageTransition(
+          type: PageTransitionType.fade,
+          duration: const Duration(milliseconds: 3000),
+          child: WinnerPage()),
+        );
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _votingFinishedSubscription?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    Timer(const Duration(seconds: 8), () {
-      Navigator.pushReplacement(
-          context, PageTransition(
-          type: PageTransitionType.fade,
-          duration: Duration(seconds: 3),
-      child: WinnerPage()),
-      );
-    });
     return Scaffold(
       body: Container(
         decoration:  BoxDecoration(
@@ -69,9 +84,9 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
                         children: [
                           ListView.builder(
                             shrinkWrap: true,
-                            itemCount: context.watch<VotingViewModel>().votingSummary?.results.length,
+                            itemCount: context.watch<VotingResultsViewModel>().votingSummary?.votingResults.length,
                             itemBuilder: (BuildContext context, int index) {
-                              var voteInfo = context.watch<VotingViewModel>().votingSummary?.results[index];
+                              var voteInfo = context.watch<VotingResultsViewModel>().votingSummary?.votingResults[index];
                               return Container(
                                 margin: EdgeInsets.symmetric(vertical: 10.0),
                                 padding: EdgeInsets.all(15.0),
