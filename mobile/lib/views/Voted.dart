@@ -62,7 +62,7 @@ class VotedPage extends StatefulWidget {
                             width: 110,
                           ),
                         ),
-                        SizedBox(height: 40),
+                        const SizedBox(height: 40),
                         SizedBox(
                           width: double.infinity,
                           child: DefaultTextStyle(
@@ -72,7 +72,7 @@ class VotedPage extends StatefulWidget {
                                 totalRepeatCount: 1,
                                 animatedTexts: [
                                   TyperAnimatedText(
-                                    '${context.watch<VotedViewModel>().votingType} decided:\n\n${context.watch<VotedViewModel>().votedPlayerNickname}\nhas been voted out',
+                                    '${context.watch<VotedViewModel>().votedPlayerNickname} decided:\n\n${context.watch<VotedViewModel>().votedPlayerNickname}\nhas been voted out',
                                     textAlign: TextAlign.center,
                                   ),
                                 ],
@@ -80,7 +80,7 @@ class VotedPage extends StatefulWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 40),
+                        const SizedBox(height: 40),
                       ],
                     ),
                   ),

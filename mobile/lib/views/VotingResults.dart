@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/viewModels/VotingResultsViewModel.dart';
 import 'package:mobile/views/Menu.dart';
+import 'package:mobile/views/Voted.dart';
 import 'package:mobile/views/Winner.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +31,7 @@ class VotingResultsPageState extends State<VotingResultsPage> {
         Navigator.pushReplacement(context, PageTransition(
           type: PageTransitionType.fade,
           duration: const Duration(milliseconds: 3000),
-          child: WinnerPage()),
+          child: VotedPage()),
         );
       });
     });
