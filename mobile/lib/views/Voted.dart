@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/viewModels/VotedViewModel.dart';
+import 'package:mobile/views/Voting.dart';
+import 'package:mobile/views/Winner.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class VotedPage extends StatefulWidget {
@@ -12,6 +17,38 @@ class VotedPage extends StatefulWidget {
   }
 
   class VotedPageState extends State<VotedPage> {
+  StreamSubscription<void>? _gameEndedSubscription;
+  StreamSubscription<void>? _votingSettedSubscription;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _gameEndedSubscription ?? context.read<VotedViewModel>().gameEnded.listen((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(context, PageTransition(
+            type: PageTransitionType.fade,
+            duration: const Duration(milliseconds: 1500),
+            child: WinnerPage()
+        ));
+      });
+    });
+    _votingSettedSubscription ?? context.read<VotedViewModel>().votingSetted.listen((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(context, PageTransition(
+          type: PageTransitionType.fade,
+          duration: const Duration(milliseconds: 1500),
+          child: const VotingPage()
+        ));
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _gameEndedSubscription?.cancel();
+    _votingSettedSubscription?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build (BuildContext context) {
