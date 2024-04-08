@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/state/AccountState.dart';
+import 'package:mobile/viewModels/UserRoleViewModel.dart';
 import 'package:mobile/views/VotingResults.dart';
 import 'package:mobile/views/styles.dart';
 import 'package:page_transition/page_transition.dart';
@@ -18,17 +19,28 @@ class VotingPage extends StatefulWidget {
 
 class _VotingPageState extends State<VotingPage> {
   StreamSubscription<void>? _votingFinishedSubscription;
+  late String? turn = context.watch<VotingViewModel>().turn;
+  late String role = context.watch<UserRoleViewModel>().role;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _votingFinishedSubscription ??= context.read<VotingViewModel>().votingFinished.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(context, PageTransition(
+        if(turn=='mafia' && role=='citizen') {
+          Navigator.pushReplacement(context, PageTransition(
           type: PageTransitionType.fade,
           duration: const Duration(milliseconds: 1500),
-          child: const VotingResultsPage(),
+          child: const WaitingPage(),
         ));
+        }
+        else if (turn=='mafia'){
+          Navigator.pushReplacement(context, PageTransition(
+            type: PageTransitionType.fade,
+            duration: const Duration(milliseconds: 1500),
+            child: const VotingResultsPage(),
+          ));
+        }
       });
     });
   }
@@ -41,6 +53,8 @@ class _VotingPageState extends State<VotingPage> {
 
   @override
   Widget build(BuildContext context) {
+    String votingText = turn== 'mafia'? 'What\'s your gut feeling?\nWho should be eliminated?' :
+    'What\'s your gut feeling?\nWho\'s the mafia?';
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -61,8 +75,8 @@ class _VotingPageState extends State<VotingPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 35),
-                const Text(
-                  'What\'s your gut feeling?\nWho\'s the mafia?',
+                 Text(
+                  votingText,
                   style: TextStyle(fontSize: 28, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),

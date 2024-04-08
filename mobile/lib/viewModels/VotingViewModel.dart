@@ -11,6 +11,8 @@ class VotingViewModel extends ChangeNotifier {
   final GameService _gameService = GameService();
 
   int? _votingId;
+  String? _turn;
+  String? get turn =>_turn;
 
   List<String>? _playerUsernames;
   List<String>? get playerUsernames => _playerUsernames;
@@ -26,6 +28,7 @@ class VotingViewModel extends ChangeNotifier {
 
   VotingViewModel() {
     _votingState.addListener(_updateVoting); _updateVoting();
+    _votingState.addListener(_updateTurn);_updateTurn();
     _votingState.votingFinished.listen((_) {
       if(_votingState.currentVotingSummary == null) return;
       _votedPlayer = null;
@@ -38,6 +41,12 @@ class VotingViewModel extends ChangeNotifier {
     if(_votingState.currentVoting == null) return;
     _votingId = _votingState.currentVoting!.id;
     _playerUsernames = _votingState.currentVoting!.playerUsernames;
+    notifyListeners();
+  }
+
+  void _updateTurn(){
+    if(_votingState.currentVoting == null) return;
+    _turn=_votingState.currentVoting!.type;
     notifyListeners();
   }
 
