@@ -27,8 +27,8 @@ class VotedPageState extends State<VotedPage> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(context, PageTransition(
             type: PageTransitionType.fade,
-            duration: const Duration(milliseconds: 1500),
-            child: WinnerPage()
+            duration: const Duration(milliseconds: 500),
+            child: const WinnerPage()
         ));
       });
     });
@@ -109,7 +109,7 @@ class VotedPageState extends State<VotedPage> {
                                 totalRepeatCount: 1,
                                 animatedTexts: [
                                   TyperAnimatedText(
-                                    '${context.watch<VotedViewModel>().votedPlayerNickname} decided:\n\n${context.watch<VotedViewModel>().votedPlayerNickname}\nhas been voted out',
+                                    '${context.watch<VotedViewModel>().votingType} decided:\n\n${context.watch<VotedViewModel>().votedPlayerNickname}\nhas been voted out',
                                     textAlign: TextAlign.center,
                                   ),
                                 ],

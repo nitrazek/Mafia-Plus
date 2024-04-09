@@ -24,7 +24,7 @@ class VotedViewModel extends ChangeNotifier {
   Stream<void> get votingStarted => _votingStarted.stream;
 
   VotedViewModel() {
-    _votingState.addListener(_setVoting); _setVoting();
+    _votingState.addListener(_updateVotingEnd); _updateVotingEnd();
     _gameState.addListener(_endGame); _endGame();
 
     _votingState.votingStarted.listen((_) {
@@ -44,11 +44,10 @@ class VotedViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _setVoting() {
-    if (_votingState.currentVoting == null) return;
-    _votingType = _votingState.currentVoting?.type;
-    _votingType =
-        _votingType![0].toUpperCase() + _votingType!.substring(1).toLowerCase();
+  void _updateVotingEnd() {
+    if (_votingState.currentVotingEnd == null) return;
+    _votingType = _votingState.currentVotingEnd!.votingType;
+    _votingType = _votingType![0].toUpperCase() + _votingType!.substring(1).toLowerCase();
 
     if (_votingState.currentVotingEnd?.votedUsername != null) {
       _votedPlayerNickname = _votingState.currentVotingEnd?.votedUsername;

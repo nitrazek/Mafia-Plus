@@ -40,13 +40,13 @@ class VotingState extends ChangeNotifier {
 
   void setVotingSummary(VotingSummary? votingSummary) {
     _currentVotingSummary = votingSummary;
-    _votingFinished.add(null);
+    if(votingSummary != null) _votingFinished.add(null);
     notifyListeners();
   }
 
   void setVotingEnd(VotingEnd? votingEnd) {
     _currentVotingEnd = votingEnd;
-    _votingFinished.add(null);
+    if(votingEnd != null) _votingFinished.add(null);
     notifyListeners();
   }
 }
