@@ -52,6 +52,11 @@ public class GameService {
         return newPlayer;
     }
 
+    private String getRole(int mafiaCount, int playerCount) {
+        int mafiaMax = playerCount / 4 + playerCount % 4 >= 2 ? 1 : 0;
+        return mafiaCount < mafiaMax ? "mafia" : "citizen"; //Warunek do dostosowania gdy będą ustawienia
+    }
+
     @Transactional
     public Game getGame(Long gameId) {
         Optional<Game> fetchedGame = gameRepository.findById(gameId);
@@ -97,7 +102,7 @@ public class GameService {
 
         int mafiaCount = 0;
         for(Account account : accountList) {
-            String role = mafiaCount < accountList.size() / 4 ? "mafia" : "citizen"; //Warunek do dostosowania gdy będą ustawienia
+            String role = getRole(mafiaCount, accountList.size());
             if(role.equals("mafia")) mafiaCount++;
             Player newPlayer = createNewPlayer(account.getUsername(), createdGame, role);
             createdGame.getPlayers().add(newPlayer);
