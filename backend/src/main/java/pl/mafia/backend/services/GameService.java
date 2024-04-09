@@ -89,6 +89,10 @@ public class GameService {
         createdGame = gameRepository.save(createdGame);
 
         List<Account> accountList = room.getAccounts();
+
+        if (accountList.size() / 4 == 0)
+            throw new IllegalAccessException("Not enough players.");
+
         Collections.shuffle(accountList);
 
         int mafiaCount = 0;
