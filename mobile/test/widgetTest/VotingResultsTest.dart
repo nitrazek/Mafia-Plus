@@ -39,7 +39,7 @@ void main() {
       accessCode: "0000001",
       roomSettings: RoomSettings(
         isPublic: true,
-        numberOfPlayers: 10
+        maxNumberOfPlayers: 10
       )
     );
     when(mockVotingResultsViewModel.votingSummary).thenReturn(votingSummary);
