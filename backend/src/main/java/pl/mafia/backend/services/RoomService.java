@@ -66,6 +66,9 @@ public class RoomService {
         Room room = getRoomByAccessCode(accessCode);
         Account account = accountService.getAccount(username);
 
+        if (room.getRoomSettings().getMaxNumberOfPlayers() >= room.getAccounts().size())
+            throw new IllegalAccessException("Lobby is full.");
+
         account.setRoom(room);
         room.getAccounts().add(account);
         accountRepository.save(account);
@@ -78,6 +81,9 @@ public class RoomService {
     public RoomUpdate joinRoomById(Long id, String username) throws IllegalAccessException {
         Room room = getRoomById(id);
         Account account = accountService.getAccount(username);
+
+        if (room.getRoomSettings().getMaxNumberOfPlayers() >= room.getAccounts().size())
+            throw new IllegalAccessException("Lobby is full.");
 
         account.setRoom(room);
         room.getAccounts().add(account);
