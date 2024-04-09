@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobile/services/network/GameService.dart';
+import 'package:mobile/services/network/NetworkException.dart';
 import 'package:mobile/services/network/RoomService.dart';
 import 'package:mobile/models/Room.dart';
 import 'package:mobile/services/WebSocketClient.dart';
@@ -52,7 +53,11 @@ class RoomViewModel extends ChangeNotifier {
     }
     catch(e)
     {
-      messageError = "Wrong starting procedure";
+      if(e is UnauthorisedException) {
+        messageError = "Not enough players";
+      } else {
+        messageError = "Wrong starting procedure";
+      }
       notifyListeners();
       onError.call();
     }

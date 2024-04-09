@@ -4,6 +4,8 @@ import 'package:mobile/services/network/RoomService.dart';
 import 'package:mobile/models/Room.dart';
 import 'package:mobile/state/RoomState.dart';
 
+import '../services/network/NetworkException.dart';
+
 class JoinPrivateRoomViewModel extends ChangeNotifier {
 
   bool _loading = false;
@@ -33,8 +35,12 @@ class JoinPrivateRoomViewModel extends ChangeNotifier {
         _roomState.setRoom(room);
         onSuccess.call();
       }
-      catch (_) {
-        onError.call("Wrong code");
+      catch (e) {
+        if(e is UnauthorisedException) {
+          onError.call("Lobby is full");
+        } else {
+          onError.call("Wrong code");
+        }
       }
     }
     else {

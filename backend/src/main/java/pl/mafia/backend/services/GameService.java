@@ -43,11 +43,6 @@ public class GameService {
     @Autowired
     private PlatformTransactionManager transactionManager;
 
-    private String getRandomRole() {
-        String[] roles = new String[]{"citizen", "mafia"};
-        return roles[new Random().nextInt(roles.length)];
-    }
-
     private Player createNewPlayer(String username, Game game, String role) {
         Player newPlayer = new Player();
         newPlayer.setUsername(username);
@@ -55,6 +50,11 @@ public class GameService {
         newPlayer.setRole(role);
         newPlayer.setAlive(true);
         return newPlayer;
+    }
+
+    private String getRole(int mafiaCount, int playerCount) {
+        int mafiaMax = (playerCount / 4) + (playerCount % 4 >= 2 ? 1 : 0);
+        return mafiaCount < mafiaMax ? "mafia" : "citizen"; //Warunek do dostosowania gdy będą ustawienia
     }
 
     @Transactional
@@ -93,8 +93,17 @@ public class GameService {
         createdGame.setCreateTimestamp(Timestamp.from(Instant.now()));
         createdGame = gameRepository.save(createdGame);
 
-        for(Account account : room.getAccounts()) {
-            String role = getRandomRole();
+        List<Account> accountList = room.getAccounts();
+
+        if (accountList.size() / 4 == 0)
+            throw new IllegalAccessException("Not enough players.");
+
+        Collections.shuffle(accountList);
+
+        int mafiaCount = 0;
+        for(Account account : accountList) {
+            String role = getRole(mafiaCount, accountList.size());
+            if(role.equals("mafia")) mafiaCount++;
             Player newPlayer = createNewPlayer(account.getUsername(), createdGame, role);
             createdGame.getPlayers().add(newPlayer);
             playerRepository.save(newPlayer);

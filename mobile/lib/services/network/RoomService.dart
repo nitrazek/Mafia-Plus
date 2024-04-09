@@ -98,10 +98,10 @@ class RoomService {
     }
   }
 
-  Future<void> modifyRoomProperties(RoomSettings roomSettings) async {
+  Future<void> saveRoomSettings(int roomId, RoomSettings roomSettings) async {
     try {
       final response = await httpClient.put(
-        Uri.parse("$baseUrl/room/properties"),
+        Uri.parse("$baseUrl/room/$roomId/settings"),
         body: jsonEncode(roomSettings.toJson()),
       );
       return handleResponse(response);

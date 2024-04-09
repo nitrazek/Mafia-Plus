@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/viewModels/VotingResultsViewModel.dart';
 import 'package:mobile/views/Menu.dart';
+import 'package:mobile/views/Voted.dart';
 import 'package:mobile/views/Winner.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ import 'Room.dart';
 
 class VotingResultsPage extends StatefulWidget {
   const VotingResultsPage({super.key});
+
   @override
   VotingResultsPageState createState() => VotingResultsPageState();
 }
@@ -25,12 +27,12 @@ class VotingResultsPageState extends State<VotingResultsPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _votingFinishedSubscription ??= context.read<VotingViewModel>().votingFinished.listen((_) {
+    _votingFinishedSubscription ??= context.read<VotingResultsViewModel>().votingFinished.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(context, PageTransition(
           type: PageTransitionType.fade,
-          duration: const Duration(milliseconds: 3000),
-          child: WinnerPage()),
+          duration: const Duration(milliseconds: 500),
+          child: const VotedPage()),
         );
       });
     });
