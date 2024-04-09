@@ -53,7 +53,7 @@ class _VotingPageState extends State<VotingPage> {
 
   @override
   Widget build(BuildContext context) {
-    String votingText = turn== 'mafia'? 'What\'s your gut feeling?\nWho should be eliminated?' :
+    String votingText = turn== 'mafia'? 'I\'m all ears. Who\'s the target this time??' :
     'What\'s your gut feeling?\nWho\'s the mafia?';
     return Scaffold(
       body: Container(
