@@ -14,11 +14,11 @@ class VotedPage extends StatefulWidget {
 
   @override
   VotedPageState createState() => VotedPageState();
-  }
+}
 
-  class VotedPageState extends State<VotedPage> {
+class VotedPageState extends State<VotedPage> {
   StreamSubscription<void>? _gameEndedSubscription;
-  StreamSubscription<void>? _votingSettedSubscription;
+  StreamSubscription<void>? _votingStartedSubscription;
 
   @override
   void didChangeDependencies() {
@@ -32,7 +32,7 @@ class VotedPage extends StatefulWidget {
         ));
       });
     });
-    _votingSettedSubscription ?? context.read<VotedViewModel>().votingSetted.listen((_) {
+    _votingStartedSubscription ?? context.read<VotedViewModel>().votingStarted.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(context, PageTransition(
           type: PageTransitionType.fade,
@@ -46,7 +46,7 @@ class VotedPage extends StatefulWidget {
   @override
   void dispose() {
     _gameEndedSubscription?.cancel();
-    _votingSettedSubscription?.cancel();
+    _votingStartedSubscription?.cancel();
     super.dispose();
   }
 

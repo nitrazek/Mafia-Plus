@@ -10,6 +10,9 @@ import '../models/VotingStart.dart';
 class VotingState extends ChangeNotifier {
   static VotingState? _instance;
 
+  final StreamController<void> _votingStarted = StreamController.broadcast();
+  Stream<void> get votingStarted => _votingStarted.stream;
+
   final StreamController<void> _votingFinished = StreamController.broadcast();
   Stream<void> get votingFinished => _votingFinished.stream;
 
@@ -31,6 +34,7 @@ class VotingState extends ChangeNotifier {
 
   void setVoting(VotingStart? votingStart) {
     _currentVoting = votingStart;
+    if(votingStart != null) _votingStarted.add(null);
     notifyListeners();
   }
 
