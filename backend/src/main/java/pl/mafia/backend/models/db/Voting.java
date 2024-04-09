@@ -24,7 +24,7 @@ public class Voting {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_round", unique = true)
+    @JoinColumn(name = "id_round")
     private Round round;
 
     @ToString.Exclude

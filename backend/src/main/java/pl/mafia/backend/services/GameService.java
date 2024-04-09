@@ -191,10 +191,9 @@ public class GameService {
         Voting createdVoting = new Voting();
         createdVoting.setType("city");
         createdVoting = votingRepository.save(createdVoting);
-
-        createdVoting.setRound(round);
         round.setVoting(createdVoting);
         round = roundRepository.save(round);
+        createdVoting.setRound(round);
         createdVoting = votingRepository.save(createdVoting);
 
         Game game = round.getGame();
@@ -223,10 +222,9 @@ public class GameService {
         Voting createdVoting = new Voting();
         createdVoting.setType("mafia");
         createdVoting = votingRepository.save(createdVoting);
-
-        createdVoting.setRound(round);
         round.setVoting(createdVoting);
         round = roundRepository.save(round);
+        createdVoting.setRound(round);
         createdVoting = votingRepository.save(createdVoting);
 
         Game game = round.getGame();

@@ -10,6 +10,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 
+import 'Voted.dart';
+
 class VotingPage extends StatefulWidget {
   const VotingPage({super.key});
 
