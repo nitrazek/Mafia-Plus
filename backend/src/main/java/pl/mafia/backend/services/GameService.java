@@ -191,7 +191,7 @@ public class GameService {
         Voting createdVoting = new Voting();
         createdVoting.setType("city");
         createdVoting = votingRepository.save(createdVoting);
-        round.setVoting(createdVoting);
+        round.getVotings().add(createdVoting);
         round = roundRepository.save(round);
         createdVoting.setRound(round);
         createdVoting = votingRepository.save(createdVoting);
@@ -218,14 +218,15 @@ public class GameService {
     @Transactional
     public void startVotingMafia(long roundId) {
         Round round = getRound(roundId);
+        round = roundRepository.save(round);
 
         Voting createdVoting = new Voting();
         createdVoting.setType("mafia");
         createdVoting = votingRepository.save(createdVoting);
-        round.setVoting(createdVoting);
-        round = roundRepository.save(round);
         createdVoting.setRound(round);
+        round.getVotings().add(createdVoting);
         createdVoting = votingRepository.save(createdVoting);
+        round = roundRepository.save(round);
 
         Game game = round.getGame();
         String destination = "/queue/voting-start";
@@ -238,7 +239,7 @@ public class GameService {
                   .toList();
             }
             simpMessagingTemplate.convertAndSendToUser(player.getUsername(), destination, new VotingStart(
-              createdVoting.getId(),
+                  createdVoting.getId(),
               "mafia",
               player.getAlive(),
               usernamesToVote

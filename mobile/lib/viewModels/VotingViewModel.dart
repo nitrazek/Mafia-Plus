@@ -11,6 +11,7 @@ class VotingViewModel extends ChangeNotifier {
   final GameService _gameService = GameService();
 
   int? _votingId;
+
   String? _turn;
   String? get turn =>_turn;
 
