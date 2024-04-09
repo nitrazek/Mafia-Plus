@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/views/styles.dart';
 import 'package:mobile/views/Menu.dart';
-
-//viewType 1 dla widoku miasta, gdy mafia glosuje, a viewType 0 dla widoku przegranego ktory czeka na koniec rundy
+import 'package:mobile/views/VotedPage.dart';
+import 'package:provider/provider.dart';
+import 'package:mobile/viewModels/VotingViewModel.dart';
+import 'package:mobile/state/VotingState.dart';
+import 'package:mobile/views/VotingResults.dart';
 
 class WaitingPage extends StatefulWidget {
   final int viewType;
@@ -23,7 +26,16 @@ class _WaitingPageState extends State<WaitingPage>
     _controller = AnimationController(
       duration: const Duration(milliseconds: 2000),
       vsync: this,
-    )..repeat(reverse: true);
+    )
+      ..repeat(reverse: true);
+    // Listen for votingFinished stream
+    context
+        .read<VotingViewModel>()
+        .votingFinished
+        .listen((_) {
+      // Navigate to VotedPage when voting finishes
+      _navigateToVotedPage();
+    });
   }
 
   @override
@@ -42,7 +54,8 @@ class _WaitingPageState extends State<WaitingPage>
         ),
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 100.0),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 10.0, vertical: 100.0),
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -72,7 +85,9 @@ class _WaitingPageState extends State<WaitingPage>
                     ),
                     SizedBox(height: 40),
                     Text(
-                      widget.viewType == 0 ? "You died!:3" : "hope you wake up in the morning...",
+                      widget.viewType == 0
+                          ? "You died!:3"
+                          : "hope you wake up in the morning...",
                       style: TextStyle(
                         fontSize: 40,
                         color: MyStyles.purple,
@@ -80,7 +95,6 @@ class _WaitingPageState extends State<WaitingPage>
                       ),
                       textAlign: TextAlign.center,
                     ),
-
                     SizedBox(height: 40),
                     AnimatedBuilder(
                       animation: _controller,
@@ -88,23 +102,14 @@ class _WaitingPageState extends State<WaitingPage>
                         return Opacity(
                           opacity: _controller.value,
                           child: widget.viewType == 0
-                              ? Image.asset('assets/images/skull.png', width: 120)
-                              :  Image.asset('assets/images/sleep.png', width: 120),
+                              ? Image.asset(
+                              'assets/images/skull.png', width: 120)
+                              : Image.asset(
+                              'assets/images/sleep.png', width: 120),
                         );
                       },
                     ),
                     SizedBox(height: 30),
-                 /*   ElevatedButton(
-                      onPressed: () => Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => MenuPage()),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: MyStyles.lightPurple,
-                        onPrimary: Colors.white,
-                      ),
-                      child: Text("Return to Menu"),
-                    ), */
                   ],
                 ),
               ),
@@ -119,5 +124,27 @@ class _WaitingPageState extends State<WaitingPage>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  // Add a method to navigate to VotedPage
+  void _navigateToVotedPage() {
+    // Access the VotingState from the context
+    final votingType = context
+        .read<VotingState>()
+        .currentVoting
+        ?.type ?? '';
+
+    // Decide which page to navigate to based on the voting type
+    if (votingType == 'city') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => VotingResultsPage()),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => VotedPage()),
+      );
+    }
   }
 }
