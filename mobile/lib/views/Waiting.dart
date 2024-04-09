@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:mobile/viewModels/WaitingViewModel.dart';
 import 'package:mobile/views/styles.dart';
-import 'package:mobile/views/Menu.dart';
-import 'package:mobile/views/VotedPage.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 import 'package:mobile/state/VotingState.dart';
 import 'package:mobile/views/VotingResults.dart';
+
+import 'Voted.dart';
 
 class WaitingPage extends StatefulWidget {
   final int viewType;
@@ -19,6 +23,7 @@ class WaitingPage extends StatefulWidget {
 class _WaitingPageState extends State<WaitingPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  StreamSubscription<void>? _votingFinishedSubscription;
 
   @override
   void initState() {
@@ -26,16 +31,28 @@ class _WaitingPageState extends State<WaitingPage>
     _controller = AnimationController(
       duration: const Duration(milliseconds: 2000),
       vsync: this,
-    )
-      ..repeat(reverse: true);
-    // Listen for votingFinished stream
-    context
-        .read<VotingViewModel>()
-        .votingFinished
-        .listen((_) {
-      // Navigate to VotedPage when voting finishes
-      _navigateToVotedPage();
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _votingFinishedSubscription ??= context.read<WaitingViewModel>().votingFinished.listen((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(context, PageTransition(
+          type: PageTransitionType.fade,
+          duration: const Duration(milliseconds: 1500),
+          child: const VotingResultsPage(),
+        ));
+      });
     });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _votingFinishedSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -118,33 +135,5 @@ class _WaitingPageState extends State<WaitingPage>
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  // Add a method to navigate to VotedPage
-  void _navigateToVotedPage() {
-    // Access the VotingState from the context
-    final votingType = context
-        .read<VotingState>()
-        .currentVoting
-        ?.type ?? '';
-
-    // Decide which page to navigate to based on the voting type
-    if (votingType == 'city') {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => VotingResultsPage()),
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => VotedPage()),
-      );
-    }
   }
 }
