@@ -70,7 +70,6 @@ class WebSocketClient {
           _unsubscribeFunctions.add(_stompClient!.subscribe(
             destination: "/user/queue/game-start",
             callback: (frame) {
-              _gameState.setGame(null);
               _gameState.setGameEnd(null);
               Map<String, dynamic> gameStartJson = jsonDecode(frame.body!);
               GameStart gameStart = GameStart.fromJson(gameStartJson);
@@ -80,8 +79,6 @@ class WebSocketClient {
           _unsubscribeFunctions.add(_stompClient!.subscribe(
             destination: "/user/queue/voting-start",
             callback: (frame) {
-              _votingState.setVoting(null);
-              _votingState.setVotingSummary(null);
               _votingState.setVotingEnd(null);
               Map<String, dynamic> votingStartJson = jsonDecode(frame.body!);
               VotingStart votingStart = VotingStart.fromJson(votingStartJson);
@@ -91,6 +88,7 @@ class WebSocketClient {
           _unsubscribeFunctions.add(_stompClient!.subscribe(
             destination: "/topic/$roomId/voting-summary",
             callback: (frame) {
+              _votingState.setVoting(null);
               Map<String, dynamic> votingSummaryJson = jsonDecode(frame.body!);
               VotingSummary votingSummary = VotingSummary.fromJson(votingSummaryJson);
               _votingState.setVotingSummary(votingSummary);
@@ -99,6 +97,7 @@ class WebSocketClient {
           _unsubscribeFunctions.add(_stompClient!.subscribe(
               destination: "/topic/$roomId/voting-end",
               callback: (frame) {
+                _votingState.setVotingSummary(null);
                 Map<String, dynamic> votingEndJson = jsonDecode(frame.body!);
                 VotingEnd votingEnd = VotingEnd.fromJson(votingEndJson);
                 _votingState.setVotingEnd(votingEnd);
@@ -107,6 +106,7 @@ class WebSocketClient {
           _unsubscribeFunctions.add(_stompClient!.subscribe(
             destination: "/topic/$roomId/game-end",
             callback: (frame) {
+              _gameState.setGame(null);
               Map<String, dynamic> gameEndJson = jsonDecode(frame.body!);
               GameEnd gameEnd = GameEnd.fromJson(gameEndJson);
               _gameState.setGameEnd(gameEnd);
