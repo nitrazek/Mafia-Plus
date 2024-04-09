@@ -21,43 +21,14 @@ class VotedViewModel extends ChangeNotifier {
   Stream<void> get votingSetted => _votingSetted.stream;
 
   VotedViewModel() {
-    _votingState.addListener(_updateVotingType); _updateVotingType();
-    _votingState.addListener(_updateVotedPlayerNickname); _updateVotedPlayerNickname();
     _votingState.addListener(_setVoting); _setVoting();
     _gameState.addListener(_endGame); _endGame();
-
-    _votingState.currentVoting.listen((_) {
-      if (_votingState.currentVoting == null) return;
-      _votingSetted.add(null);
-      notifyListeners();
-    });
 
     _gameState.gameFinished.listen((_) {
       if (_gameState.currentGameEnd == null) return;
       _gameEnded.add(null);
       notifyListeners();
     });
-  }
-
-  void _updateVotingType(){
-    if (_votingState.currentVoting == null) return;
-    else {
-      _votingType = _votingState.currentVoting?.type;
-      _votingType = _votingType![0].toUpperCase()+_votingType!.substring(1).toLowerCase();
-    }
-  }
-
-  void _updateVotedPlayerNickname() {
-    if (_votingState.currentVoting == null) return;
-    else {
-      if (_votingState.currentVotingEnd?.votedUsername != null)
-        {
-          _votedPlayerNickname = _votingState.currentVotingEnd?.votedUsername;
-        }
-      else {
-        _votedPlayerNickname = "Nobody";
-      }
-    }
   }
 
   void _endGame()
@@ -67,6 +38,20 @@ class VotedViewModel extends ChangeNotifier {
 
   void _setVoting()
   {
+    if (_votingState.currentVoting == null) return;
+      _votingType = _votingState.currentVoting?.type;
+      _votingType = _votingType![0].toUpperCase()+_votingType!.substring(1).toLowerCase();
+
+    if (_votingState.currentVotingEnd?.votedUsername != null)
+    {
+      _votedPlayerNickname = _votingState.currentVotingEnd?.votedUsername;
+    }
+    else {
+      _votedPlayerNickname = "Nobody";
+    }
+
+    _votingSetted.add(null);
+    notifyListeners();
 
   }
 
