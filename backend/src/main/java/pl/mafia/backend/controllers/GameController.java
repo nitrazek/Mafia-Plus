@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.mafia.backend.models.db.Game;
 import pl.mafia.backend.models.db.Round;
 import pl.mafia.backend.models.dto.AccountDetails;
-import pl.mafia.backend.models.dto.RoomDTO;
 import pl.mafia.backend.services.GameService;
 import pl.mafia.backend.services.RoomService;
 

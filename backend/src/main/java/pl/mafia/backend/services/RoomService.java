@@ -2,13 +2,12 @@ package pl.mafia.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.user.SimpUser;
-import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.mafia.backend.models.db.Account;
 import pl.mafia.backend.models.db.Room;
-import pl.mafia.backend.models.dto.RoomDTO;
+import pl.mafia.backend.models.dto.RoomSettingsUpdate;
+import pl.mafia.backend.models.dto.RoomUpdate;
 import pl.mafia.backend.repositories.AccountRepository;
 import pl.mafia.backend.models.db.RoomSettings;
 import pl.mafia.backend.repositories.RoomRepository;
@@ -23,6 +22,8 @@ import static pl.mafia.backend.repositories.specifications.RoomSpecifications.is
 @Component
 public class RoomService {
     @Autowired
+    private AccountService accountService;
+    @Autowired
     private AccountRepository accountRepository;
     @Autowired
     private RoomRepository roomRepository;
@@ -31,127 +32,109 @@ public class RoomService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    public List<RoomDTO> getPublicRooms() {
+    public List<RoomUpdate> getPublicRooms() {
         return roomRepository.findAll(isRoomPublic())
                 .stream()
-                .map(RoomDTO::new)
+                .map(RoomUpdate::new)
                 .toList();
     }
 
-    public boolean isHost(String username, long roomId) throws IllegalAccessException {
-        Optional<Room> fetchedRoom = roomRepository.findById(roomId);
-        if (fetchedRoom.isEmpty())
-            throw new IllegalArgumentException("Room does not exists.");
-        Room room = fetchedRoom.get();
-
-        Optional<Account> fetchedAccount = accountRepository.findByUsername(username);
-        if (fetchedAccount.isEmpty())
-            throw new IllegalAccessException("Account does not exists.");
-
-        return Objects.equals(room.getHost().getUsername(), username);
-    }
-
-    @Transactional
-    public RoomDTO joinRoomByAccessCode(String accessCode, String username) throws IllegalAccessException {
-        Optional<Room> fetchedRoom = roomRepository.findByAccessCode(accessCode);
-        if (fetchedRoom.isEmpty())
-            throw new IllegalArgumentException("Room does not exists.");
-
-        Optional<Account> fetchedAccount = accountRepository.findByUsername(username);
-        if (fetchedAccount.isEmpty())
-            throw new IllegalAccessException("Account does not exists.");
-
-        Account updatedAccount = fetchedAccount.get();
-        Room updatedRoom = fetchedRoom.get();
-
-        updatedAccount.setRoom(updatedRoom);
-        updatedRoom.getAccounts().add(updatedAccount);
-        accountRepository.save(updatedAccount);
-        updatedRoom = roomRepository.save(updatedRoom);
-
-        return new RoomDTO(updatedRoom);
-    }
-
-    @Transactional
-    public RoomDTO joinRoomById(Long id, String username) throws IllegalAccessException {
+    @Transactional(readOnly = true)
+    public Room getRoomById(long id) {
         Optional<Room> fetchedRoom = roomRepository.findById(id);
         if (fetchedRoom.isEmpty())
             throw new IllegalArgumentException("Room does not exists.");
+        return fetchedRoom.get();
+    }
 
-        Optional<Account> fetchedAccount = accountRepository.findByUsername(username);
-        if (fetchedAccount.isEmpty())
-            throw new IllegalAccessException("Account does not exists.");
+    @Transactional(readOnly = true)
+    public Room getRoomByAccessCode(String accessCode) {
+        Optional<Room> fetchedRoom = roomRepository.findByAccessCode(accessCode);
+        if (fetchedRoom.isEmpty())
+            throw new IllegalArgumentException("Room does not exists.");
+        return fetchedRoom.get();
+    }
 
-        Account updatedAccount = fetchedAccount.get();
-        Room updatedRoom = fetchedRoom.get();
+    public boolean isHost(String username, long roomId) throws IllegalAccessException {
+        Room room = getRoomById(roomId);
+        Account host = accountService.getAccount(username);
+        return Objects.equals(room.getHost().getUsername(), host.getUsername());
+    }
 
-        updatedAccount.setRoom(updatedRoom);
-        updatedRoom.getAccounts().add(updatedAccount);
-        accountRepository.save(updatedAccount);
-        updatedRoom = roomRepository.save(updatedRoom);
+    @Transactional
+    public RoomUpdate joinRoomByAccessCode(String accessCode, String username) throws IllegalAccessException {
+        Room room = getRoomByAccessCode(accessCode);
+        Account account = accountService.getAccount(username);
 
-        return new RoomDTO(updatedRoom);
+        account.setRoom(room);
+        room.getAccounts().add(account);
+        accountRepository.save(account);
+        room = roomRepository.save(room);
+
+        return new RoomUpdate(room);
+    }
+
+    @Transactional
+    public RoomUpdate joinRoomById(Long id, String username) throws IllegalAccessException {
+        Room room = getRoomById(id);
+        Account account = accountService.getAccount(username);
+
+        account.setRoom(room);
+        room.getAccounts().add(account);
+        accountRepository.save(account);
+        room = roomRepository.save(room);
+
+        return new RoomUpdate(room);
     }
 
     @Transactional
     public void leaveRoom(String username) throws IllegalAccessException {
-        Optional<Account> fetchedAccount = accountRepository.findByUsername(username);
-        if(fetchedAccount.isEmpty())
-            throw new IllegalAccessException("Account does not exists.");
+        Account account = accountService.getAccount(username);
 
-        Account updatedAccount = fetchedAccount.get();
-        if(updatedAccount.getRoom() == null)
+        if(account.getRoom() == null)
             throw new IllegalAccessException("Account is not in any room.");
 
-        Room room = updatedAccount.getRoom();
+        Room room = account.getRoom();
         if(room.getAccounts().size() == 1) {
-            updatedAccount.setRoom(null);
+            account.setRoom(null);
             roomSettingsRepository.delete(room.getRoomSettings());
             roomRepository.delete(room);
-            accountRepository.save(updatedAccount);
+            accountRepository.save(account);
             return;
         }
 
-        updatedAccount.setRoom(null);
-        room.getAccounts().remove(updatedAccount);
-        if(room.getHost().equals(updatedAccount)) {
+        account.setRoom(null);
+        room.getAccounts().remove(account);
+        if(room.getHost().equals(account)) {
             room.setHost(room.getAccounts().get(0));
         }
         roomRepository.save(room);
-        accountRepository.save(updatedAccount);
+        accountRepository.save(account);
 
-        RoomDTO roomDTO = new RoomDTO(room);
-        messagingTemplate.convertAndSend("/topic/" + roomDTO.getId() + "/room", roomDTO);
+        RoomUpdate roomUpdate = new RoomUpdate(room);
+        messagingTemplate.convertAndSend("/topic/" + roomUpdate.id() + "/room", roomUpdate);
     }
 
     @Transactional
-    public RoomDTO createRoom(String hostUsername) {
-        Optional<Account> host = accountRepository.findByUsername(hostUsername);
-        if(host.isEmpty())
-            throw new IllegalArgumentException("Account doesn't exists.");
-
-        Optional<Room> roomByHost = roomRepository.findByHost(host.get());
-        if (roomByHost.isPresent())
-            throw new IllegalArgumentException("Room already exists.");
+    public RoomUpdate createRoom(String hostUsername) {
+        Account host = accountService.getAccount(hostUsername);
 
         Room createdRoom = new Room();
-        Account updatedHost = host.get();
-
-        createdRoom.setHost(host.get());
-        createdRoom.getAccounts().add(host.get());
+        createdRoom.setHost(host);
+        createdRoom.getAccounts().add(host);
         createdRoom.setAccessCode("");
 
         RoomSettings createdRoomSettings = new RoomSettings();
         createdRoomSettings.setRoom(createdRoom);
         createdRoomSettings.setPublic(true);
-        createdRoomSettings.setNumberOfPlayers(10);
+        createdRoomSettings.setMaxNumberOfPlayers(10);
         createdRoomSettings = roomSettingsRepository.save(createdRoomSettings);
 
         createdRoom.setRoomSettings(createdRoomSettings);
         createdRoom = roomRepository.save(createdRoom);
 
-        updatedHost.setRoom(createdRoom);
-        accountRepository.save(updatedHost);
+        host.setRoom(createdRoom);
+        accountRepository.save(host);
 
         int codeLength = 7;
         String base26String = Long.toString(createdRoom.getId(), 26).toUpperCase();
@@ -161,19 +144,21 @@ public class RoomService {
         createdRoom.setAccessCode(base26String);
         createdRoom = roomRepository.save(createdRoom);
 
-        return new RoomDTO(createdRoom);
+        return new RoomUpdate(createdRoom);
     }
 
     @Transactional
-    public RoomDTO updateProperties(RoomSettings roomSettings, Long roomId) {
-        Optional<Room> room = roomRepository.findById(roomId);
+    public RoomUpdate updateRoomSettings(RoomSettingsUpdate roomSettingsUpdate, Long roomId) {
+        Room room = getRoomById(roomId);
 
-        if (room.isEmpty())
-            throw new IllegalArgumentException("Room does not exists.");
+        RoomSettings roomSettings = room.getRoomSettings();
+        roomSettings.setPublic(roomSettingsUpdate.isPublic());
+        roomSettings.setMaxNumberOfPlayers(roomSettingsUpdate.maxNumberOfPlayers());
+        room.setRoomSettings(roomSettings);
 
-        Room updatedRoom = room.get();
-        updatedRoom.setRoomSettings(roomSettings);
+        roomSettingsRepository.save(roomSettings);
+        room = roomRepository.save(room);
 
-        return new RoomDTO(roomRepository.save(updatedRoom));
+        return new RoomUpdate(room);
     }
 }

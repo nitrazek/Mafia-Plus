@@ -31,8 +31,6 @@ class _GameHistoryPageState extends State<GameHistoryPage> {
               colors: [
                 MyStyles.appBarColor,
                 MyStyles.lightestPurple,
-                // Color(0xFF8E44AD),
-                // Color(0xFFc8a2d8),
               ],
             ),
           ),
