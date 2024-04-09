@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/viewModels/VotedViewModel.dart';
 import 'package:mobile/views/Voting.dart';
+import 'package:mobile/views/Waiting.dart';
 import 'package:mobile/views/Winner.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -32,13 +33,21 @@ class VotedPageState extends State<VotedPage> {
         ));
       });
     });
-    _votingStartedSubscription ?? context.read<VotedViewModel>().votingStarted.listen((_) {
+    _votingStartedSubscription ?? context.read<VotedViewModel>().votingStarted.listen((conditions) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(context, PageTransition(
-          type: PageTransitionType.fade,
-          duration: const Duration(milliseconds: 1500),
-          child: const VotingPage()
-        ));
+        if(conditions.isVoting) {
+          Navigator.pushReplacement(context, PageTransition(
+            type: PageTransitionType.fade,
+            duration: const Duration(milliseconds: 1500),
+            child: const VotingPage()
+          ));
+        } else {
+          Navigator.pushReplacement(context, PageTransition(
+            type: PageTransitionType.fade,
+            duration: const Duration(milliseconds: 1500),
+            child: WaitingPage(viewType: conditions.isAlive ? 1 : 0)
+          ));
+        }
       });
     });
   }
