@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:mobile/models/Room.dart';
 import 'package:mobile/viewModels/PublicRoomsViewModel.dart';
 import 'styles.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'Room.dart';
 
 class PublicRoomsPage extends StatefulWidget {
   const PublicRoomsPage({super.key});
@@ -68,8 +70,19 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
             const SizedBox(height: 25.0),
             for (Room room in publicRooms)
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   //context.read<PublicRoomsViewModel>().pressed(room);
+                  String accessCode = room.accessCode;
+                  final viewModel = context.read<PublicRoomsViewModel>();
+                  await viewModel.joinRoom(
+                    accessCode,
+                        () {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RoomPage()));
+                    },
+                        (errorMsg) {
+                      Fluttertoast.showToast(msg: errorMsg);
+                    },
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: MyStyles.purple,
@@ -82,6 +95,8 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
                 ),
                 child: Text(room.hostUsername.toString()),
               ),
+
+
           ],
         ),
       ),

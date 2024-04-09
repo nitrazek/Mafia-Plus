@@ -8,42 +8,38 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.mafia.backend.models.db.Game;
+import pl.mafia.backend.models.db.Round;
 import pl.mafia.backend.models.dto.AccountDetails;
-import pl.mafia.backend.models.dto.RoomDTO;
 import pl.mafia.backend.services.GameService;
+import pl.mafia.backend.services.RoomService;
+
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/game")
 public class GameController {
     @Autowired
+    private RoomService roomService;
+    @Autowired
     private GameService gameService;
-
+    @Autowired
+    private ScheduledExecutorService scheduledExecutorService;
+    
     @PostMapping("/start/{roomId}")
     public ResponseEntity<?> startGame(@PathVariable Long roomId, @AuthenticationPrincipal AccountDetails accountDetails) {
         try {
             String username = accountDetails.getUsername();
-            long gameId = gameService.startGame(username, roomId);
-            long roundId = gameService.startRound(gameId);
-            gameService.createVoting(roundId);
+            if(roomService.isHost(username, roomId))
+                gameService.startGame(roomId);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (IllegalAccessException ex) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
-    }
-
-    @PostMapping("/end/{gameId}")
-    public ResponseEntity<?> endGame(@PathVariable Long gameId, @AuthenticationPrincipal AccountDetails accountDetails) {
-        try {
-            gameService.endGame(gameId);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus .INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
 }

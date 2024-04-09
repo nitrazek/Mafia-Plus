@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.server.ResponseStatusException;
 import pl.mafia.backend.models.db.Account;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,8 @@ public class AccountController {
     @GetMapping("/{username}")
     public ResponseEntity<?> getAccountByUsername(@PathVariable String username) {
         try {
-            return ResponseEntity.ok(accountService.getAccountByUsername(username));
+            Account account = accountService.getAccount(username);
+            return ResponseEntity.ok(new AccountDetails(account));
         } catch(IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch(Exception ex) {
@@ -74,9 +76,9 @@ public class AccountController {
     }
 
     @PutMapping("/nickname")
-    public ResponseEntity<?> changeUsername(@PathVariable Long accountId, @RequestBody String username) {
+    public ResponseEntity<?> changeUsername(@RequestBody String username, @AuthenticationPrincipal AccountDetails accountDetails) {
         try {
-            return ResponseEntity.ok(accountService.changeNickname(accountId, username));
+            return ResponseEntity.ok(accountService.changeUsername(accountDetails.getUsername(), username));
         } catch(IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch(Exception ex) {
@@ -85,9 +87,9 @@ public class AccountController {
     }
 
     @PutMapping("/password")
-    public ResponseEntity<?> changePassword(@PathVariable Long accountId, @RequestBody PasswordRequest passwordRequest) {
+    public ResponseEntity<?> changePassword(@RequestBody PasswordRequest passwordRequest, @AuthenticationPrincipal AccountDetails accountDetails) {
         try {
-            return ResponseEntity.ok(accountService.changePassword(accountId, passwordRequest.previousPassword, passwordRequest.newPassword));
+            return ResponseEntity.ok(accountService.changePassword(accountDetails.getUsername(), passwordRequest.previousPassword, passwordRequest.newPassword));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (BadCredentialsException ex) {

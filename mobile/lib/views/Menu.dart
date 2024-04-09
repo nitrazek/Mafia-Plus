@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile/state/AccountState.dart';
@@ -18,6 +20,18 @@ class MenuPage extends StatefulWidget {
 
 class MenuPageState extends State<MenuPage> {
   final AccountState _accountState = AccountState();
+
+  late double screenWidth;
+  late double screenHeight;
+
+  @override
+  void initState() {
+    super.initState();
+    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+    Size size = view.physicalSize;
+    screenWidth = size.width;
+    screenHeight = size.height;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +59,7 @@ class MenuPageState extends State<MenuPage> {
               child: Image.asset(
                 'assets/images/mafialogo.png',
                 fit: BoxFit.contain,
-                height: 20
+                height: 35
               ),
             )
           ],
@@ -56,108 +70,111 @@ class MenuPageState extends State<MenuPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 25.0),
+             SizedBox(height: screenHeight*0.01),
               Text(
                 'Welcome to the family!',
                 textAlign: TextAlign.center,
                 style: MyStyles.menuTitleStyle,
               ),
-              const SizedBox(height: 15.0),
+              SizedBox(height: screenHeight*0.0005),
               Text(
                 _accountState.currentAccount!.username,
                 textAlign: TextAlign.center,
                 style: MyStyles.menuUsernameStyle,
               ),
-              const SizedBox(height: 45.0),
+              SizedBox(height: screenHeight*0.005),
               Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 15,
-                  crossAxisSpacing: 15,
-                  children: [
-                    MenuItem(
-                      icon: Icons.add,
-                      title: 'Create new room',
-                      onPressed: () {
-                        context.read<MenuViewModel>().createRoom(
-                          () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const RoomPage()
-                              )
-                            );
-                          },
-                          () {
-                            Fluttertoast.showToast(
-                              msg: 'Creating room error'
-                            );
-                          }
-                        );
-                      }
-                    ),
-                    MenuItem(
-                      icon: Icons.lock_open,
-                      title: 'Enter room code',
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const JoinPrivateRoomPage()
-                          )
-                        );
-                      }
-                    ),
-                    MenuItem(
-                      icon: Icons.public,
-                      title: 'Public rooms',
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const PublicRoomsPage()
-                          )
-                        );
-                      }
-                    ),
-                    MenuItem(
-                      icon: Icons.history,
-                      title: 'Game history',
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const GameHistoryPage()
-                          )
-                        );
-                      }
-                    ),
-                    MenuItem(
-                      icon: Icons.settings,
-                      title: 'Settings',
-                      onPressed: () {
-                        Fluttertoast.showToast(
-                          msg: 'No settings to show',
-                        );
-                      }
-                    ),
-                    MenuItem(
-                      icon: Icons.logout,
-                      title: 'Logout',
-                      onPressed: () {
-                        context.read<MenuViewModel>().logout(
-                          () {
-                            Navigator.pop(context);
-                          },
-                          () {
-                            Fluttertoast.showToast(
-                              msg: 'Logout error'
-                            );
-                          }
-                        );
-                      }
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15.0),
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 15,
+                    crossAxisSpacing: 15,
+                    children: [
+                      MenuItem(
+                        icon: Icons.add,
+                        title: 'Create new room',
+                        onPressed: () {
+                          context.read<MenuViewModel>().createRoom(
+                            () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const RoomPage()
+                                )
+                              );
+                            },
+                            () {
+                              Fluttertoast.showToast(
+                                msg: 'Creating room error'
+                              );
+                            }
+                          );
+                        }
+                      ),
+                      MenuItem(
+                        icon: Icons.lock_open,
+                        title: 'Enter room code',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const JoinPrivateRoomPage()
+                            )
+                          );
+                        }
+                      ),
+                      MenuItem(
+                        icon: Icons.public,
+                        title: 'Public rooms',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PublicRoomsPage()
+                            )
+                          );
+                        }
+                      ),
+                      MenuItem(
+                        icon: Icons.history,
+                        title: 'Game history',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const GameHistoryPage()
+                            )
+                          );
+                        }
+                      ),
+                      MenuItem(
+                        icon: Icons.settings,
+                        title: 'Settings',
+                        onPressed: () {
+                          Fluttertoast.showToast(
+                            msg: 'No settings to show',
+                          );
+                        }
+                      ),
+                      MenuItem(
+                        icon: Icons.logout,
+                        title: 'Logout',
+                        onPressed: () {
+                          context.read<MenuViewModel>().logout(
+                            () {
+                              Navigator.pop(context);
+                            },
+                            () {
+                              Fluttertoast.showToast(
+                                msg: 'Logout error'
+                              );
+                            }
+                          );
+                        }
+                      ),
+                    ],
+                  ),
                 ),
               )
             ],
