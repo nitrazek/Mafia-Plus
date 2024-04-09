@@ -53,7 +53,7 @@ public class GameService {
     }
 
     private String getRole(int mafiaCount, int playerCount) {
-        int mafiaMax = playerCount / 4 + playerCount % 4 >= 2 ? 1 : 0;
+        int mafiaMax = (playerCount / 4) + (playerCount % 4 >= 2 ? 1 : 0);
         return mafiaCount < mafiaMax ? "mafia" : "citizen"; //Warunek do dostosowania gdy będą ustawienia
     }
 
