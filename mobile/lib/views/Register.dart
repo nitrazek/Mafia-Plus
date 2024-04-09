@@ -25,6 +25,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
   bool _passwordsMismatch = false;
 
   late double screenWidth;
+  late double screenHeight;
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
     FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
     Size size = view.physicalSize;
     screenWidth = size.width;
+    screenHeight = size.height;
   }
 
   @override
@@ -163,22 +165,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                             ],
                           ),
                         ),
-                        if (_showErrorMessage || _passwordsMismatch)
-                          const SizedBox(height: 35,),
-                        if (_showErrorMessage || _passwordsMismatch)
-                          Text(
-                            _passwordsMismatch
-                                ? 'Please make sure your password match.'
-                                : 'Add login, password and email',
-                            style: TextStyle(
-                              color: MyStyles.red,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                        if (_showErrorMessage || _passwordsMismatch)
-                          const SizedBox(height: 20,),
-                        if (!_showErrorMessage && !_passwordsMismatch)
-                          const SizedBox(height: 81,),
+                        SizedBox(height: screenHeight*0.015,),
                         Consumer<RegisterViewModel>(
                             builder: (context, viewModel, child) {
                               return ElevatedButton(
@@ -218,6 +205,19 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                                     });
                                     print('Password mismatch');
                                   }
+
+                                  if (_passwordsMismatch)
+                                    {
+                                      Fluttertoast.showToast(
+                                          msg: "Please make sure your passwords match",
+                                          toastLength: Toast.LENGTH_SHORT);
+                                    }
+                                  if (_showErrorMessage)
+                                    {
+                                      Fluttertoast.showToast(
+                                          msg: "Add login, password and email",
+                                          toastLength: Toast.LENGTH_SHORT);
+                                    }
                                 },
                                 child: const Text(
                                     'Register',
@@ -230,7 +230,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                               );
                             }
                         ),
-                        const SizedBox(height: 25.0),
+                        SizedBox(height: screenHeight * 0.015),
                         const Text("Already have an account?"),
                         const SizedBox(height: 8.0),
                         ElevatedButton(

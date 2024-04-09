@@ -20,6 +20,7 @@ class LoginPageState extends State<LoginPage> with RouteAware {
   final TextEditingController _passwordController = TextEditingController();
 
   late double screenWidth;
+  late double screenHeight;
 
   @override
   void initState() {
@@ -27,6 +28,7 @@ class LoginPageState extends State<LoginPage> with RouteAware {
     FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
     Size size = view.physicalSize;
     screenWidth = size.width;
+    screenHeight = size.height;
   }
 
   @override
@@ -67,7 +69,7 @@ class LoginPageState extends State<LoginPage> with RouteAware {
               Center(
                 child: Image.asset(
                   'assets/images/mafialogo.png',
-                  width: screenWidth * 0.17,
+                  height: screenHeight * 0.06,
                 ),
               ),
               const Padding(

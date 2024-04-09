@@ -149,7 +149,7 @@ public class VotingService {
         game = gameRepository.save(game);
         Room room = game.getRoom();
         room = roomRepository.save(room);
-        messagingTemplate.convertAndSend("/topic/" + room.getId() + "/voting-end", new VotingEnd(votedPlayerUsername));
+        messagingTemplate.convertAndSend("/topic/" + room.getId() + "/voting-end", new VotingEnd(voting.getType(), votedPlayerUsername));
 
         Voting finalVoting = voting;
         Round finalRound = round;

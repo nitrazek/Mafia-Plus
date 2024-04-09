@@ -20,6 +20,6 @@ public class RoomSettings {
     @Column(name = "is_public", nullable = false)
     private boolean isPublic;
 
-    @Column(name = "number_of_players", nullable = false)
-    private int numberOfPlayers;
+    @Column(name = "max_number_of_players", nullable = false)
+    private int maxNumberOfPlayers;
 }

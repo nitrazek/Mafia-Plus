@@ -7,13 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.server.ResponseStatusException;
-import pl.mafia.backend.models.db.Room;  // Update import to Room
 import org.springframework.web.bind.annotation.*;
 import pl.mafia.backend.models.dto.AccountDetails;
 import pl.mafia.backend.models.db.RoomSettings;
-import pl.mafia.backend.models.dto.RoomDTO;
+import pl.mafia.backend.models.dto.RoomSettingsUpdate;
+import pl.mafia.backend.models.dto.RoomUpdate;
 import pl.mafia.backend.services.RoomService;
 
 import java.util.List;
@@ -39,9 +37,9 @@ public class RoomController {
     public ResponseEntity<?> joinRoomById(@PathVariable String id, @AuthenticationPrincipal AccountDetails accountDetails) {
         try {
             String username = accountDetails.getUsername();
-            RoomDTO roomDTO = roomService.joinRoomById(Long.parseLong(id), username);
-            messagingTemplate.convertAndSend("/topic/" + id + "/room", roomDTO);
-            return ResponseEntity.ok(roomDTO);
+            RoomUpdate roomUpdate = roomService.joinRoomById(Long.parseLong(id), username);
+            messagingTemplate.convertAndSend("/topic/" + id + "/room", roomUpdate);
+            return ResponseEntity.ok(roomUpdate);
         } catch(IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch(IllegalAccessException ex) {
@@ -55,9 +53,9 @@ public class RoomController {
     public ResponseEntity<?> joinRoomByAccessCode(@PathVariable String accessCode, @AuthenticationPrincipal AccountDetails accountDetails) {
         try {
             String username = accountDetails.getUsername();
-            RoomDTO roomDTO = roomService.joinRoomByAccessCode(accessCode, username);
-            messagingTemplate.convertAndSend("/topic/" + roomDTO.getId() + "/room", roomDTO);
-            return ResponseEntity.ok(roomDTO);
+            RoomUpdate roomUpdate = roomService.joinRoomByAccessCode(accessCode, username);
+            messagingTemplate.convertAndSend("/topic/" + roomUpdate.id() + "/room", roomUpdate);
+            return ResponseEntity.ok(roomUpdate);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (IllegalAccessException ex) {
@@ -94,11 +92,11 @@ public class RoomController {
         }
     }
 
-    @PutMapping("/properties/{id}")
-    public ResponseEntity<?> updateProperties(@PathVariable String roomId, @RequestBody RoomSettings roomSettings) {
+    @PutMapping("{roomId}/settings")
+    public ResponseEntity<?> updateRoomSettings(@PathVariable String roomId, @RequestBody RoomSettingsUpdate roomSettingsUpdate) {
         try {
-            RoomDTO roomDTO = roomService.updateProperties(roomSettings, Long.parseLong(roomId));
-            messagingTemplate.convertAndSend("/topic/" + roomId + "/room", roomDTO);
+            RoomUpdate roomUpdate = roomService.updateRoomSettings(roomSettingsUpdate, Long.parseLong(roomId));
+            messagingTemplate.convertAndSend("/topic/" + roomId + "/room", roomUpdate);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
