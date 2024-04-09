@@ -27,14 +27,14 @@ class _VotingPageState extends State<VotingPage> {
     super.didChangeDependencies();
     _votingFinishedSubscription ??= context.read<VotingViewModel>().votingFinished.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if(turn=='mafia' && role=='citizen') {
+        if(turn=='mafia') {
           Navigator.pushReplacement(context, PageTransition(
           type: PageTransitionType.fade,
           duration: const Duration(milliseconds: 1500),
-          child: const WaitingPage(),
+          child: const VotedPage(),
         ));
         }
-        else if (turn=='mafia'){
+        else if (turn=='city'){
           Navigator.pushReplacement(context, PageTransition(
             type: PageTransitionType.fade,
             duration: const Duration(milliseconds: 1500),
