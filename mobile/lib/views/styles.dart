@@ -81,6 +81,12 @@ class MyStyles {
     fontWeight: FontWeight.bold
   );
 
+  static TextStyle votedPlayerUsernameStyle = TextStyle(
+    color: darkPurple,
+    fontSize: 40.0,
+    fontWeight: FontWeight.bold
+  );
+
   // napisy na przyciskach
   static TextStyle buttonTextStyle = const TextStyle(
     color: Colors.white,
