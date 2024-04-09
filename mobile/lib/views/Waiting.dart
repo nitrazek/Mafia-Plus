@@ -2,21 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:mobile/views/styles.dart';
 import 'package:mobile/views/Menu.dart';
 
+//viewType 1 dla widoku miasta, gdy mafia glosuje, a viewType 0 dla widoku przegranego ktory czeka na koniec rundy
+
 class WaitingPage extends StatefulWidget {
-  const WaitingPage({Key? key}) : super(key: key);
+  final int viewType;
+
+  const WaitingPage({Key? key, required this.viewType}) : super(key: key);
 
   @override
   _WaitingPageState createState() => _WaitingPageState();
 }
 
-class _WaitingPageState extends State<WaitingPage> with SingleTickerProviderStateMixin {
+class _WaitingPageState extends State<WaitingPage>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 6000),
+      duration: const Duration(milliseconds: 2000),
       vsync: this,
     )..repeat(reverse: true);
   }
@@ -57,7 +62,7 @@ class _WaitingPageState extends State<WaitingPage> with SingleTickerProviderStat
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Congrats!",
+                      widget.viewType == 0 ? "Congrats!" : "Good night!",
                       style: TextStyle(
                         fontSize: 60,
                         color: MyStyles.purple,
@@ -65,9 +70,9 @@ class _WaitingPageState extends State<WaitingPage> with SingleTickerProviderStat
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 40),
                     Text(
-                      "You died!:3",
+                      widget.viewType == 0 ? "You died!:3" : "hope you wake up in the morning...",
                       style: TextStyle(
                         fontSize: 40,
                         color: MyStyles.purple,
@@ -75,19 +80,21 @@ class _WaitingPageState extends State<WaitingPage> with SingleTickerProviderStat
                       ),
                       textAlign: TextAlign.center,
                     ),
+
                     SizedBox(height: 40),
                     AnimatedBuilder(
                       animation: _controller,
                       builder: (BuildContext context, Widget? child) {
                         return Opacity(
                           opacity: _controller.value,
-                          child: Image.asset('assets/images/skull.png', width: 120),
+                          child: widget.viewType == 0
+                              ? Image.asset('assets/images/skull.png', width: 120)
+                              :  Image.asset('assets/images/sleep.png', width: 120),
                         );
                       },
                     ),
                     SizedBox(height: 30),
-                    SizedBox(height: 20),
-                    ElevatedButton(
+                 /*   ElevatedButton(
                       onPressed: () => Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => MenuPage()),
@@ -97,7 +104,7 @@ class _WaitingPageState extends State<WaitingPage> with SingleTickerProviderStat
                         onPrimary: Colors.white,
                       ),
                       child: Text("Return to Menu"),
-                    ),
+                    ), */
                   ],
                 ),
               ),
