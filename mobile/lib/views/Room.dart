@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/models/Room.dart';
@@ -25,6 +26,18 @@ class RoomPageState extends State<RoomPage> {
         Navigator.push(context, MaterialPageRoute(builder: (context) => const UserRolePage()));
       });
     });
+  }
+
+  late double screenWidth;
+  late double screenHeight;
+
+  @override
+  void initState() {
+    super.initState();
+    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+    Size size = view.physicalSize;
+    screenWidth = size.width;
+    screenHeight = size.height;
   }
 
   @override
@@ -102,7 +115,7 @@ class RoomPageState extends State<RoomPage> {
                         style: TextStyle(fontSize: 28, color: MyStyles.appBarColor, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 80),
+                      SizedBox(height: screenHeight * 0.01),
                       Text(
                         'Players: ${context.watch<RoomViewModel>().room?.accountUsernames.length}',
                         style: TextStyle(fontSize: 28, color: MyStyles.appBarColor, fontWeight: FontWeight.bold),
