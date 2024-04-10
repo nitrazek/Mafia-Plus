@@ -5,6 +5,8 @@ import 'package:mobile/services/network/RoomService.dart';
 import 'package:mobile/services/WebSocketClient.dart';
 import 'package:mobile/state/RoomState.dart';
 
+import '../services/network/NetworkException.dart';
+
 class PublicRoomsViewModel with ChangeNotifier {
   final RoomService _roomService = RoomService();
   //dopusane 2
@@ -38,8 +40,12 @@ class PublicRoomsViewModel with ChangeNotifier {
         _roomState.setRoom(room);
         onSuccess.call();
       }
-      catch (_) {
-        onError.call("Joing room error");
+      catch (e) {
+        if(e is UnauthorisedException) {
+          onError.call("Lobby is full");
+        } else {
+          onError.call("Wrong code");
+        }
       }
     }
   }
