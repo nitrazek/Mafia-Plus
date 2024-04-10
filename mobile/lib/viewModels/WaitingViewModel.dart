@@ -13,11 +13,17 @@ class WaitingViewModel extends ChangeNotifier {
   Stream<void> get votingFinished => _votingFinished.stream;
 
   WaitingViewModel() {
+    _votingState.addListener(_updateTurn); _updateTurn();
     _votingState.votingFinished.listen((_) {
-      if (_votingState.currentVoting == null) return;
-      _turn = _votingState.currentVoting!.type;
+      if (_votingState.currentVotingSummary == null && _votingState.currentVotingEnd == null) return;
       _votingFinished.add(null);
       notifyListeners();
     });
+  }
+
+  void _updateTurn() {
+    if (_votingState.currentVoting == null) return;
+    _turn = _votingState.currentVoting!.type;
+    notifyListeners();
   }
 }

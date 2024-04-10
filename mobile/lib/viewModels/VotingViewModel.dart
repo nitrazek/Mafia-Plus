@@ -30,7 +30,7 @@ class VotingViewModel extends ChangeNotifier {
   VotingViewModel() {
     _votingState.addListener(_updateVoting); _updateVoting();
     _votingState.votingFinished.listen((_) {
-      if(_votingState.currentVotingSummary == null) return;
+      if(_votingState.currentVotingSummary == null && _votingState.currentVotingEnd == null) return;
       _votedPlayer = null;
       _votingFinished.add(null);
       notifyListeners();
