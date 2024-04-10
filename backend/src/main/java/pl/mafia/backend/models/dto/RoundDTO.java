@@ -11,6 +11,9 @@ public class RoundDTO {
 
     public RoundDTO(Round round) {
         this.id = round.getId();
-        this.votingId = round.getVoting().getId();
+        this.votingId = round
+          .getVotings()
+          .get(round.getVotings().size() - 1)
+          .getId();
     }
 }

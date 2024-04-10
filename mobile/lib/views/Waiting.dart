@@ -39,11 +39,19 @@ class _WaitingPageState extends State<WaitingPage>
     super.didChangeDependencies();
     _votingFinishedSubscription ??= context.read<WaitingViewModel>().votingFinished.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(context, PageTransition(
-          type: PageTransitionType.fade,
-          duration: const Duration(milliseconds: 1500),
-          child: const VotingResultsPage(),
-        ));
+        if(context.read<WaitingViewModel>().turn == 'city') {
+          Navigator.pushReplacement(context, PageTransition(
+            type: PageTransitionType.fade,
+            duration: const Duration(milliseconds: 1500),
+            child: const VotingResultsPage(),
+          ));
+        } else {
+          Navigator.pushReplacement(context, PageTransition(
+            type: PageTransitionType.fade,
+            duration: const Duration(milliseconds: 1500),
+            child: const VotedPage(),
+          ));
+        }
       });
     });
   }

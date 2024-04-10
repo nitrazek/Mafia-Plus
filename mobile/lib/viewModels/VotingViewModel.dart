@@ -12,6 +12,9 @@ class VotingViewModel extends ChangeNotifier {
 
   int? _votingId;
 
+  String? _turn;
+  String? get turn =>_turn;
+
   List<String>? _playerUsernames;
   List<String>? get playerUsernames => _playerUsernames;
 
@@ -27,7 +30,7 @@ class VotingViewModel extends ChangeNotifier {
   VotingViewModel() {
     _votingState.addListener(_updateVoting); _updateVoting();
     _votingState.votingFinished.listen((_) {
-      if(_votingState.currentVotingSummary == null) return;
+      if(_votingState.currentVotingSummary == null && _votingState.currentVotingEnd == null) return;
       _votedPlayer = null;
       _votingFinished.add(null);
       notifyListeners();
@@ -37,6 +40,7 @@ class VotingViewModel extends ChangeNotifier {
   void _updateVoting() {
     if(_votingState.currentVoting == null) return;
     _votingId = _votingState.currentVoting!.id;
+    _turn=_votingState.currentVoting!.type;
     _playerUsernames = _votingState.currentVoting!.playerUsernames;
     notifyListeners();
   }

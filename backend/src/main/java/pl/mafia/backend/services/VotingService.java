@@ -82,7 +82,11 @@ public class VotingService {
 
         voting.getVotes().add(vote);
         votingRepository.save(voting);
-        return voting.getVotes().size() >= voter.getRoom().getAccounts().size();
+        if(voting.getType().equals("city"))
+            return voting.getVotes().size() >= voter.getRoom().getGame().getPlayers().stream().filter(Player::getAlive).toList().size();
+        else
+            return voting.getVotes().size() >= voter.getRoom().getGame().getPlayers().stream().filter(player -> player.getRole().equals("mafia")).toList().size();
+
     }
 
     public VotingSummary calculateVotingSummary(Voting voting) {
