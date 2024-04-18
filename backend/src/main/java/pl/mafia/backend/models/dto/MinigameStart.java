@@ -3,9 +3,10 @@ package pl.mafia.backend.models.dto;
 import pl.mafia.backend.models.db.Minigame;
 
 public record MinigameStart (
-  String title
+  Long id,
+  String type
 ) {
   public MinigameStart(Minigame minigame) {
-    this(minigame.getTitle());
+    this(minigame.getId(), minigame.getType().name());
   }
 }

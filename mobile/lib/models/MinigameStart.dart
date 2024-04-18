@@ -1,27 +1,31 @@
 class MinigameStart {
-  final MinigameTitle title;
+  final int id;
+  final MinigameType type;
 
   MinigameStart({
-    required this.title
+    required this.id,
+    required this.type
   });
 
   factory MinigameStart.fromJson(Map<String, dynamic> json) {
-    MinigameTitle title = MinigameTitle.values.firstWhere(
-      (e) => e.name.toLowerCase() == json['title'].toLowerCase(),
-      orElse: () => throw Exception('Invalid title')
+    MinigameType type = MinigameType.values.firstWhere(
+      (e) => e.name.toLowerCase() == json['type'].toLowerCase(),
+      orElse: () => throw Exception('Invalid type')
     );
     return MinigameStart(
-      title: title
+      id: json['id'],
+      type: type
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'title': title.name.toLowerCase()
+      'id': id,
+      'type': type.name.toUpperCase()
     };
   }
 }
 
-enum MinigameTitle {
+enum MinigameType {
   TEST
 }

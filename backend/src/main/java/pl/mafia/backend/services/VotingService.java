@@ -56,24 +56,12 @@ public class VotingService {
 
     @Transactional
     public boolean saveVote(Long votingId, String voterUsername, String votedUsername) {
-        Optional<Voting> fetchedVoting = votingRepository.findById(votingId);
-        if (fetchedVoting.isEmpty())
-            throw new IllegalArgumentException("Voting does not exists.");
-
-        Optional<Account> fetchedVoter = accountRepository.findByUsername(voterUsername);
-        if (fetchedVoter.isEmpty())
-            throw new IllegalArgumentException("Voter does not exist");
-
-        Optional<Account> fetchedVoted = accountRepository.findByUsername(votedUsername);
-        if (fetchedVoted.isEmpty())
-            throw new IllegalArgumentException("Voted does not exist");
-
+        Voting voting = getVoting(votingId);
+        Account voter = accountService.getAccount(voterUsername);
+        Account voted = accountService.getAccount(votedUsername);
         if (voterUsername.equals(votedUsername))
             throw new IllegalArgumentException("Voter and voted can not be the same user");
 
-        Voting voting = fetchedVoting.get();
-        Account voter = fetchedVoter.get();
-        Account voted = fetchedVoted.get();
         Vote vote = new Vote();
         vote.setVoting(voting);
         vote.setVoter(voter);

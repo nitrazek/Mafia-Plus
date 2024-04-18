@@ -14,6 +14,7 @@ class MyStyles {
   static Color grey = const Color(0xFF212121);
   static Color green = const Color(0xFF80DB80);
   static Color red = const Color(0xFFB22222);
+  static Color black = Colors.black;
 
   // style dla inputów
   static InputDecoration inputStyle = InputDecoration(

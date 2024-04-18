@@ -13,8 +13,8 @@ class UserRoleViewModel extends ChangeNotifier {
   String _role = '';
   String get role => _role;
 
-  final _minigameStarted = StreamController<MinigameTitle>.broadcast();
-  Stream<MinigameTitle> get minigameStarted => _minigameStarted.stream;
+  final _minigameStarted = StreamController<MinigameType>.broadcast();
+  Stream<MinigameType> get minigameStarted => _minigameStarted.stream;
 
   UserRoleViewModel() {
     _gameState.addListener(_updateRole); _updateRole();
@@ -29,7 +29,7 @@ class UserRoleViewModel extends ChangeNotifier {
 
   void _updateMinigame() {
     if(_minigameState.currentMinigame == null) return;
-    _minigameStarted.add(_minigameState.currentMinigame!.title);
+    _minigameStarted.add(_minigameState.currentMinigame!.type);
     notifyListeners();
   }
 }

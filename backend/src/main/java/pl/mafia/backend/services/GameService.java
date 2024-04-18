@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import pl.mafia.backend.models.db.*;
 import pl.mafia.backend.models.dto.*;
+import pl.mafia.backend.models.enums.MinigameType;
 import pl.mafia.backend.repositories.*;
 import pl.mafia.backend.websockets.WebSocketListener;
 
@@ -189,10 +190,13 @@ public class GameService {
 
     @Transactional
     public void startMinigame(long roundId) {
-        List<Minigame> minigames = minigameRepository.findAll();
-        Minigame selectedMinigame = minigames.get(random.nextInt(minigames.size()));
-
         Round round = getRound(roundId);
+
+        Minigame minigame = new Minigame();
+        minigame.setType(MinigameType.random());
+        minigame.setRound(round);
+        minigame = minigameRepository.save(minigame);
+
         round = roundRepository.save(round);
         Game game = round.getGame();
         game = gameRepository.save(game);
@@ -200,7 +204,7 @@ public class GameService {
         room = roomRepository.save(room);
 
         String destination = "/topic/" + room.getId() + "/minigame-start";
-        simpMessagingTemplate.convertAndSend(destination, new MinigameStart(selectedMinigame));
+        simpMessagingTemplate.convertAndSend(destination, new MinigameStart(minigame));
     }
 
     @Transactional

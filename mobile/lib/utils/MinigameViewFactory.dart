@@ -5,9 +5,9 @@ import 'package:mobile/views/minigames/Test.dart';
 import 'package:provider/provider.dart';
 
 class MinigameViewFactory {
-  static Widget Function(BuildContext context) createMinigameView(MinigameTitle minigame) {
-    switch(minigame) {
-      case MinigameTitle.TEST:
+  static Widget Function(BuildContext context) createMinigameView(MinigameType minigameType) {
+    switch(minigameType) {
+      case MinigameType.TEST:
         return (context) => ChangeNotifierProvider(
           create: (context) => TestViewModel(),
           child: const TestPage()
