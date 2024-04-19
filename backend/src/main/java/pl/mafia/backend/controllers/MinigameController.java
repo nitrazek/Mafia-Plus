@@ -14,6 +14,7 @@ import pl.mafia.backend.services.MinigameService;
 public class MinigameController {
   @Autowired
   private MinigameService minigameService;
+  private Object object;
 
   @PostMapping("/{minigameId}")
   public ResponseEntity<?> finishMinigame(
@@ -25,7 +26,7 @@ public class MinigameController {
       String username = accountDetails.getUsername();
       boolean lastMinigameFinished = minigameService.finishMinigame(minigameId, username, request.score);
       if(lastMinigameFinished) {
-        //minigameService.summarizeMinigame(minigameId);
+        minigameService.summarizeMinigame(minigameId);
       }
       return ResponseEntity.noContent().build();
     } catch(IllegalArgumentException ex) {

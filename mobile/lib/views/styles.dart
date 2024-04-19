@@ -88,6 +88,18 @@ class MyStyles {
     fontWeight: FontWeight.bold
   );
 
+  static TextStyle minigameTitleStyle = TextStyle(
+    color: darkPurple,
+    fontSize: 50.0,
+    fontWeight: FontWeight.bold
+  );
+
+  static TextStyle minigameDescriptionStyle = TextStyle(
+      color: darkPurple,
+      fontSize: 25.0,
+      fontWeight: FontWeight.bold
+  );
+
   // napisy na przyciskach
   static TextStyle buttonTextStyle = const TextStyle(
     color: Colors.white,

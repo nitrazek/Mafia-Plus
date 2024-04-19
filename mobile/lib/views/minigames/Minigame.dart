@@ -2,20 +2,25 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/viewModels/minigames/TestViewModel.dart';
+import 'package:mobile/viewModels/minigames/MinigameViewModel.dart';
 import 'package:mobile/views/Voting.dart';
 import 'package:mobile/views/styles.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-class TestPage extends StatefulWidget {
-  const TestPage({Key? key}) : super(key: key);
+class MinigamePage extends StatefulWidget {
+  final Widget minigame;
+
+  const MinigamePage({
+    Key? key,
+    required this.minigame
+  }) : super(key: key);
 
   @override
-  TestPageState createState() => TestPageState();
+  MinigamePageState createState() => MinigamePageState();
 }
 
-class TestPageState extends State<TestPage> {
+class MinigamePageState extends State<MinigamePage> {
   StreamSubscription<void>? _votingStartedSubscription;
 
   int _countdownValue = 3;
@@ -43,8 +48,9 @@ class TestPageState extends State<TestPage> {
       if(_minigameDuration == 0) {
         timer.cancel();
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          context.read<TestViewModel>().finishMinigame();
+          context.read<MinigameViewModel>().finishMinigame();
         });
+        WidgetsBinding.instance.ensureVisualUpdate();
       } else {
         setState(() {
           _minigameDuration--;
@@ -56,7 +62,7 @@ class TestPageState extends State<TestPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _votingStartedSubscription ??= context.read<TestViewModel>().votingStarted.listen((_) {
+    _votingStartedSubscription ??= context.read<MinigameViewModel>().votingStarted.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(context, PageTransition(
           type: PageTransitionType.fade,
@@ -102,9 +108,7 @@ class TestPageState extends State<TestPage> {
     return Scaffold(
       body: Stack(
         children: [
-          const Center(
-            child: Text("best minigejm")
-          ),
+          widget.minigame,
           Positioned(
             top: 30.0,
             right: 30.0,
