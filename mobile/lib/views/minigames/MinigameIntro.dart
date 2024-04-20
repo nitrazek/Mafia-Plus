@@ -26,7 +26,7 @@ class MinigameIntroPage extends StatefulWidget {
 class MinigameIntroPageState extends State<MinigameIntroPage> {
   @override
   Widget build(BuildContext context) {
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 4), () {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
         create: (context) => MinigameViewModel(),
         child: MinigamePage(minigame: widget.minigame)
@@ -50,7 +50,7 @@ class MinigameIntroPageState extends State<MinigameIntroPage> {
         )
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(25.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

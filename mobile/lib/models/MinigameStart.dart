@@ -1,3 +1,5 @@
+import 'MinigameType.dart';
+
 class MinigameStart {
   final int id;
   final MinigameType type;
@@ -24,8 +26,4 @@ class MinigameStart {
       'type': type.name.toUpperCase()
     };
   }
-}
-
-enum MinigameType {
-  TEST
 }

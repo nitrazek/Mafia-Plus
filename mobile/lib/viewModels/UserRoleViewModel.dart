@@ -6,6 +6,8 @@ import 'package:mobile/state/GameState.dart';
 import 'package:mobile/state/MinigameState.dart';
 import 'package:mobile/state/VotingState.dart';
 
+import '../models/MinigameType.dart';
+
 class UserRoleViewModel extends ChangeNotifier {
   final GameState _gameState = GameState();
   final MinigameState _minigameState = MinigameState();

@@ -90,13 +90,13 @@ class MyStyles {
 
   static TextStyle minigameTitleStyle = TextStyle(
     color: darkPurple,
-    fontSize: 50.0,
+    fontSize: 40.0,
     fontWeight: FontWeight.bold
   );
 
   static TextStyle minigameDescriptionStyle = TextStyle(
       color: darkPurple,
-      fontSize: 25.0,
+      fontSize: 20.0,
       fontWeight: FontWeight.bold
   );
 
