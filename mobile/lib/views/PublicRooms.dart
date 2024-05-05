@@ -33,7 +33,8 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
       appBar: AppBar(
         backgroundColor: MyStyles.appBarColor,
         automaticallyImplyLeading: false,
-        title:  Text('Public Rooms'),
+        title:  Text('Public Rooms',
+        style: MyStyles.backgroundTextStyle),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -93,7 +94,8 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
                       borderRadius: BorderRadius.circular(18),
                     )
                 ),
-                child: Text(room.hostUsername.toString()),
+                child: Text(room.hostUsername.toString(),
+                style: MyStyles.backgroundTextStyle),
               ),
 
 
