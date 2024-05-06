@@ -9,9 +9,10 @@ import 'package:mobile/views/Waiting.dart';
 import 'package:mobile/views/Winner.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:mobile/views/VotingAnnouncement.dart';
 
 class VotedPage extends StatefulWidget {
-  const VotedPage({super.key});
+  const VotedPage({Key? key}) : super(key: key);
 
   @override
   VotedPageState createState() => VotedPageState();
@@ -33,20 +34,34 @@ class VotedPageState extends State<VotedPage> {
         ));
       });
     });
-    _votingStartedSubscription ?? context.read<VotedViewModel>().votingStarted.listen((conditions) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if(conditions.isVoting) {
+    _votingStartedSubscription ??= context.read<VotedViewModel>().votingStarted.listen((conditions) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        if (conditions.isVoting) {
+          //najpierw do VotingAnnouncement, a potem do VotingPage
           Navigator.pushReplacement(context, PageTransition(
             type: PageTransitionType.fade,
             duration: const Duration(milliseconds: 1500),
-            child: const VotingPage()
-          ));
-        } else {
+            child: VotingAnnouncement(viewType: conditions.isAlive ? 0 : 1),
+          )).then((_) {
+            Navigator.pushReplacement(context, PageTransition(
+              type: PageTransitionType.fade,
+              duration: const Duration(milliseconds: 1500),
+              child: const VotingPage(),
+            ));
+          });
+        }  else {
+          // najpierw do VotingAnnouncement, a potem do Waitingpage
           Navigator.pushReplacement(context, PageTransition(
             type: PageTransitionType.fade,
             duration: const Duration(milliseconds: 1500),
-            child: WaitingPage(viewType: conditions.isAlive ? 1 : 0)
-          ));
+            child: VotingAnnouncement(viewType: conditions.isAlive ? 1 : 0),
+          )).then((_) {
+            Navigator.pushReplacement(context, PageTransition(
+              type: PageTransitionType.fade,
+              duration: const Duration(milliseconds: 1500),
+              child: WaitingPage(viewType: conditions.isAlive ? 1 : 0),
+            ));
+          });
         }
       });
     });
