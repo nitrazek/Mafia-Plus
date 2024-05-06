@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 import 'package:mobile/state/VotingState.dart';
 import 'package:mobile/views/VotingResults.dart';
+import 'package:mobile/viewModels/RoomViewModel.dart';
 
 import 'Voted.dart';
 
@@ -24,6 +25,7 @@ class _WaitingPageState extends State<WaitingPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   StreamSubscription<void>? _votingFinishedSubscription;
+  final RoomViewModel _roomViewModel = RoomViewModel();
 
   @override
   void initState() {
@@ -135,6 +137,28 @@ class _WaitingPageState extends State<WaitingPage>
                       },
                     ),
                     SizedBox(height: 30),
+                    // Przycisk "quit" wyświetli się, jeśli gracz odpadł
+                    if (widget.viewType == 0)
+                      ElevatedButton(
+                          style: MyStyles.buttonStyle,
+                          onPressed: () {
+                            _roomViewModel.leaveRoom(
+                                  () {
+                                // onSuccess - tutaj możesz wykonać jakieś operacje po pomyślnym opuszczeniu pokoju
+                              },
+                                  () {
+                                // onError - tutaj możesz wykonać jakieś operacje po błędzie podczas opuszczania pokoju
+                              },
+                            );
+                          },
+                          child: const Text(
+                              'Quit',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold
+                              ))
+                      ),
                   ],
                 ),
               ),
