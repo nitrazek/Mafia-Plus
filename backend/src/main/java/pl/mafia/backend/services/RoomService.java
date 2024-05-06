@@ -13,6 +13,7 @@ import pl.mafia.backend.models.db.RoomSettings;
 import pl.mafia.backend.repositories.RoomRepository;
 import pl.mafia.backend.repositories.RoomSettingsRepository;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -62,12 +63,14 @@ public class RoomService {
     }
 
     @Transactional
-    public RoomUpdate joinRoomByAccessCode(String accessCode, String username) throws IllegalAccessException {
+    public RoomUpdate joinRoomByAccessCode(String accessCode, String username) throws IllegalAccessException, AccessDeniedException {
         Room room = getRoomByAccessCode(accessCode);
         Account account = accountService.getAccount(username);
 
         if (room.getRoomSettings().getMaxNumberOfPlayers() <= room.getAccounts().size())
             throw new IllegalAccessException("Lobby is full.");
+        if (room.getGame() != null)
+            throw new AccessDeniedException("Game has been started.");
 
         account.setRoom(room);
         room.getAccounts().add(account);
@@ -78,12 +81,14 @@ public class RoomService {
     }
 
     @Transactional
-    public RoomUpdate joinRoomById(Long id, String username) throws IllegalAccessException {
+    public RoomUpdate joinRoomById(Long id, String username) throws IllegalAccessException, AccessDeniedException {
         Room room = getRoomById(id);
         Account account = accountService.getAccount(username);
 
         if (room.getRoomSettings().getMaxNumberOfPlayers() <= room.getAccounts().size())
             throw new IllegalAccessException("Lobby is full.");
+        if (room.getGame() != null)
+            throw new AccessDeniedException("Game has been started.");
 
         account.setRoom(room);
         room.getAccounts().add(account);
