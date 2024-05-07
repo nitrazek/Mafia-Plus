@@ -65,7 +65,7 @@ class LoginPageState extends State<LoginPage> with RouteAware {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const SizedBox(height: 40,),
+              SizedBox(height: screenHeight * 0.012,),
               Center(
                 child: Image.asset(
                   'assets/images/mafialogo.png',
@@ -92,7 +92,7 @@ class LoginPageState extends State<LoginPage> with RouteAware {
                       padding: const EdgeInsets.all(30),
                       child: Column(
                         children: <Widget>[
-                          const SizedBox(height: 15,),
+                          SizedBox(height: screenHeight * 0.005,),
                           Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -134,7 +134,7 @@ class LoginPageState extends State<LoginPage> with RouteAware {
                               ],
                             )
                           ),
-                          const SizedBox(height: 35,),
+                          SizedBox(height: screenHeight * 0.015,),
                           Consumer<LoginViewModel>(
                               builder: (context, viewModel, child) {
                                 return ElevatedButton(
@@ -166,9 +166,9 @@ class LoginPageState extends State<LoginPage> with RouteAware {
                                 );
                               }
                           ),
-                          const SizedBox(height: 25.0),
+                          SizedBox(height: screenHeight * 0.0075),
                           const Text("Don't have an account?"),
-                          const SizedBox(height: 8.0),
+                          SizedBox(height: screenHeight * 0.005),
                           ElevatedButton(
                             style: MyStyles.buttonStyle,
                             onPressed: () {

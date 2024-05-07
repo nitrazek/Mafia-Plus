@@ -57,7 +57,8 @@ class RoomPageState extends State<RoomPage> {
           style: MyStyles.backgroundTextStyle,),
           backgroundColor: MyStyles.appBarColor,
           actions: [
-            Padding(
+            if (context.watch<RoomViewModel>().isHost)
+              Padding(
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
                 onTap: () {
@@ -109,16 +110,15 @@ class RoomPageState extends State<RoomPage> {
                     children: [
                       Image.asset(
                         'assets/images/mafialogo.png',
-                        width: 150,
-                        height: 150,
+                        height: screenHeight * 0.06,
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: screenHeight * 0.005),
                       Text(
                         'Invite your friends and start the game!',
                         style: TextStyle(fontSize: 28, color: MyStyles.appBarColor, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: screenHeight * 0.01),
+                      SizedBox(height: screenHeight * 0.005),
                       Text(
                         'Players: ${context.watch<RoomViewModel>().room?.accountUsernames.length}',
                         style: TextStyle(fontSize: 28, color: MyStyles.appBarColor, fontWeight: FontWeight.bold),
@@ -145,7 +145,7 @@ class RoomPageState extends State<RoomPage> {
                           style: MyStyles.buttonStyle,
                           child: const Text('Start game'),
                         ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: screenHeight * 0.005),
                       ElevatedButton(
                         onPressed: () {
                           context.read<RoomViewModel>().leaveRoom(
@@ -158,7 +158,7 @@ class RoomPageState extends State<RoomPage> {
                         style: MyStyles.buttonStyle,
                         child: const Text('Exit'),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenHeight * 0.0075),
                       if (context.read<RoomViewModel>().room?.roomSettings.isPublic == false)
                         const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -181,7 +181,7 @@ class RoomPageState extends State<RoomPage> {
                             ),
                           ],
                         ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenHeight * 0.005),
                       Text(
                         'AccessCode: ${context.read<RoomViewModel>().room?.accessCode}',
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

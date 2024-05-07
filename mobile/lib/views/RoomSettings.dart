@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -18,6 +20,19 @@ class RoomSettingsPage extends StatefulWidget {
 }
 
 class RoomSettingsPageState extends State<RoomSettingsPage> {
+
+  late double screenWidth;
+  late double screenHeight;
+
+  @override
+  void initState() {
+    super.initState();
+    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+    Size size = view.physicalSize;
+    screenWidth = size.width;
+    screenHeight = size.height;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,12 +68,12 @@ class RoomSettingsPageState extends State<RoomSettingsPage> {
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: <Widget>[
-                      const SizedBox(height: 45),
+                      SizedBox(height: screenHeight * 0.015),
                       const Text(
                         'Max players:',
                         style: TextStyle(fontSize: 20),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: screenHeight * 0.005),
                       SliderTheme(
                         data: SliderThemeData(
                           thumbColor: MyStyles.purple,
@@ -87,7 +102,7 @@ class RoomSettingsPageState extends State<RoomSettingsPage> {
                             .setMaxNumberOfPlayers,
                           ),
                         ),
-                        const SizedBox(height: 90,),
+                        SizedBox(height: screenHeight * 0.04,),
                         const Text(
                           'Room type:',
                           style: TextStyle(fontSize: 20),
@@ -115,7 +130,7 @@ class RoomSettingsPageState extends State<RoomSettingsPage> {
                             onSwipe: () {},
                           )
                         ),
-                        const SizedBox(height: 120),
+                        SizedBox(height: screenHeight * 0.04),
                         ElevatedButton(
                           style: MyStyles.buttonStyle,
                           onPressed: () {
