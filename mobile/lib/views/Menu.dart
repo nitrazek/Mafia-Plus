@@ -39,7 +39,7 @@ class MenuPageState extends State<MenuPage> {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Mafia+'),
+          title: Text('Mafia+', style: MyStyles.backgroundTextStyle,),
           automaticallyImplyLeading: false,
           flexibleSpace: Container(
             decoration: BoxDecoration(

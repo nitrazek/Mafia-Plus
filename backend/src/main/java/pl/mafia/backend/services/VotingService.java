@@ -70,10 +70,16 @@ public class VotingService {
 
         voting.getVotes().add(vote);
         votingRepository.save(voting);
-        if(voting.getType().equals("city"))
-            return voting.getVotes().size() >= voter.getRoom().getGame().getPlayers().stream().filter(Player::getAlive).toList().size();
-        else
-            return voting.getVotes().size() >= voter.getRoom().getGame().getPlayers().stream().filter(player -> player.getRole().equals("mafia")).toList().size();
+
+        Room room = voter.getRoom();
+        room = roomRepository.save(room);
+        Game game = room.getGame();
+        game = gameRepository.save(game);
+
+        if(voting.getType().equals("city")) {
+            return voting.getVotes().size() >= game.getPlayers().stream().filter(Player::getAlive).toList().size();
+        } else
+            return voting.getVotes().size() >= game.getPlayers().stream().filter(player -> player.getRole().equals("mafia")).toList().size();
 
     }
 

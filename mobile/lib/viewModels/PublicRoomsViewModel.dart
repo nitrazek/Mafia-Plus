@@ -43,7 +43,11 @@ class PublicRoomsViewModel with ChangeNotifier {
       catch (e) {
         if(e is UnauthorisedException) {
           onError.call("Lobby is full");
-        } else {
+        }
+        else if(e is ForbiddenException) {
+          onError.call("Game has been started.");
+        }
+        else {
           onError.call("Wrong code");
         }
       }
