@@ -97,8 +97,6 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
                 child: Text(room.hostUsername.toString(),
                 style: MyStyles.backgroundTextStyle),
               ),
-
-
           ],
         ),
       ),
