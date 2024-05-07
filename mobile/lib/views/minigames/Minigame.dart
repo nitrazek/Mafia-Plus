@@ -24,7 +24,7 @@ class MinigamePageState extends State<MinigamePage> {
   StreamSubscription<void>? _votingStartedSubscription;
 
   int _countdownValue = 3;
-  int _minigameDuration = 5;
+  int _minigameDuration = 10;
   late Timer _countdownTimer, _minigameTimer;
   late OverlayEntry _overlayEntry;
 
