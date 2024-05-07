@@ -134,7 +134,7 @@ class MenuPageState extends State<MenuPage> {
                       MenuItem(
                         icon: Icons.lock_open,
                         title: 'Enter room code',
-                        onPressed: () {
+                          onPressed: _isLoading ? null : () async {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -146,7 +146,7 @@ class MenuPageState extends State<MenuPage> {
                       MenuItem(
                         icon: Icons.public,
                         title: 'Public rooms',
-                        onPressed: () {
+                          onPressed: _isLoading ? null : () async {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -158,7 +158,7 @@ class MenuPageState extends State<MenuPage> {
                       MenuItem(
                         icon: Icons.history,
                         title: 'Game history',
-                        onPressed: () {
+                          onPressed: _isLoading ? null : () async {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -170,7 +170,7 @@ class MenuPageState extends State<MenuPage> {
                       MenuItem(
                         icon: Icons.settings,
                         title: 'Settings',
-                        onPressed: () {
+                        onPressed: _isLoading ? null : () async {
                           Fluttertoast.showToast(
                             msg: 'No settings to show',
                           );

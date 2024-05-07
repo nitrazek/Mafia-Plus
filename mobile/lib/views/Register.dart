@@ -227,7 +227,9 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                                     }
                                   },
                                   child: _isLoading
-                                      ? CircularProgressIndicator()
+                                      ? CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
                                       : const Text(
                                       'Register',
                                       style: TextStyle(

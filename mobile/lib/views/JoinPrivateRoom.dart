@@ -118,7 +118,9 @@ class JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
                           );
                         },
                           child: _isLoading
-                              ? CircularProgressIndicator()
+                              ? CircularProgressIndicator(
+                            color: Colors.white,
+                          )
                               :Text(
                               'Join',
                               style: TextStyle(

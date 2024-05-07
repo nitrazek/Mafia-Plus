@@ -174,7 +174,9 @@ class LoginPageState extends State<LoginPage> with RouteAware {
                                       });
                                     },
                                     child: _isLoading
-                                        ? CircularProgressIndicator()
+                                        ? CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
                                         :Text(
                                         'Login',
                                       style: TextStyle(

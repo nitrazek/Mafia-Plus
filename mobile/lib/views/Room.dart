@@ -144,11 +144,17 @@ class RoomPageState extends State<RoomPage> {
                                     );
                                   }
                                 }
-                            );
+                            ).then((_){
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            });
                           },
                           style: MyStyles.buttonStyle,
                             child: _isLoading
-                                ? CircularProgressIndicator()
+                                ? CircularProgressIndicator(
+                              color: Colors.white,
+                            )
                                 :Text(
                                 'Start Game',
                                 style: TextStyle(
