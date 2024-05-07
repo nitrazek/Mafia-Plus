@@ -17,6 +17,7 @@ class RoomPage extends StatefulWidget {
 
 class RoomPageState extends State<RoomPage> {
   StreamSubscription<void>? _gameStartedSubscription;
+  bool _isLoading = false;
 
   @override
   void didChangeDependencies() {
@@ -123,12 +124,18 @@ class RoomPageState extends State<RoomPage> {
                       const SizedBox(height: 20),
                       if (context.watch<RoomViewModel>().isHost)
                         ElevatedButton(
-                          onPressed: () {
+                          onPressed: _isLoading ? null : () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
                             int roomId = context.read<RoomViewModel>().room?.id ?? 0;
                             context.read<RoomViewModel>().startGame(
                                 roomId,
                                     (){},
                                     (){
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
                                   if (context.read<RoomViewModel>().messageError.isNotEmpty) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
@@ -140,14 +147,22 @@ class RoomPageState extends State<RoomPage> {
                             );
                           },
                           style: MyStyles.buttonStyle,
-                          child: const Text('Start game'),
+                            child: _isLoading
+                                ? CircularProgressIndicator()
+                                :Text(
+                                'Start Game',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold
+                                ))
                         ),
                       const SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: () {
                           context.read<RoomViewModel>().leaveRoom(
                                   () {
-                                Navigator.pop(context);
+                                Navigator.pop(context, false);
                               },
                                   () {}
                           );

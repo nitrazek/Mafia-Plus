@@ -23,6 +23,40 @@ class MenuPageState extends State<MenuPage> {
 
   late double screenWidth;
   late double screenHeight;
+  bool _isLoading = false;
+
+  void _getIsLoadingValue(BuildContext context) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    await context.read<MenuViewModel>().createRoom(
+          () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const RoomPage(),
+          ),
+        ).then((value) {
+          setState(() {
+            if (value != null && value is bool) {
+              _isLoading = value;
+            } else {
+              _isLoading = false;
+            }
+          });
+        });
+      },
+          () {
+        Fluttertoast.showToast(
+          msg: 'Creating room error',
+        );
+        setState(() {
+          _isLoading = false;
+        });
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -93,24 +127,9 @@ class MenuPageState extends State<MenuPage> {
                     children: [
                       MenuItem(
                         icon: Icons.add,
-                        title: 'Create new room',
-                        onPressed: () {
-                          context.read<MenuViewModel>().createRoom(
-                            () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const RoomPage()
-                                )
-                              );
-                            },
-                            () {
-                              Fluttertoast.showToast(
-                                msg: 'Creating room error'
-                              );
-                            }
-                          );
-                        }
+                          title: _isLoading ? 'Creating...' : 'Create new room',
+                          onPressed: _isLoading ? null : () => _getIsLoadingValue(context)
+
                       ),
                       MenuItem(
                         icon: Icons.lock_open,
@@ -159,7 +178,7 @@ class MenuPageState extends State<MenuPage> {
                       ),
                       MenuItem(
                         icon: Icons.logout,
-                        title: 'Logout',
+                        title: _isLoading ? 'Logging out...' : 'Logout',
                         onPressed: () {
                           context.read<MenuViewModel>().logout(
                             () {
@@ -188,7 +207,7 @@ class MenuPageState extends State<MenuPage> {
 class MenuItem extends StatelessWidget {
   final IconData icon;
   final String title;
-  final void Function() onPressed;
+  final void Function()? onPressed;
 
   const MenuItem({
     required this.icon,
