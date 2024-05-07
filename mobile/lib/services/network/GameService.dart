@@ -6,11 +6,11 @@ import 'package:http/http.dart' as http;
 import 'package:mobile/utils/CustomHttpClient.dart';
 import 'package:mobile/utils/NetworkUtils.dart';
 import 'package:mobile/services/network/NetworkException.dart';
+
 class GameService {
   final String baseUrl = "http://${Constants.baseUrl}";
   final CustomHttpClient httpClient = CustomHttpClient();
   final WebSocketClient webSocketClient = WebSocketClient();
-
 
   Future<void> startGame(int roomId) async {
     try {
