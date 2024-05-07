@@ -52,7 +52,9 @@ class RoomPageState extends State<RoomPage> {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Room'),
+          foregroundColor: Colors.white,
+          title: Text('Room',
+          style: MyStyles.backgroundTextStyle,),
           backgroundColor: MyStyles.appBarColor,
           actions: [
             Padding(
@@ -66,7 +68,8 @@ class RoomPageState extends State<RoomPage> {
                 },
                 child: const Icon(
                   Icons.settings,
-                  size: 30
+                  size: 30,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -212,7 +215,7 @@ class RoomPageState extends State<RoomPage> {
                   children: [
                     Text(context.watch<RoomViewModel>().room!.hostUsername),
                     const Text(
-                      '👑', // Emotikona korony
+                      ' 👑', // Emotikona korony
                       style: TextStyle(fontSize: 20),
                     )
                   ],
