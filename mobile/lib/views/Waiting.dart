@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/viewModels/WaitingViewModel.dart';
@@ -25,6 +26,9 @@ class _WaitingPageState extends State<WaitingPage>
   late AnimationController _controller;
   StreamSubscription<void>? _votingFinishedSubscription;
 
+  late double screenWidth;
+  late double screenHeight;
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +36,10 @@ class _WaitingPageState extends State<WaitingPage>
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     )..repeat(reverse: true);
+    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+    Size size = view.physicalSize;
+    screenWidth = size.width;
+    screenHeight = size.height;
   }
 
   @override
@@ -108,7 +116,7 @@ class _WaitingPageState extends State<WaitingPage>
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 40),
+                    SizedBox(height: screenHeight * 0.02),
                     Text(
                       widget.viewType == 0
                           ? "You died!:3"
@@ -120,7 +128,7 @@ class _WaitingPageState extends State<WaitingPage>
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 40),
+                    SizedBox(height: screenHeight * 0.02),
                     AnimatedBuilder(
                       animation: _controller,
                       builder: (BuildContext context, Widget? child) {
@@ -134,7 +142,7 @@ class _WaitingPageState extends State<WaitingPage>
                         );
                       },
                     ),
-                    SizedBox(height: 30),
+                    SizedBox(height: screenHeight * 0.015),
                   ],
                 ),
               ),

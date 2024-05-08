@@ -74,7 +74,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const SizedBox(height: 40,),
+            SizedBox(height: screenHeight * 0.015,),
             const Padding(
               padding: EdgeInsets.all(20),
               child: Column(
@@ -94,7 +94,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                     padding: const EdgeInsets.all(30),
                     child: Column(
                       children: <Widget>[
-                        const SizedBox(height: 35,),
+                        SizedBox(height: screenHeight * 0.01,),
                         Container(
                           decoration: BoxDecoration(
                             color: MyStyles.backgroundColor,
@@ -232,7 +232,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                         ),
                         SizedBox(height: screenHeight * 0.015),
                         const Text("Already have an account?"),
-                        const SizedBox(height: 8.0),
+                        SizedBox(height: screenHeight * 0.005),
                         ElevatedButton(
                             style:MyStyles.buttonStyle,
                             onPressed: () {
