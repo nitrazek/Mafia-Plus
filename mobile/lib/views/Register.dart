@@ -120,6 +120,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                                       hintStyle: TextStyle(color: Colors.grey),
                                       border: InputBorder.none,
                                     ),
+                                    enabled: !_isLoading,
                                   ),
                                 ),
                                 Container(
@@ -134,6 +135,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                                       hintStyle: TextStyle(color: Colors.grey),
                                       border: InputBorder.none,
                                     ),
+                                    enabled: !_isLoading,
                                   ),
                                 ),
                                 Container(
@@ -149,6 +151,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                                         hintStyle: TextStyle(color: Colors.grey),
                                         border: InputBorder.none,
                                       ),
+                                      enabled: !_isLoading,
                                     )
                                 ),
                                 Container(
@@ -161,6 +164,7 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                                         hintStyle: TextStyle(color: Colors.grey),
                                         border: InputBorder.none,
                                       ),
+                                      enabled: !_isLoading,
                                     )
                                 ),
                               ],
