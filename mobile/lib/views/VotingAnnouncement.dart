@@ -22,11 +22,11 @@ class _VotingAnnouncementState extends State<VotingAnnouncement> {
     super.initState();
     // po5 sekundach przechodzi do kolejnej strony
     Timer(Duration(seconds: 5), () {
-      navigateToNextPage();
+      navigateToNextPage(context);
     });
   }
 
-  void navigateToNextPage() {
+  void navigateToNextPage(BuildContext context) {
     Navigator.pushReplacement(
       context,
       PageTransition(
@@ -34,9 +34,7 @@ class _VotingAnnouncementState extends State<VotingAnnouncement> {
         duration: const Duration(milliseconds: 1500),
         child: widget.viewType == 0
             ? VotingPage()
-            : Provider
-            .of<WaitingViewModel>(context, listen: false)
-            .turn == 'mafia'
+            : Provider.of<WaitingViewModel>(context, listen: false).turn == 'mafia'
             ? const VotingPage()
             : WaitingPage(viewType: 1),
       ),

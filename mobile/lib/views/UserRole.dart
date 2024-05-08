@@ -5,6 +5,7 @@ import 'package:mobile/Views/styles.dart';
 import 'package:mobile/views/Voting.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/UserRoleViewModel.dart';
+import 'package:mobile/views/VotingAnnouncement.dart';
 
 class UserRolePage extends StatefulWidget {
   const UserRolePage({super.key});
@@ -21,7 +22,7 @@ class UserRolePageState extends State<UserRolePage> {
     super.didChangeDependencies();
     _votingStartedSubscription ??= context.read<UserRoleViewModel>().votingStarted.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const VotingPage()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const VotingAnnouncement(viewType:0)));
       });
     });
   }
