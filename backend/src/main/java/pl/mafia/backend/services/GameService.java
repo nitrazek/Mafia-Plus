@@ -9,12 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import pl.mafia.backend.models.db.*;
 import pl.mafia.backend.models.dto.*;
+import pl.mafia.backend.models.enums.MinigameType;
 import pl.mafia.backend.repositories.*;
 import pl.mafia.backend.websockets.WebSocketListener;
 
+import java.awt.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -22,12 +25,15 @@ import java.util.stream.Collectors;
 
 @Component
 public class GameService {
+    private final Random random = new Random();
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
     private RoomRepository roomRepository;
     @Autowired
     private GameRepository gameRepository;
+    @Autowired
+    private MinigameRepository minigameRepository;
     @Autowired
     private RoundRepository roundRepository;
     @Autowired
@@ -61,7 +67,7 @@ public class GameService {
     public Game getGame(Long gameId) {
         Optional<Game> fetchedGame = gameRepository.findById(gameId);
         if(fetchedGame.isEmpty())
-            throw new IllegalArgumentException("Player does not exists.");
+            throw new IllegalArgumentException("Game does not exists.");
         return fetchedGame.get();
     }
 
@@ -69,7 +75,7 @@ public class GameService {
     public Round getRound(Long roundId) {
         Optional<Round> fetchedRound = roundRepository.findById(roundId);
         if(fetchedRound.isEmpty())
-            throw new IllegalArgumentException("Player does not exists.");
+            throw new IllegalArgumentException("Round does not exists.");
         return fetchedRound.get();
     }
 
@@ -170,9 +176,7 @@ public class GameService {
 
     @Transactional
     public void startRound(long gameId) {
-        Optional<Game> fetchedGame = gameRepository.findById(gameId);
-        if(fetchedGame.isEmpty()) throw new IllegalArgumentException("Game does not exist.");
-        Game game = fetchedGame.get();
+        Game game = getGame(gameId);
 
         Round createdRound = new Round();
         createdRound = roundRepository.save(createdRound);
@@ -181,7 +185,26 @@ public class GameService {
         gameRepository.save(game);
         createdRound = roundRepository.save(createdRound);
 
-        startVotingCity(createdRound.getId());
+        startMinigame(createdRound.getId());
+    }
+
+    @Transactional
+    public void startMinigame(long roundId) {
+        Round round = getRound(roundId);
+
+        Minigame minigame = new Minigame();
+        minigame.setType(MinigameType.random());
+        minigame.setRound(round);
+        minigame = minigameRepository.save(minigame);
+
+        round = roundRepository.save(round);
+        Game game = round.getGame();
+        game = gameRepository.save(game);
+        Room room = game.getRoom();
+        room = roomRepository.save(room);
+
+        String destination = "/topic/" + room.getId() + "/minigame-start";
+        simpMessagingTemplate.convertAndSend(destination, new MinigameStart(minigame));
     }
 
     @Transactional

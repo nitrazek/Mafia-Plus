@@ -1,22 +1,26 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/models/MinigameStart.dart';
 import 'package:mobile/state/GameState.dart';
+import 'package:mobile/state/MinigameState.dart';
 import 'package:mobile/state/VotingState.dart';
+
+import '../models/MinigameType.dart';
 
 class UserRoleViewModel extends ChangeNotifier {
   final GameState _gameState = GameState();
-  final VotingState _votingState = VotingState();
+  final MinigameState _minigameState = MinigameState();
 
   String _role = '';
   String get role => _role;
 
-  final _votingStarted = StreamController<void>.broadcast();
-  Stream<void> get votingStarted => _votingStarted.stream;
+  final _minigameStarted = StreamController<MinigameType>.broadcast();
+  Stream<MinigameType> get minigameStarted => _minigameStarted.stream;
 
   UserRoleViewModel() {
     _gameState.addListener(_updateRole); _updateRole();
-    _votingState.addListener(_updateVoting); _updateVoting();
+    _minigameState.addListener(_updateMinigame); _updateMinigame();
   }
 
   void _updateRole() {
@@ -25,9 +29,9 @@ class UserRoleViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _updateVoting() {
-    if(_votingState.currentVoting == null) return;
-    _votingStarted.add(null);
+  void _updateMinigame() {
+    if(_minigameState.currentMinigame == null) return;
+    _minigameStarted.add(_minigameState.currentMinigame!.type);
     notifyListeners();
   }
 }

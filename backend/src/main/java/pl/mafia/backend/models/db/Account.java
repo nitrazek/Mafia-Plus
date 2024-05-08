@@ -38,11 +38,6 @@ public class Account {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-    private List<RoundMiniGame> roundMiniGames = new ArrayList<>();
-
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "voter", fetch = FetchType.LAZY)
     private List<Vote> votesAsVoter = new ArrayList<>();
 

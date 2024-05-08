@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
+import 'package:mobile/utils/MinigameViewFactory.dart';
 import 'package:mobile/views/Voting.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/UserRoleViewModel.dart';
@@ -32,9 +33,12 @@ class UserRolePageState extends State<UserRolePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _votingStartedSubscription ??= context.read<UserRoleViewModel>().votingStarted.listen((_) {
+    _votingStartedSubscription ??= context.read<UserRoleViewModel>().minigameStarted.listen((minigame) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const VotingPage()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: MinigameViewFactory.createMinigameView(minigame))
+        );
       });
     });
   }
