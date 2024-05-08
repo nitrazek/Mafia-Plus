@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/models/Room.dart';
@@ -14,10 +16,18 @@ class PublicRoomsPage extends StatefulWidget {
 }
 
 class PublicRoomsPageState extends State<PublicRoomsPage> {
+
+  late double screenWidth;
+  late double screenHeight;
+
   @override
   void initState() {
     super.initState();
     context.read<PublicRoomsViewModel>().fetchPublicRooms();
+    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+    Size size = view.physicalSize;
+    screenWidth = size.width;
+    screenHeight = size.height;
   }
 
   void _refreshRooms() {
@@ -59,7 +69,7 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
               style:MyStyles.buttonStyle,
               child: const Text('Refresh'),
             ),
-            const SizedBox(height: 25.0),
+            SizedBox(height: screenHeight * 0.015),
             const Text(
               'Choose a Public Room',
               style: TextStyle(
@@ -68,7 +78,7 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
                 color: Colors.black
               ),
             ),
-            const SizedBox(height: 25.0),
+            SizedBox(height: screenHeight * 0.015),
             for (Room room in publicRooms)
               ElevatedButton(
                 onPressed: () async {

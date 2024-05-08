@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/state/AccountState.dart';
@@ -23,6 +24,19 @@ class _VotingPageState extends State<VotingPage> {
   StreamSubscription<void>? _votingFinishedSubscription;
   late String? turn = context.watch<VotingViewModel>().turn;
   late String role = context.watch<UserRoleViewModel>().role;
+
+  late double screenWidth;
+  late double screenHeight;
+
+  @override
+  void initState() {
+    super.initState();
+    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+    Size size = view.physicalSize;
+    screenWidth = size.width;
+    screenHeight = size.height;
+  }
+
 
   @override
   void didChangeDependencies() {
@@ -76,13 +90,13 @@ class _VotingPageState extends State<VotingPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 35),
+                SizedBox(height: screenHeight * 0.02),
                  Text(
                   votingText,
-                  style: TextStyle(fontSize: 28, color: Colors.white),
+                  style: const TextStyle(fontSize: 28, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: screenHeight * 0.01),
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(16.0),
@@ -161,16 +175,16 @@ class PlayerButtonState extends State<PlayerButton> {
           children: [
             AnimatedAlign(
               curve: Curves.fastOutSlowIn,
-              duration: Duration(seconds: 1),
+              duration: const Duration(seconds: 1),
               alignment: _isButtonPressed ? Alignment.center : Alignment.centerLeft,
               child: CircleAvatar(
                 radius: 30.0,
                 backgroundColor: _isButtonPressed ? MyStyles.red : MyStyles.buttonStyle.backgroundColor!.resolve({}),
-                child: Icon(Icons.person, size: 35.0, color: Colors.white),
+                child: const Icon(Icons.person, size: 35.0, color: Colors.white),
               ),
             ),
             AnimatedOpacity(
-              duration: Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
               opacity: _isButtonPressed ? 0.0 : 1.0,
               child: Container(
                   padding: const EdgeInsets.all(8.0),

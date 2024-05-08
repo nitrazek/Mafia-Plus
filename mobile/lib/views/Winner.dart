@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,19 @@ class WinnerPage extends StatefulWidget {
 }
 
 class WinnerPageState extends State<WinnerPage> {
+
+  late double screenWidth;
+  late double screenHeight;
+
+  @override
+  void initState() {
+    super.initState();
+    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+    Size size = view.physicalSize;
+    screenWidth = size.width;
+    screenHeight = size.height;
+  }
+
   @override
   Widget build(BuildContext context) {
     Timer(const Duration(seconds: 8), () {
@@ -41,14 +55,14 @@ class WinnerPageState extends State<WinnerPage> {
         ),
         child: Column(
           children: [
-            SizedBox(height: 80),
+            SizedBox(height: screenHeight * 0.015),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(width: 20),
-                  Text(
+                  SizedBox(width: screenWidth * 0.01),
+                  const Text(
                     'The Winner is...',
                     style: TextStyle(
                       fontSize: 40,
@@ -56,7 +70,7 @@ class WinnerPageState extends State<WinnerPage> {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(width: 20),
+                  SizedBox(width: screenWidth * 0.01),
                 ],
               ),
             ),
@@ -74,7 +88,7 @@ class WinnerPageState extends State<WinnerPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(height: 100),
+                        SizedBox(height: screenHeight * 0.05),
                         Image.asset(
                             'assets/images/Crown.png',
                             width: 100
@@ -83,13 +97,11 @@ class WinnerPageState extends State<WinnerPage> {
                             imagePath,
                             width: 100
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: screenHeight * 0.01),
                         Text(
                           roleName,
                           style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold, color: textColor),
                         ),
-
-                        SizedBox(height: 150),
                       ],
                     ),
                   ),
