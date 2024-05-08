@@ -58,7 +58,7 @@ public class VotingService {
     public boolean saveVote(Long votingId, String voterUsername, String votedUsername) {
         Voting voting = getVoting(votingId);
         Account voter = accountService.getAccount(voterUsername);
-        Account voted = accountService.getAccount(votedUsername);
+        Account voted = !votedUsername.isEmpty() ? accountService.getAccount(votedUsername): null;
         if (voterUsername.equals(votedUsername))
             throw new IllegalArgumentException("Voter and voted can not be the same user");
 

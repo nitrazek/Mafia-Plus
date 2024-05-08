@@ -38,17 +38,17 @@ class PublicRoomsViewModel with ChangeNotifier {
         Room room = await _roomService.joinRoomByAccessCode(accessCode);
         await _webSocketClient.connect(room.id);
         _roomState.setRoom(room);
-        onSuccess.call();
+        onSuccess();
       }
       catch (e) {
         if(e is UnauthorisedException) {
-          onError.call("Lobby is full");
+          onError("Lobby is full");
         }
         else if(e is ForbiddenException) {
-          onError.call("Game has been started.");
+          onError("Game has been started.");
         }
         else {
-          onError.call("Wrong code");
+          onError("Wrong code");
         }
       }
     }

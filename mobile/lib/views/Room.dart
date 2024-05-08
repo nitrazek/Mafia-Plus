@@ -130,12 +130,12 @@ class RoomPageState extends State<RoomPage> {
                             int roomId = context.read<RoomViewModel>().room?.id ?? 0;
                             context.read<RoomViewModel>().startGame(
                                 roomId,
-                                    (){},
-                                    (){
-                                  if (context.read<RoomViewModel>().messageError.isNotEmpty) {
+                                  (){},
+                                  (messageError){
+                                  if(messageError.isNotEmpty) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text(context.watch<RoomViewModel>().messageError),
+                                        content: Text(messageError),
                                       ),
                                     );
                                   }
@@ -149,10 +149,10 @@ class RoomPageState extends State<RoomPage> {
                       ElevatedButton(
                         onPressed: () {
                           context.read<RoomViewModel>().leaveRoom(
-                                  () {
+                              () {
                                 Navigator.pop(context);
                               },
-                                  () {}
+                              (messageError) {}
                           );
                         },
                         style: MyStyles.buttonStyle,
