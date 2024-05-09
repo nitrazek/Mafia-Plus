@@ -34,9 +34,4 @@ public class Round {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "round", fetch = FetchType.LAZY)
     private List<Voting> votings = new ArrayList<>();
-
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "round", fetch = FetchType.LAZY)
-    private List<RoundMiniGame> roundMiniGames = new ArrayList<>();
 }

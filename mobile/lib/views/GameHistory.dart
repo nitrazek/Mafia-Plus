@@ -23,7 +23,9 @@ class _GameHistoryPageState extends State<GameHistoryPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Game History'),
+        foregroundColor: Colors.white,
+        title: Text('Game History',
+        style: MyStyles.backgroundTextStyle),
         flexibleSpace: Container(
           decoration:  BoxDecoration(
             gradient: LinearGradient(
