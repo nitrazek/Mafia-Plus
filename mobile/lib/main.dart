@@ -12,6 +12,7 @@ import 'package:mobile/viewModels/JoinPrivateRoomViewModel.dart';
 import 'package:mobile/viewModels/MenuViewModel.dart';
 import 'package:mobile/viewModels/RoomSettingsViewModel.dart';
 import 'package:mobile/viewModels/RoomViewModel.dart';
+import 'package:mobile/views/MinigameResult.dart';
 import 'package:mobile/views/VotingResults.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/LoginViewModel.dart';
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
       ],
       child: const MaterialApp(
         title: 'MAFIA+',
-        home: LoginPage(),
+        home: MinigameResultPage(),
       ),
     );
   }
