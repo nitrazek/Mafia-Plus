@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/viewModels/minigames/MinigameViewModel.dart';
+import 'package:mobile/views/MinigameResult.dart';
 import 'package:mobile/views/Voting.dart';
 import 'package:mobile/views/styles.dart';
 import 'package:page_transition/page_transition.dart';
@@ -67,7 +68,7 @@ class MinigamePageState extends State<MinigamePage> {
         Navigator.pushReplacement(context, PageTransition(
           type: PageTransitionType.fade,
           duration: const Duration(milliseconds: 1500),
-          child: const VotingPage(),
+          child: const MinigameResultPage(),
         ));
       });
     });

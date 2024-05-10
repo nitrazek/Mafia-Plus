@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
       ],
       child: const MaterialApp(
         title: 'MAFIA+',
-        home: MinigameResultPage(),
+        home: LoginPage(),
       ),
     );
   }
