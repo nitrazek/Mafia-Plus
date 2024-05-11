@@ -33,6 +33,9 @@ class MinigamePageState extends State<MinigamePage> {
       if(_countdownValue == 0) {
         timer.cancel();
         _overlayEntry.remove();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.read<MinigameViewModel>().init();
+        });
         _startMinigame();
       } else {
         setState(() {

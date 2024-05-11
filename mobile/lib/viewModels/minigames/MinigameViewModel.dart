@@ -33,6 +33,8 @@ class MinigameViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void init() {}
+
   void increaseScore(int value) {
     _score += value;
   }

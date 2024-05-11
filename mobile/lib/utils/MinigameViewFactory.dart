@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mobile/models/MinigameStart.dart';
 import 'package:mobile/viewModels/minigames/MinigameViewModel.dart';
+import 'package:mobile/viewModels/minigames/NumberMemoryMinigameViewModel.dart';
 import 'package:mobile/views/minigames/ClickTheButtonMinigame.dart';
 import 'package:mobile/views/minigames/NumberMemoryMinigame.dart';
 import 'package:mobile/views/minigames/TestMinigame.dart';
@@ -25,10 +26,11 @@ class MinigameViewFactory {
           minigame: ClickTheButtonMinigamePage()
         );
       case MinigameType.NUMBER_MEMORY:
-        return (context) => const MinigameIntroPage(
+        return (context) => MinigameIntroPage(
           title: "Number Memory",
           description: "Score the highest points by memorizing as many numbers as you can. Each correct answer increases number by 1 digit.",
-          minigame: NumberMemoryMinigamePage()
+          minigame: const NumberMemoryMinigamePage(),
+          minigameViewModel: NumberMemoryMinigameViewModel()
         );
     }
   }

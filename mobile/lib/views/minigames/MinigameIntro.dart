@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/models/Minigame.dart';
 import 'package:mobile/viewModels/minigames/MinigameViewModel.dart';
 import 'package:mobile/views/minigames/Minigame.dart';
 import 'package:mobile/views/styles.dart';
@@ -11,12 +12,14 @@ class MinigameIntroPage extends StatefulWidget {
   final String title;
   final String description;
   final Widget minigame;
+  final MinigameViewModel? minigameViewModel;
 
   const MinigameIntroPage({
     Key? key,
     required this.title,
     required this.description,
-    required this.minigame
+    required this.minigame,
+    this.minigameViewModel
   }) : super(key: key);
 
   @override
@@ -28,7 +31,7 @@ class MinigameIntroPageState extends State<MinigameIntroPage> {
   Widget build(BuildContext context) {
     Timer(const Duration(seconds: 4), () {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
-        create: (context) => MinigameViewModel(),
+        create: (context) => widget.minigameViewModel ?? MinigameViewModel(),
         child: MinigamePage(minigame: widget.minigame)
       )));
     });
