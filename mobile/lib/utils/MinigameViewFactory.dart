@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:mobile/models/MinigameStart.dart';
 import 'package:mobile/viewModels/minigames/MinigameViewModel.dart';
 import 'package:mobile/views/minigames/ClickTheButtonMinigame.dart';
+import 'package:mobile/views/minigames/NumberMemoryMinigame.dart';
 import 'package:mobile/views/minigames/TestMinigame.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +23,12 @@ class MinigameViewFactory {
           title: "Click The Button!",
           description: "Score the highest points by clicking big red button as many times as possible.",
           minigame: ClickTheButtonMinigamePage()
+        );
+      case MinigameType.NUMBER_MEMORY:
+        return (context) => const MinigameIntroPage(
+          title: "Number Memory",
+          description: "Score the highest points by memorizing as many numbers as you can. Each correct answer increases number by 1 digit.",
+          minigame: NumberMemoryMinigamePage()
         );
     }
   }
