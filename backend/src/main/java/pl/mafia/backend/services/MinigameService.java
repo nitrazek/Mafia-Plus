@@ -74,6 +74,20 @@ public class MinigameService {
     round = roundRepository.save(round);
 
     //Tutaj wybrać najlepszego i przyznać nagrodę czy coś takiego
+    int highestScore = 0;
+    for (MinigameScore minigameScore : minigame.getMinigameScores()) {
+      if (minigameScore.getScore() > highestScore) {
+        highestScore = minigameScore.getScore();
+      }
+    }
+
+    Account winner = null;
+    for (MinigameScore minigameScore : minigame.getMinigameScores()) {
+      if (minigameScore.getScore() == highestScore) {
+        winner = minigameScore.getAccount();
+        break;
+      }
+    }
 
     Round finalRound = round;
     scheduledExecutorService.schedule(() -> {
