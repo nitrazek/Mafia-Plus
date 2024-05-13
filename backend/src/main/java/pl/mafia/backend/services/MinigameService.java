@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import pl.mafia.backend.models.db.*;
+import pl.mafia.backend.models.dto.MinigameSummary;
 import pl.mafia.backend.repositories.GameRepository;
 import pl.mafia.backend.repositories.MinigameRepository;
 import pl.mafia.backend.repositories.MinigameScoreRepository;
@@ -76,6 +77,7 @@ public class MinigameService {
   @Transactional
   public void summarizeMinigame(Long minigameId) {
     Minigame minigame = getMinigame(minigameId);
+
     Round round = minigame.getRound();
     round = roundRepository.save(round);
 
@@ -101,7 +103,7 @@ public class MinigameService {
     }
 
 
-    messagingTemplate.convertAndSend("/topic/"+round.getId() + "/minigame-summary",winner);
+    messagingTemplate.convertAndSend("/topic/"+round.getId() + "/minigame-summary",new MinigameSummary(winner,highestScore));
 
     Round finalRound = round;
     scheduledExecutorService.schedule(() -> {
