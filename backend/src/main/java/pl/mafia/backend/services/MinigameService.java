@@ -1,6 +1,7 @@
 package pl.mafia.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Isolation;
@@ -13,7 +14,10 @@ import pl.mafia.backend.repositories.MinigameRepository;
 import pl.mafia.backend.repositories.MinigameScoreRepository;
 import pl.mafia.backend.repositories.RoundRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +39,8 @@ public class MinigameService {
   private ScheduledExecutorService scheduledExecutorService;
   @Autowired
   private PlatformTransactionManager transactionManager;
+  @Autowired
+  private SimpMessagingTemplate messagingTemplate;
 
   @Transactional
   private Minigame getMinigame(Long minigameId) {
@@ -75,19 +81,27 @@ public class MinigameService {
 
     //Tutaj wybrać najlepszego i przyznać nagrodę czy coś takiego
     int highestScore = 0;
+    List<Account> winners = new ArrayList<>();
+    Account winner = null;
+
     for (MinigameScore minigameScore : minigame.getMinigameScores()) {
       if (minigameScore.getScore() > highestScore) {
         highestScore = minigameScore.getScore();
+        winners.clear();
+        winners.add(minigameScore.getAccount());
+      } else if (minigameScore.getScore() == highestScore) {
+        winners.add(minigameScore.getAccount());
       }
+    }
+    if (winners.size() > 1) {
+      winner = winners.get(new Random().nextInt(winners.size()));
+    }
+    else{
+      winner = winners.get(0);
     }
 
-    Account winner = null;
-    for (MinigameScore minigameScore : minigame.getMinigameScores()) {
-      if (minigameScore.getScore() == highestScore) {
-        winner = minigameScore.getAccount();
-        break;
-      }
-    }
+
+    messagingTemplate.convertAndSend("/topic/"+round.getId() + "/minigame-summary",winner);
 
     Round finalRound = round;
     scheduledExecutorService.schedule(() -> {
