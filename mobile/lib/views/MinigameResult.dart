@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
+import 'package:mobile/models/Score.dart';
+import 'package:mobile/viewModels/MinigameResultViewModel.dart';
+import 'package:provider/provider.dart';
 
 class MinigameResultPage extends StatefulWidget {
   const MinigameResultPage({super.key});
@@ -19,6 +22,7 @@ class MinigameResultPageState extends State<MinigameResultPage> {
 
   @override
   Widget build(BuildContext context) {
+    var highestScore = context.watch<MinigameResultViewModel>().highestScore;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -71,10 +75,10 @@ class MinigameResultPageState extends State<MinigameResultPage> {
                           child:Row(
                             crossAxisAlignment: CrossAxisAlignment.end, //add this line
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               CircleAvatar(radius: 45, backgroundColor: Color(0xFF8E44AD),
                               child: Text(
-                                '2'
+                                ''
                               ),
                               ),
                               SizedBox(width:20),
@@ -82,13 +86,13 @@ class MinigameResultPageState extends State<MinigameResultPage> {
                                 padding:EdgeInsets.only(bottom:30),
                                 child: CircleAvatar(radius: 60, backgroundColor: Color(0xFFA569BD),
                                   child: Text(
-                                      '1'
+                                      highestScore == null ? "0" : highestScore.toString(),
                                   ),),
                               ),
                               SizedBox(width:20),
                               CircleAvatar(radius: 35, backgroundColor: Color(0xFF77176E),
                                 child: Text(
-                                    '3'
+                                    ''
                                 ),),
                             ],
                           )
