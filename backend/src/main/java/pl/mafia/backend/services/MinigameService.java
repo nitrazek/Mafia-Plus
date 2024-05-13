@@ -103,7 +103,7 @@ public class MinigameService {
     }
 
 
-    messagingTemplate.convertAndSend("/topic/"+round.getId() + "/minigame-summary",new MinigameSummary(winner,highestScore));
+    messagingTemplate.convertAndSend("/topic/"+round.getId() + "/minigame-summary",new MinigameSummary(highestScore));
 
     Round finalRound = round;
     scheduledExecutorService.schedule(() -> {
