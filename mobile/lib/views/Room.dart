@@ -158,7 +158,7 @@ class RoomPageState extends State<RoomPage> {
                                 ? CircularProgressIndicator(
                               color: Colors.white,
                             )
-                                :Text(
+                                :const Text(
                                 'Start Game',
                                 style: TextStyle(
                                     color: Colors.white,
@@ -177,7 +177,13 @@ class RoomPageState extends State<RoomPage> {
                           );
                         },
                         style: MyStyles.buttonStyle,
-                        child: const Text('Exit'),
+                        child: const Text(
+                            'Exit',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold
+                            )),
                       ),
                       SizedBox(height: screenHeight * 0.0075),
                       if (context.read<RoomViewModel>().room?.roomSettings.isPublic == false)
