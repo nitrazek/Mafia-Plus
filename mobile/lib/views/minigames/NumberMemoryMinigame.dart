@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/viewModels/minigames/MinigameViewModel.dart';
@@ -13,7 +12,29 @@ class NumberMemoryMinigamePage extends StatefulWidget {
 }
 
 class NumberMemoryMinigamePageState extends State<NumberMemoryMinigamePage> {
+  bool _isNumberVisible = true;
   final TextEditingController _answerController = TextEditingController();
+
+  void _showNumber() {
+    setState(() {
+      _isNumberVisible = true;
+    });
+  }
+
+  void _hideNumber() {
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        _isNumberVisible = false;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    NumberMemoryMinigameViewModel viewModel = Provider.of<MinigameViewModel>(context) as NumberMemoryMinigameViewModel;
+    viewModel.setHideNumberCallback(_hideNumber);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +42,12 @@ class NumberMemoryMinigamePageState extends State<NumberMemoryMinigamePage> {
       builder: (context, minigameViewModel, child) {
         NumberMemoryMinigameViewModel viewModel = minigameViewModel as NumberMemoryMinigameViewModel;
         return viewModel.isNumberVisible ? Center(
-          child: Text(viewModel.generatedNumber)
+          child: Text(
+            viewModel.generatedNumber,
+            style: const TextStyle(
+              fontSize: 25
+            ),
+          )
         ) : Column(
           children: [
             Row(
@@ -40,6 +66,7 @@ class NumberMemoryMinigamePageState extends State<NumberMemoryMinigamePage> {
                 ElevatedButton(
                   onPressed: () {
                     viewModel.submitAnswer(_answerController.text);
+                    _showNumber();
                   },
                   child: const Text("Submit"),
                 )

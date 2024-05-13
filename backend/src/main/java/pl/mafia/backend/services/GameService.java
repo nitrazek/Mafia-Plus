@@ -101,8 +101,8 @@ public class GameService {
 
         List<Account> accountList = room.getAccounts();
 
-        if (accountList.size() / 4 == 0)
-            throw new IllegalAccessException("Not enough players.");
+//        if (accountList.size() / 4 == 0)
+//            throw new IllegalAccessException("Not enough players.");
 
         Collections.shuffle(accountList);
 
