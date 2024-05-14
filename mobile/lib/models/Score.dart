@@ -1,13 +1,22 @@
+import 'Account.dart';
+
 class Score {
-  final int score;
+  final Account bestPlayer;
+  final int bestScore;
+  final List<Map<Account, int>> playersScores;
 
   Score({
-    required this.score,
+    required this.bestScore,
+    required this.bestPlayer,
+    required this.playersScores
 });
 
   factory Score.fromJson(Map<String, dynamic> json) {
     return Score(
-        score: json['score'],
+        bestScore: json['bestScore'],
+      bestPlayer: json['bestPlayer'],
+      playersScores: json['playersScores'],
+
     );
   }
 }

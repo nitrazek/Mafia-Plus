@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/state/GameState.dart';
 import 'package:mobile/state/RoomState.dart';
 import 'package:mobile/state/VotingState.dart';
+import 'package:mobile/viewModels/MinigameResultViewModel.dart';
 import 'package:mobile/viewModels/UserRoleViewModel.dart';
 import 'package:mobile/viewModels/VotedViewModel.dart';
 import 'package:mobile/viewModels/VotingResultsViewModel.dart';
@@ -49,7 +50,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => WaitingViewModel()),
         ChangeNotifierProvider(create: (context) => VotingResultsViewModel()),
         ChangeNotifierProvider(create: (context) => VotedViewModel()),
-        ChangeNotifierProvider(create: (context) => WinnerViewModel())
+        ChangeNotifierProvider(create: (context) => WinnerViewModel()),
+        ChangeNotifierProvider(create: (context) => MinigameResultViewModel())
       ],
       child: const MaterialApp(
         title: 'MAFIA+',

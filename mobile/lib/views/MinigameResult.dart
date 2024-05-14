@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/models/Score.dart';
@@ -22,7 +24,11 @@ class MinigameResultPageState extends State<MinigameResultPage> {
 
   @override
   Widget build(BuildContext context) {
-    var highestScore = context.watch<MinigameResultViewModel>().highestScore;
+    var scores = context.watch<MinigameResultViewModel>().scores;
+    var player = context.watch<MinigameResultViewModel>().account;
+    var playerScore = scores!.playersScores
+        .map((map) => map[player])
+        .firstWhere((score) => score != null, orElse: () => null);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -64,39 +70,62 @@ class MinigameResultPageState extends State<MinigameResultPage> {
                           ),
                           SizedBox(height: 10,),
                           Text(
-                            isWinner ? 'Your price is:' : 'Winner is richer by:',
+                            isWinner ? 'Your prize is:' : 'Winner is richer by:',
                             style: TextStyle(
                               fontSize: 20,
                             ),
                           ),
-                      SizedBox(height: 100,),
+                      SizedBox(height: 200,),
                       Container(
                           padding:EdgeInsets.only(top:15,bottom:5),
                           child:Row(
-                            crossAxisAlignment: CrossAxisAlignment.end, //add this line
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CircleAvatar(radius: 45, backgroundColor: Color(0xFF8E44AD),
                               child: Text(
-                                ''
+                                style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 25
+                                ),
+                                playerScore == null ? "0" : playerScore.toString(),
                               ),
                               ),
                               SizedBox(width:20),
                               Padding(
                                 padding:EdgeInsets.only(bottom:30),
-                                child: CircleAvatar(radius: 60, backgroundColor: Color(0xFFA569BD),
+                                child: CircleAvatar(radius: 80, backgroundColor: Color(0xFFA569BD),
                                   child: Text(
-                                      highestScore == null ? "0" : highestScore.toString(),
+                                    style: TextStyle(
+                                      color: Colors.yellowAccent,
+                                      fontSize: 40
+                                    ),
+                                      scores == null ? "0" : scores.bestScore.toString(),
                                   ),),
                               ),
-                              SizedBox(width:20),
-                              CircleAvatar(radius: 35, backgroundColor: Color(0xFF77176E),
-                                child: Text(
-                                    ''
-                                ),),
                             ],
                           )
-                      )
+                      ),
+                          Row(
+                            children: [
+                              SizedBox(width: 60,),
+                              Text(
+                                "Yours",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                              ),
+                              SizedBox(width: 91,),
+                              Text(
+                                "Best",
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          )
                       ],
                       )
                     ),

@@ -8,8 +8,8 @@ class MinigameState extends ChangeNotifier {
 
   MinigameStart? _currentMinigame;
   MinigameStart? get currentMinigame => _currentMinigame;
-  Score? _highestScore;
-  Score? get highestScore => _highestScore;
+  Score? _scores;
+  Score? get scores => _scores;
 
   MinigameState._internal();
 
@@ -23,8 +23,8 @@ class MinigameState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setHighestScore(Score? score)
+  void setScores(Score? scores)
   {
-    _highestScore = score;
+    _scores = scores;
   }
 }

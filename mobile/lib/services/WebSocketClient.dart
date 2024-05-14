@@ -128,12 +128,12 @@ class WebSocketClient {
             }
           ));
           _unsubscribeFunctions.add(_stompClient!.subscribe(
-              destination: "/topic/$roomId/highestScore",
+              destination: "/topic/$roomId/scores",
               callback: (frame) {
-                _minigameState.setHighestScore(null);
+                _minigameState.setScores(null);
                 Map<String, dynamic> scoreEndJson = jsonDecode(frame.body!);
                 Score highestScore = Score.fromJson(scoreEndJson);
-                _minigameState.setHighestScore(highestScore);
+                _minigameState.setScores(highestScore);
               }
           ));
           connectionCompleter.complete();
