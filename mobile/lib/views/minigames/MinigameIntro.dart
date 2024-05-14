@@ -2,21 +2,22 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/viewModels/minigames/MinigameViewModel.dart';
-import 'package:mobile/views/minigames/Minigame.dart';
+import 'package:mobile/models/Minigame.dart';
+import 'package:mobile/viewModels/minigames/ClickTheButtonMinigameViewModel.dart';
+import 'package:mobile/views/minigames/ClickTheButtonMinigame.dart';
 import 'package:mobile/views/styles.dart';
 import 'package:provider/provider.dart';
 
 class MinigameIntroPage extends StatefulWidget {
   final String title;
   final String description;
-  final Widget minigame;
+  final Widget Function(BuildContext context) minigameNavigation;
 
   const MinigameIntroPage({
     Key? key,
     required this.title,
     required this.description,
-    required this.minigame
+    required this.minigameNavigation
   }) : super(key: key);
 
   @override
@@ -27,14 +28,14 @@ class MinigameIntroPageState extends State<MinigameIntroPage> {
   @override
   Widget build(BuildContext context) {
     Timer(const Duration(seconds: 4), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
-        create: (context) => MinigameViewModel(),
-        child: MinigamePage(minigame: widget.minigame)
-      )));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: widget.minigameNavigation)
+      );
     });
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Minigame'),
+          title: Text('Minigame', style: MyStyles.backgroundTextStyle),
         automaticallyImplyLeading: false,
         flexibleSpace: Container(
           decoration: BoxDecoration(

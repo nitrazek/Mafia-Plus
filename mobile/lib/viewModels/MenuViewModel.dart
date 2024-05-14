@@ -33,10 +33,10 @@ class MenuViewModel extends ChangeNotifier {
       Room room = await _roomService.createRoom();
       await _webSocketClient.connect(room.id);
       _roomState.setRoom(room);
-      onSuccess.call();
+      onSuccess();
     } catch (e) {
       print("Error creating room: $e");
-      onError.call();
+      onError();
     }
   }
 
@@ -44,9 +44,9 @@ class MenuViewModel extends ChangeNotifier {
     try {
       _accountService.logout();
       _accountState.setAccount(null);
-      onSuccess.call();
+      onSuccess();
     } on Exception catch (e) {
-      onError.call();
+      onError();
     }
   }
 }
