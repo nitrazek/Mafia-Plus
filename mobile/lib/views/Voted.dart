@@ -50,9 +50,6 @@ class VotedPageState extends State<VotedPage> {
     });
     _votingStartedSubscription ??= context.read<VotedViewModel>().votingStarted.listen((conditions) {
       WidgetsBinding.instance!.addPostFrameCallback((_) {
-
-        if (conditions.isVoting) { //jak glosuje
-
           //turn mafii
           if (Provider
               .of<WaitingViewModel>(context, listen: false)
@@ -72,7 +69,6 @@ class VotedPageState extends State<VotedPage> {
               child: VotingAnnouncement(viewType: 0),
             ));
           }
-        }
       });
     });
   }
