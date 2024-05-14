@@ -58,14 +58,14 @@ public class VotingService {
     public boolean saveVote(Long votingId, String voterUsername, String votedUsername) {
         Voting voting = getVoting(votingId);
         Account voter = accountService.getAccount(voterUsername);
-        Account voted = accountService.getAccount(votedUsername);
+        Account voted = !votedUsername.isEmpty() ? accountService.getAccount(votedUsername): null;
         if (voterUsername.equals(votedUsername))
             throw new IllegalArgumentException("Voter and voted can not be the same user");
 
         Vote vote = new Vote();
         vote.setVoting(voting);
         vote.setVoter(voter);
-        vote.setVoted(voted);
+        if(voted != null) vote.setVoted(voted);
         vote = voteRepository.save(vote);
 
         voting.getVotes().add(vote);
@@ -86,6 +86,7 @@ public class VotingService {
     public VotingSummary calculateVotingSummary(Voting voting) {
       Map<Account, Long> voteCounts = voting.getVotes().stream()
         .map(Vote::getVoted)
+        .filter(Objects::nonNull)
         .collect(Collectors.groupingBy(account -> account, Collectors.counting()));
       List<VotingResult> votingResults = voteCounts.entrySet().stream()
         .map(entry -> new VotingResult(entry.getKey().getUsername(), entry.getValue()))

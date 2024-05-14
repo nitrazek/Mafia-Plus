@@ -17,8 +17,6 @@ class RoomViewModel extends ChangeNotifier {
   final GameService _gameService = GameService();
   final WebSocketClient _webSocketClient = WebSocketClient();
 
-  String messageError = "";
-
   Room? _room;
   Room? get room => _room;
 
@@ -46,33 +44,31 @@ class RoomViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> startGame(int roomId, void Function() onSuccess, void Function() onError) async {
+  Future<void> startGame(int roomId, void Function() onSuccess, void Function(String errorMsg) onError) async {
     try {
       await _gameService.startGame(roomId);
-      onSuccess.call();
+      onSuccess();
     }
     catch(e)
     {
       if(e is UnauthorisedException) {
-        messageError = "Not enough players";
+        onError("Not enough players");
       } else {
-        messageError = "Wrong starting procedure";
+        onError("Wrong starting procedure");
       }
       notifyListeners();
-      onError.call();
     }
   }
 
-  Future<void> leaveRoom(void Function() onSuccess, void Function() onError) async {
+  Future<void> leaveRoom(void Function() onSuccess, void Function(String errorMsg) onError) async {
     try {
       await _roomService.leaveRoom();
       _roomState.setRoom(null);
       _webSocketClient.disconnect();
-      onSuccess.call();
+      onSuccess();
     } catch(e) {
-      messageError = "Leaving room error";
+      onError("Leaving room error");
       notifyListeners();
-      onError.call();
     }
   }
 

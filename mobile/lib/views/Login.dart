@@ -170,6 +170,11 @@ class LoginPageState extends State<LoginPage> with RouteAware {
                                             context,
                                             MaterialPageRoute(builder: (context) => const MenuPage())
                                         );
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg: "Login Failed",
+                                            toastLength: Toast.LENGTH_SHORT
+                                        );
                                       }
                                       setState(() {
                                         _isLoading = false;

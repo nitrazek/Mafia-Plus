@@ -3,8 +3,8 @@ package pl.mafia.backend.models.enums;
 import java.util.Random;
 
 public enum MinigameType {
-  //TEST,
-  CLICK_THE_BUTTON;
+  CLICK_THE_BUTTON,
+  NUMBER_MEMORY;
 
   public static MinigameType valueOf(int index) {
     MinigameType[] values = MinigameType.values();
