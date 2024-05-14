@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
@@ -23,6 +24,19 @@ class VotingResultsPage extends StatefulWidget {
 
 class VotingResultsPageState extends State<VotingResultsPage> {
   StreamSubscription<void>? _votingFinishedSubscription;
+
+  late double screenWidth;
+  late double screenHeight;
+
+  @override
+  void initState() {
+    super.initState();
+    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+    Size size = view.physicalSize;
+    screenWidth = size.width;
+    screenHeight = size.height;
+  }
+
 
   @override
   void didChangeDependencies() {
@@ -60,7 +74,7 @@ class VotingResultsPageState extends State<VotingResultsPage> {
         ),
         child: Column(
           children: [
-            const SizedBox(height: 80),
+            SizedBox(height: screenHeight * 0.03),
             const Text(
               'Voting Results',
               style: TextStyle(
@@ -112,7 +126,7 @@ class VotingResultsPageState extends State<VotingResultsPage> {
                               );
                             },
                           ),
-                          const SizedBox(height: 450),
+                          SizedBox(height: screenHeight * 0.3),
                         ],
                       ),
                     ),

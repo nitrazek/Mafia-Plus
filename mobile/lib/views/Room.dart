@@ -17,6 +17,7 @@ class RoomPage extends StatefulWidget {
 
 class RoomPageState extends State<RoomPage> {
   StreamSubscription<void>? _gameStartedSubscription;
+  bool _isLoading = false;
 
   @override
   void didChangeDependencies() {
@@ -52,10 +53,13 @@ class RoomPageState extends State<RoomPage> {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Room'),
+          foregroundColor: Colors.white,
+          title: Text('Room',
+          style: MyStyles.backgroundTextStyle,),
           backgroundColor: MyStyles.appBarColor,
           actions: [
-            Padding(
+            if (context.watch<RoomViewModel>().isHost)
+              Padding(
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
                 onTap: () {
@@ -66,7 +70,8 @@ class RoomPageState extends State<RoomPage> {
                 },
                 child: const Icon(
                   Icons.settings,
-                  size: 30
+                  size: 30,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -106,16 +111,15 @@ class RoomPageState extends State<RoomPage> {
                     children: [
                       Image.asset(
                         'assets/images/mafialogo.png',
-                        width: 150,
-                        height: 150,
+                        height: screenHeight * 0.06,
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: screenHeight * 0.005),
                       Text(
                         'Invite your friends and start the game!',
                         style: TextStyle(fontSize: 28, color: MyStyles.appBarColor, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: screenHeight * 0.01),
+                      SizedBox(height: screenHeight * 0.005),
                       Text(
                         'Players: ${context.watch<RoomViewModel>().room?.accountUsernames.length}',
                         style: TextStyle(fontSize: 28, color: MyStyles.appBarColor, fontWeight: FontWeight.bold),
@@ -123,12 +127,18 @@ class RoomPageState extends State<RoomPage> {
                       const SizedBox(height: 20),
                       if (context.watch<RoomViewModel>().isHost)
                         ElevatedButton(
-                          onPressed: () {
+                          onPressed: _isLoading ? null : () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
                             int roomId = context.read<RoomViewModel>().room?.id ?? 0;
                             context.read<RoomViewModel>().startGame(
                                 roomId,
                                     (){},
                                     (){
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
                                   if (context.read<RoomViewModel>().messageError.isNotEmpty) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
@@ -137,17 +147,31 @@ class RoomPageState extends State<RoomPage> {
                                     );
                                   }
                                 }
-                            );
+                            ).then((_){
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            });
                           },
                           style: MyStyles.buttonStyle,
-                          child: const Text('Start game'),
+                            child: _isLoading
+                                ? CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                                :Text(
+                                'Start Game',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold
+                                ))
                         ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: screenHeight * 0.005),
                       ElevatedButton(
                         onPressed: () {
                           context.read<RoomViewModel>().leaveRoom(
                                   () {
-                                Navigator.pop(context);
+                                Navigator.pop(context, false);
                               },
                                   () {}
                           );
@@ -155,7 +179,7 @@ class RoomPageState extends State<RoomPage> {
                         style: MyStyles.buttonStyle,
                         child: const Text('Exit'),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenHeight * 0.0075),
                       if (context.read<RoomViewModel>().room?.roomSettings.isPublic == false)
                         const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -178,7 +202,7 @@ class RoomPageState extends State<RoomPage> {
                             ),
                           ],
                         ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenHeight * 0.005),
                       Text(
                         'AccessCode: ${context.read<RoomViewModel>().room?.accessCode}',
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -212,7 +236,7 @@ class RoomPageState extends State<RoomPage> {
                   children: [
                     Text(context.watch<RoomViewModel>().room!.hostUsername),
                     const Text(
-                      '👑', // Emotikona korony
+                      ' 👑', // Emotikona korony
                       style: TextStyle(fontSize: 20),
                     )
                   ],

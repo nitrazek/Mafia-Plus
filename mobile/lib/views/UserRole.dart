@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
+import 'package:mobile/utils/MinigameViewFactory.dart';
 import 'package:mobile/views/Voting.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/UserRoleViewModel.dart';
@@ -17,12 +19,27 @@ class UserRolePage extends StatefulWidget {
 class UserRolePageState extends State<UserRolePage> {
   StreamSubscription<void>? _votingStartedSubscription;
 
+  late double screenWidth;
+  late double screenHeight;
+
+  @override
+  void initState() {
+    super.initState();
+    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+    Size size = view.physicalSize;
+    screenWidth = size.width;
+    screenHeight = size.height;
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _votingStartedSubscription ??= context.read<UserRoleViewModel>().votingStarted.listen((_) {
+    _votingStartedSubscription ??= context.read<UserRoleViewModel>().minigameStarted.listen((minigame) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const VotingAnnouncement(viewType:0)));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: MinigameViewFactory.createMinigameView(minigame))
+        );
       });
     });
   }
@@ -51,7 +68,7 @@ class UserRolePageState extends State<UserRolePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 50),
+            SizedBox(height: screenHeight * 0.025),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -68,7 +85,7 @@ class UserRolePageState extends State<UserRolePage> {
                         padding: const EdgeInsets.symmetric(vertical: 35.0),
                         child: Text(
                           'Your role is: $role',
-                          style: TextStyle(color: textColor, fontSize: 36),
+                          style: TextStyle(color: textColor, fontSize: 36, fontWeight: FontWeight.bold),
                         ),
                       ),
                       Padding(

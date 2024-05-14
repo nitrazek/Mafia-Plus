@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:mobile/models/MinigameStart.dart';
 import 'package:mobile/models/VotingStart.dart';
 import 'package:mobile/models/VotingSummary.dart';
 import 'package:mobile/state/GameState.dart';
+import 'package:mobile/state/MinigameState.dart';
 import 'package:mobile/state/RoomState.dart';
 import 'package:mobile/state/AccountState.dart';
 import 'package:mobile/state/VotingState.dart';
@@ -38,6 +40,7 @@ class WebSocketClient {
   final AccountState _accountState = AccountState();
   final RoomState _roomState = RoomState();
   final GameState _gameState = GameState();
+  final MinigameState _minigameState = MinigameState();
   final VotingState _votingState = VotingState();
 
   WebSocketClient._internal();
@@ -77,6 +80,14 @@ class WebSocketClient {
             }
           ));
           _unsubscribeFunctions.add(_stompClient!.subscribe(
+            destination: "/topic/$roomId/minigame-start",
+            callback: (frame) {
+              Map<String, dynamic> minigameStartJson = jsonDecode(frame.body!);
+              MinigameStart minigameStart = MinigameStart.fromJson(minigameStartJson);
+              _minigameState.setMinigame(minigameStart);
+            }
+          ));
+          _unsubscribeFunctions.add(_stompClient!.subscribe(
             destination: "/user/queue/voting-start",
             callback: (frame) {
               _votingState.setVotingEnd(null);
@@ -95,13 +106,13 @@ class WebSocketClient {
             }
           ));
           _unsubscribeFunctions.add(_stompClient!.subscribe(
-              destination: "/topic/$roomId/voting-end",
-              callback: (frame) {
-                _votingState.setVotingSummary(null);
-                Map<String, dynamic> votingEndJson = jsonDecode(frame.body!);
-                VotingEnd votingEnd = VotingEnd.fromJson(votingEndJson);
-                _votingState.setVotingEnd(votingEnd);
-              }
+            destination: "/topic/$roomId/voting-end",
+            callback: (frame) {
+              _votingState.setVotingSummary(null);
+              Map<String, dynamic> votingEndJson = jsonDecode(frame.body!);
+              VotingEnd votingEnd = VotingEnd.fromJson(votingEndJson);
+              _votingState.setVotingEnd(votingEnd);
+            }
           ));
           _unsubscribeFunctions.add(_stompClient!.subscribe(
             destination: "/topic/$roomId/game-end",

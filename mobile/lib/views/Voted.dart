@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,18 @@ class VotedPage extends StatefulWidget {
 class VotedPageState extends State<VotedPage> {
   StreamSubscription<void>? _gameEndedSubscription;
   StreamSubscription<void>? _votingStartedSubscription;
+
+  late double screenWidth;
+  late double screenHeight;
+
+  @override
+  void initState() {
+    super.initState();
+    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+    Size size = view.physicalSize;
+    screenWidth = size.width;
+    screenHeight = size.height;
+  }
 
   @override
   void didChangeDependencies() {
@@ -159,13 +172,13 @@ class VotedPageState extends State<VotedPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 35),
+                SizedBox(height: screenHeight * 0.02),
                 const Text(
                   "Voting result",
                   style: TextStyle(fontSize: 28, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: screenHeight * 0.01),
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(16.0),
@@ -187,7 +200,7 @@ class VotedPageState extends State<VotedPage> {
                             width: 110,
                           ),
                         ),
-                        const SizedBox(height: 40),
+                        SizedBox(height: screenHeight * 0.035),
                         SizedBox(
                           width: double.infinity,
                           child: DefaultTextStyle(
@@ -205,7 +218,7 @@ class VotedPageState extends State<VotedPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 40),
+                        SizedBox(height: screenHeight * 0.035),
                       ],
                     ),
                   ),
