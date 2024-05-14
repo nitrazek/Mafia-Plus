@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mobile/viewModels/minigames/ClickTheButtonMinigameViewModel.dart';
 import 'package:mobile/viewModels/minigames/NumberMemoryMinigameViewModel.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +21,10 @@ class NumberMemoryMinigamePageState extends State<NumberMemoryMinigamePage> {
   final TextEditingController _answerController = TextEditingController();
 
   int _countdownValue = 3;
-  int _minigameDuration = 30;
+  int _minigameDuration = 60;
   bool _isNumberVisible = true;
+  bool? _isAnswerCorrect;
+  
   late Timer _countdownTimer, _minigameTimer;
   late OverlayEntry _overlayEntry;
 
@@ -63,7 +64,7 @@ class NumberMemoryMinigamePageState extends State<NumberMemoryMinigamePage> {
     context.read<NumberMemoryMinigameViewModel>().generateNumber();
     setState(() { _isNumberVisible = true; });
 
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 2), () {
       setState(() { _isNumberVisible = false; });
     });
   }
@@ -117,18 +118,19 @@ class NumberMemoryMinigamePageState extends State<NumberMemoryMinigamePage> {
     return Scaffold(
       body: Stack(
         children: [
-          _isNumberVisible ? Center(
-            child: Text(
-              context.watch<NumberMemoryMinigameViewModel>().generatedNumber,
-              style: const TextStyle(
-                fontSize: 25
-              ),
+          if(_isNumberVisible)
+            Center(
+              child: Text(
+                context.watch<NumberMemoryMinigameViewModel>().generatedNumber,
+                style: const TextStyle(
+                  fontSize: 30
+                ),
+              )
             )
-          ) : Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          else if(!_isNumberVisible && _isAnswerCorrect == null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Center(
                 child: Row(
                   children: [
                     Expanded(
@@ -144,13 +146,20 @@ class NumberMemoryMinigamePageState extends State<NumberMemoryMinigamePage> {
                         ],
                       )
                     ),
+                    const SizedBox(width: 10),
                     ElevatedButton(
                       onPressed: () {
-                        bool correctAnswer = context.read<NumberMemoryMinigameViewModel>().submitAnswer(_answerController.text);
+                        if(_answerController.text == "") return;
+                        setState(() {
+                          _isAnswerCorrect = context.read<NumberMemoryMinigameViewModel>().submitAnswer(_answerController.text);
+                        });
                         _answerController.clear();
-                        if(correctAnswer) {
-                          _toggleNumberVisibility();
-                        } else {
+                        if(_isAnswerCorrect == true) {
+                          Future.delayed(const Duration(seconds: 1), () {
+                            _toggleNumberVisibility();
+                            setState(() { _isAnswerCorrect = null; });
+                          });
+                        } else if(_isAnswerCorrect == false) {
                           context.read<NumberMemoryMinigameViewModel>().finishMinigame();
                         }
                       },
@@ -159,8 +168,33 @@ class NumberMemoryMinigamePageState extends State<NumberMemoryMinigamePage> {
                   ],
                 )
               )
-            ],
-          ),
+            )
+          else if(!_isNumberVisible && _isAnswerCorrect == true)
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.check, size: 100, color: MyStyles.green),
+                  Text(
+                    "Correct answer (${context.read<NumberMemoryMinigameViewModel>().generatedNumber})",
+                    style: TextStyle(fontSize: 25, color: MyStyles.green)
+                  )
+                ],
+              ),
+            )
+          else if(!_isNumberVisible && _isAnswerCorrect == false)
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 100, color: MyStyles.red),
+                  Text(
+                    "Incorrect answer (${context.read<NumberMemoryMinigameViewModel>().generatedNumber})",
+                    style: TextStyle(fontSize: 25, color: MyStyles.red),
+                  )
+                ],
+              ),
+            ),
           Positioned(
             top: 30.0,
             right: 30.0,
@@ -174,78 +208,3 @@ class NumberMemoryMinigamePageState extends State<NumberMemoryMinigamePage> {
     );
   }
 }
-
-// class NumberMemoryMinigamePage extends StatefulWidget {
-//   const NumberMemoryMinigamePage({super.key});
-//
-//   @override
-//   NumberMemoryMinigamePageState createState() => NumberMemoryMinigamePageState();
-// }
-//
-// class NumberMemoryMinigamePageState extends State<NumberMemoryMinigamePage> {
-//   bool _isNumberVisible = true;
-//   final TextEditingController _answerController = TextEditingController();
-//
-//   void _showNumber() {
-//     setState(() {
-//       _isNumberVisible = true;
-//     });
-//   }
-//
-//   void _hideNumber() {
-//     Future.delayed(const Duration(seconds: 3), () {
-//       setState(() {
-//         _isNumberVisible = false;
-//       });
-//     });
-//   }
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     NumberMemoryMinigameViewModel viewModel = Provider.of<MinigameViewModel>(context) as NumberMemoryMinigameViewModel;
-//     viewModel.setHideNumberCallback(_hideNumber);
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Consumer<MinigameViewModel>(
-//       builder: (context, minigameViewModel, child) {
-//         NumberMemoryMinigameViewModel viewModel = minigameViewModel as NumberMemoryMinigameViewModel;
-//         return viewModel.isNumberVisible ? Center(
-//           child: Text(
-//             viewModel.generatedNumber,
-//             style: const TextStyle(
-//               fontSize: 25
-//             ),
-//           )
-//         ) : Column(
-//           children: [
-//             Row(
-//               children: [
-//                 TextField(
-//                   controller: _answerController,
-//                   decoration: const InputDecoration(
-//                     border: OutlineInputBorder(),
-//                     hintText: "What was the number?"
-//                   ),
-//                   keyboardType: TextInputType.number,
-//                   inputFormatters: [
-//                     FilteringTextInputFormatter.digitsOnly
-//                   ],
-//                 ),
-//                 ElevatedButton(
-//                   onPressed: () {
-//                     viewModel.submitAnswer(_answerController.text);
-//                     _showNumber();
-//                   },
-//                   child: const Text("Submit"),
-//                 )
-//               ],
-//             )
-//           ],
-//         );
-//       }
-//     );
-//   }
-// }

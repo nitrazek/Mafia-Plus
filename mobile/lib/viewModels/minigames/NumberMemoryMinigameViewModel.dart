@@ -56,7 +56,7 @@ class NumberMemoryMinigameViewModel extends ChangeNotifier {
   }
 
   bool submitAnswer(String answer) {
-    bool isCorrect = answer.compareTo(_generatedNumber) == 0;
+    bool isCorrect = answer == _generatedNumber;
     if(isCorrect) { _score++; }
     return isCorrect;
   }
