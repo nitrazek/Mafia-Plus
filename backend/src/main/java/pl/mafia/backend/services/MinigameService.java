@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import pl.mafia.backend.models.db.*;
@@ -15,10 +13,7 @@ import pl.mafia.backend.repositories.MinigameRepository;
 import pl.mafia.backend.repositories.MinigameScoreRepository;
 import pl.mafia.backend.repositories.RoundRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -80,13 +75,17 @@ public class MinigameService {
 
     Round round = minigame.getRound();
     round = roundRepository.save(round);
+    Game game = round.getGame();
+    Room room = game.getRoom();
 
     //Tutaj wybrać najlepszego i przyznać nagrodę czy coś takiego
-    int highestScore = 0;
     List<Account> winners = new ArrayList<>();
+    int highestScore = 0;
     Account winner = null;
+    Map<Account,Integer> scores = new HashMap<>();
 
     for (MinigameScore minigameScore : minigame.getMinigameScores()) {
+      scores.put(minigameScore.getAccount(), minigameScore.getScore());
       if (minigameScore.getScore() > highestScore) {
         highestScore = minigameScore.getScore();
         winners.clear();
@@ -102,8 +101,7 @@ public class MinigameService {
       winner = winners.get(0);
     }
 
-
-    messagingTemplate.convertAndSend("/topic/"+round.getId() + "/minigame-summary",new MinigameSummary(highestScore));
+    messagingTemplate.convertAndSend("/topic/"+room.getId() + "/minigame-summary",new MinigameSummary(winner,highestScore,scores));
 
     Round finalRound = round;
     scheduledExecutorService.schedule(() -> {
