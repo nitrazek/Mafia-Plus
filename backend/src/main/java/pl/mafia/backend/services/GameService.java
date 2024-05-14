@@ -63,6 +63,31 @@ public class GameService {
         return mafiaCount < mafiaMax ? "mafia" : "citizen"; //Warunek do dostosowania gdy będą ustawienia
     }
 
+    private MinigameType getMinigameType(Game game) {
+        int minigamesPlayed = game.getMinigamesPlayed();
+        String binaryString = Integer.toBinaryString(minigamesPlayed);
+        binaryString = String.format("%" + MinigameType.values().length + "s", binaryString).replace(' ', '0');
+
+        if (!binaryString.contains("0"))
+            binaryString = new StringBuilder().repeat(0, binaryString.length()).toString();
+
+        int zeroCount = binaryString.replace("1", "").length();
+        int randomZeroNumber = new Random().nextInt(zeroCount);
+        int zeroIndex = binaryString.indexOf('0');
+        for (int i = 0; i < randomZeroNumber; i++) {
+            zeroIndex = binaryString.indexOf('0', zeroIndex + 1);
+        }
+
+        StringBuilder newBinaryStringBuilder = new StringBuilder(binaryString);
+        newBinaryStringBuilder.setCharAt(zeroIndex, '1');
+        binaryString = newBinaryStringBuilder.toString();
+        minigamesPlayed = Integer.parseInt(binaryString, 2);
+        game.setMinigamesPlayed(minigamesPlayed);
+        gameRepository.save(game);
+
+        return MinigameType.valueOf(zeroIndex);
+    }
+
     @Transactional
     public Game getGame(Long gameId) {
         Optional<Game> fetchedGame = gameRepository.findById(gameId);
@@ -97,11 +122,12 @@ public class GameService {
 
         Game createdGame = new Game();
         createdGame.setCreateTimestamp(Timestamp.from(Instant.now()));
+        createdGame.setMinigamesPlayed(0);
         createdGame = gameRepository.save(createdGame);
 
         List<Account> accountList = room.getAccounts();
 
-        if (accountList.size() / 4 == 0)
+        if (accountList.size() >= 4)
             throw new IllegalAccessException("Not enough players.");
 
         Collections.shuffle(accountList);
@@ -193,7 +219,8 @@ public class GameService {
         Round round = getRound(roundId);
 
         Minigame minigame = new Minigame();
-        minigame.setType(MinigameType.random());
+        minigame.setType(getMinigameType(round.getGame()));
+        round = getRound(roundId);
         minigame.setRound(round);
         minigame = minigameRepository.save(minigame);
 
