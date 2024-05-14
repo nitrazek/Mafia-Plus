@@ -15,6 +15,8 @@ class JoinPrivateRoomPage extends StatefulWidget {
 class JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
   List<TextEditingController> codeControllers = List.generate(7, (index) => TextEditingController());
 
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,7 +98,10 @@ class JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
                       const SizedBox(height: 27),
                       ElevatedButton(
                         style: MyStyles.buttonStyle,
-                        onPressed: () async {
+                        onPressed: _isLoading ? null : () async {
+                          setState(() {
+                            _isLoading = true;
+                          });
                           String accessCode = codeControllers.map((controller) => controller.text).join();
                           final viewModel = context.read<JoinPrivateRoomViewModel>();
                           await viewModel.joinRoom(
@@ -106,13 +111,23 @@ class JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
                             },
                             (errorMsg) {
                               Fluttertoast.showToast(msg: errorMsg);
+                              setState(() {
+                                _isLoading = false;
+                              });
                             },
                           );
                         },
-                        child: Text(
-                          'Join',
-                          style: MyStyles.buttonTextStyle,
-                        ),
+                          child: _isLoading
+                              ? CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                              :Text(
+                              'Join',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold
+                              ))
                       ),
                     ],
                   ),

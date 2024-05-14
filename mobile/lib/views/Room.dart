@@ -17,6 +17,7 @@ class RoomPage extends StatefulWidget {
 
 class RoomPageState extends State<RoomPage> {
   StreamSubscription<void>? _gameStartedSubscription;
+  bool _isLoading = false;
 
   @override
   void didChangeDependencies() {
@@ -126,7 +127,10 @@ class RoomPageState extends State<RoomPage> {
                       const SizedBox(height: 20),
                       if (context.watch<RoomViewModel>().isHost)
                         ElevatedButton(
-                          onPressed: () {
+                          onPressed: _isLoading ? null : () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
                             int roomId = context.read<RoomViewModel>().room?.id ?? 0;
                             context.read<RoomViewModel>().startGame(
                                 roomId,
@@ -140,10 +144,24 @@ class RoomPageState extends State<RoomPage> {
                                     );
                                   }
                                 }
-                            );
+                            ).then((_){
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            });
                           },
                           style: MyStyles.buttonStyle,
-                          child: const Text('Start game'),
+                            child: _isLoading
+                                ? CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                                :Text(
+                                'Start Game',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold
+                                ))
                         ),
                       SizedBox(height: screenHeight * 0.005),
                       ElevatedButton(
