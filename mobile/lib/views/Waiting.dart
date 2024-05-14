@@ -161,9 +161,9 @@ class _WaitingPageState extends State<WaitingPage>
                                   ),
                                 );
                               },
-                                  () {
+                                  (errorMsg) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Error leaving the room')),
+                                      SnackBar(content: Text(errorMsg)),
                                     );
                                   },
                             );
