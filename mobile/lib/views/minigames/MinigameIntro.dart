@@ -34,7 +34,7 @@ class MinigameIntroPageState extends State<MinigameIntroPage> {
     });
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Minigame'),
+          title: Text('Minigame', style: MyStyles.backgroundTextStyle),
         automaticallyImplyLeading: false,
         flexibleSpace: Container(
           decoration: BoxDecoration(
