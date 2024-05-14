@@ -23,6 +23,9 @@ public class Game {
     @Column(nullable = false)
     private Timestamp createTimestamp;
 
+    @Column(nullable = false)
+    private int minigamesPlayed;
+
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToOne(mappedBy = "game", fetch = FetchType.LAZY)
