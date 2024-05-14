@@ -53,91 +53,24 @@ class VotedPageState extends State<VotedPage> {
 
         if (conditions.isVoting) { //jak glosuje
 
-          //glosuje i jest zywa mafia
+          //turn mafii
           if (Provider
               .of<WaitingViewModel>(context, listen: false)
               .turn == 'mafia') {
-            //najpierw do VotingAnnouncement, a potem do VotingPage
             Navigator.pushReplacement(context, PageTransition(
               type: PageTransitionType.fade,
               duration: const Duration(milliseconds: 1500),
               child: VotingAnnouncement(viewType: 1),
-            )).then((_) {
-              Navigator.pushReplacement(context, PageTransition(
-                type: PageTransitionType.fade,
-                duration: const Duration(milliseconds: 1500),
-                child: const VotingPage(),
-              ));
-            });
+            ));
           }
 
-          //glosuje i jest zywe cokolwiek
+          //turn miasta
           else {
-            //najpierw do VotingAnnouncement 0, a potem do VotingPage
             Navigator.pushReplacement(context, PageTransition(
               type: PageTransitionType.fade,
               duration: const Duration(milliseconds: 1500),
               child: VotingAnnouncement(viewType: 0),
-            )).then((_) {
-              Navigator.pushReplacement(context, PageTransition(
-                type: PageTransitionType.fade,
-                duration: const Duration(milliseconds: 1500),
-                child: const VotingPage(),
-              ));
-            });
-          }
-        }
-
-           else { //jak nei glosuje to znaczy ze albo nie zyje albo jest obywatelem
-
-             //zyje wiec bedzie w waitingpage potem
-          if (conditions.isAlive) {
-            Navigator.pushReplacement(context, PageTransition(
-              type: PageTransitionType.fade,
-              duration: const Duration(milliseconds: 1500),
-              child: VotingAnnouncement(viewType: 1),
-            )).then((_) {
-              Navigator.pushReplacement(context, PageTransition(
-                type: PageTransitionType.fade,
-                duration: const Duration(milliseconds: 1500),
-                child: WaitingPage(viewType: 1),
-              ));
-            });
-          }
-
-
-          //nie zyje
-          else{
-            //jak jest glosowanie mafii i nie glosuje bo nie zyje
-            if (Provider
-                .of<WaitingViewModel>(context, listen: false)
-                .turn == 'mafia') {
-              Navigator.pushReplacement(context, PageTransition(
-                type: PageTransitionType.fade,
-                duration: const Duration(milliseconds: 1500),
-                child: VotingAnnouncement(viewType: 1),
-              )).then((_) {
-                Navigator.pushReplacement(context, PageTransition(
-                  type: PageTransitionType.fade,
-                  duration: const Duration(milliseconds: 1500),
-                  child: WaitingPage(viewType: 0),
-                ));
-              });
-            }
-
-            // jak jest glosowanie miasta i nie glosuje bo nei zyje
-            Navigator.pushReplacement(context, PageTransition(
-              type: PageTransitionType.fade,
-              duration: const Duration(milliseconds: 1500),
-              child: VotingAnnouncement(viewType: 0),
-            )).then((_) {
-              Navigator.pushReplacement(context, PageTransition(
-                type: PageTransitionType.fade,
-                duration: const Duration(milliseconds: 1500),
-                child: WaitingPage(viewType: 0),
-              ));
-            });
-
+            ));
           }
         }
       });

@@ -6,6 +6,7 @@ import 'package:mobile/viewModels/WaitingViewModel.dart';
 import 'package:mobile/views/styles.dart';
 import 'package:mobile/views/Voting.dart';
 import 'package:mobile/views/Waiting.dart';
+import 'package:mobile/viewModels/VotedViewModel.dart';
 
 class VotingAnnouncement extends StatefulWidget {
   final int viewType;
@@ -21,25 +22,81 @@ class _VotingAnnouncementState extends State<VotingAnnouncement> {
   void initState() {
     super.initState();
     Timer(Duration(seconds: 5), () {
-     // navigateToNextPage(context);
+      navigateToNextPage(context);
     });
   }
 
 
-  /*void navigateToNextPage(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      PageTransition(
-        type: PageTransitionType.fade,
-        duration: const Duration(milliseconds: 1500),
-        child: widget.viewType == 0
-            ? VotingPage() //al glosuja
-            : Provider.of<WaitingViewModel>(context, listen: false).turn == 'mafia'
-            ? const VotingPage() //jezeli mafia glosuje
-            : WaitingPage(viewType: 1), //a tak to waitingpage
-      ),
-    );
-  } */
+  void navigateToNextPage(BuildContext context) {
+    final waitingViewModel = Provider.of<WaitingViewModel>(context, listen: false);
+    final votedViewModel = context.read<VotedViewModel>();
+
+    votedViewModel.votingStarted.listen((conditions) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        if (conditions.isVoting) {
+          // Warunek: jeśli glosuje i jest zywa mafia
+          if (waitingViewModel.turn == 'mafia') {
+            Navigator.pushReplacement(
+              context,
+              PageTransition(
+                type: PageTransitionType.fade,
+                duration: const Duration(milliseconds: 1500),
+                child: const VotingPage(),
+              ),
+            );
+          } else {
+            // Warunek: jeśli glosuje i jest zywe cokolwiek innego
+            Navigator.pushReplacement(
+              context,
+              PageTransition(
+                type: PageTransitionType.fade,
+                duration: const Duration(milliseconds: 1500),
+                child:  const VotingPage(),
+              ),
+            );
+          }
+        }
+
+        else {
+          // Warunek: jeśli nie glosuje
+          if (conditions.isAlive) {
+            // Żyje więc będzie w waitingpage potem
+            Navigator.pushReplacement(
+              context,
+              PageTransition(
+                type: PageTransitionType.fade,
+                duration: const Duration(milliseconds: 1500),
+                child: WaitingPage(viewType: 1),
+              ),
+            );
+          } else {
+            // Nie żyje
+            if (waitingViewModel.turn == 'mafia') {
+              // Jak jest glosowanie mafii i nie glosuje bo nie zyje
+              Navigator.pushReplacement(
+                context,
+                PageTransition(
+                  type: PageTransitionType.fade,
+                  duration: const Duration(milliseconds: 1500),
+                  child: WaitingPage(viewType: 0),
+                ),
+              );
+            } else {
+              // Jak jest glosowanie miasta i nie glosuje bo nie zyje
+              Navigator.pushReplacement(
+                context,
+                PageTransition(
+                  type: PageTransitionType.fade,
+                  duration: const Duration(milliseconds: 1500),
+                  child: WaitingPage(viewType: 0),
+                ),
+              );
+            }
+          }
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
