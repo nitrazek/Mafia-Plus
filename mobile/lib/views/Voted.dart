@@ -92,6 +92,7 @@ class VotedPageState extends State<VotedPage> {
             });
           }
 
+
           //nie zyje
           else{
             //jak jest glosowanie mafii i nie glosuje bo nie zyje

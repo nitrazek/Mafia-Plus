@@ -25,6 +25,7 @@ class _VotingAnnouncementState extends State<VotingAnnouncement> {
     });
   }
 
+
   /*void navigateToNextPage(BuildContext context) {
     Navigator.pushReplacement(
       context,
