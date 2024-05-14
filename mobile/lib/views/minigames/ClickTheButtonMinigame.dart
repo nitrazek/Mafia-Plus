@@ -17,7 +17,7 @@ class ClickTheButtonMinigamePage extends StatelessWidget {
             MediaQuery.of(context).size.width * 0.8
           ),
           shape: const CircleBorder(),
-          primary: MyStyles.red
+          backgroundColor: MyStyles.red
         ),
         onPressed: () {
           context.read<MinigameViewModel>().increaseScore(1);
