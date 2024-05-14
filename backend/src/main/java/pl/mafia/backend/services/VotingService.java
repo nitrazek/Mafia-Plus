@@ -65,7 +65,7 @@ public class VotingService {
         Vote vote = new Vote();
         vote.setVoting(voting);
         vote.setVoter(voter);
-        vote.setVoted(voted);
+        if(voted != null) vote.setVoted(voted);
         vote = voteRepository.save(vote);
 
         voting.getVotes().add(vote);
@@ -86,6 +86,7 @@ public class VotingService {
     public VotingSummary calculateVotingSummary(Voting voting) {
       Map<Account, Long> voteCounts = voting.getVotes().stream()
         .map(Vote::getVoted)
+        .filter(Objects::nonNull)
         .collect(Collectors.groupingBy(account -> account, Collectors.counting()));
       List<VotingResult> votingResults = voteCounts.entrySet().stream()
         .map(entry -> new VotingResult(entry.getKey().getUsername(), entry.getValue()))
