@@ -27,24 +27,24 @@ class JoinPrivateRoomViewModel extends ChangeNotifier {
     if (accessCode.isNotEmpty) {
       try {
         if(!accessCodeRegex.hasMatch(accessCode)) {
-          onError.call("Access code should contain only alpha-numeric characters");
+          onError("Access code should contain only alpha-numeric characters");
           return;
         }
         Room room = await _roomService.joinRoomByAccessCode(accessCode);
         await _webSocketClient.connect(room.id);
         _roomState.setRoom(room);
-        onSuccess.call();
+        onSuccess();
       }
       catch (e) {
         if(e is UnauthorisedException) {
-          onError.call("Lobby is full");
+          onError("Lobby is full");
         } else {
-          onError.call("Wrong code");
+          onError("Wrong code");
         }
       }
     }
     else {
-      onError.call("Code is empty");
+      onError("Code is empty");
     }
   }
 }
