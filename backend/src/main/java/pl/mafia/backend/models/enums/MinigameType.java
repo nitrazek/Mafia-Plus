@@ -6,9 +6,12 @@ public enum MinigameType {
   //TEST,
   CLICK_THE_BUTTON;
 
-  private static final Random random = new Random();
-
-  public static MinigameType random() {
-    return values()[random.nextInt(values().length)];
+  public static MinigameType valueOf(int index) {
+    MinigameType[] values = MinigameType.values();
+    if (index >= 0 && index < values.length) {
+      return values[index];
+    } else {
+      throw new IllegalArgumentException("Nieprawidłowy indeks");
+    }
   }
 }
