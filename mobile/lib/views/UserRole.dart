@@ -4,10 +4,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/utils/MinigameViewFactory.dart';
-import 'package:mobile/views/Voting.dart';
+import 'package:mobile/viewModels/UserRoleViewModel.dart';
 import 'package:mobile/views/Waiting.dart';
 import 'package:provider/provider.dart';
-import 'package:mobile/viewModels/UserRoleViewModel.dart';
 
 class UserRolePage extends StatefulWidget {
   const UserRolePage({super.key});
@@ -29,26 +28,27 @@ class UserRolePageState extends State<UserRolePage> {
     Size size = view.physicalSize;
     screenWidth = size.width;
     screenHeight = size.height;
-
-    if (UserRoleViewModel().votingStart!=null && !UserRoleViewModel().votingStart!.isAlive)
-    {
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const WaitingPage(viewType: 0)));
-    }
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-        _votingStartedSubscription ??= context.read<UserRoleViewModel>().minigameStarted.listen((minigame) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushReplacement(
+    if (context.read<UserRoleViewModel>().votingStart != null &&
+        !context.read<UserRoleViewModel>().votingStart!.isAlive) {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const WaitingPage(viewType: 0)));
+    }
+    _votingStartedSubscription ??=
+        context.read<UserRoleViewModel>().minigameStarted.listen((minigame) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: MinigameViewFactory.createMinigameView(minigame))
-          );
-        });
+            MaterialPageRoute(
+                builder: MinigameViewFactory.createMinigameView(minigame)));
       });
+    });
   }
 
   @override
@@ -92,20 +92,23 @@ class UserRolePageState extends State<UserRolePage> {
                         padding: const EdgeInsets.symmetric(vertical: 35.0),
                         child: Text(
                           'Your role is: $role',
-                          style: TextStyle(color: textColor, fontSize: 36, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: textColor,
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 65.0),
                         child: role == 'mafia'
                             ? Image.asset(
-                          'assets/images/mafia.png',
-                          width: 90,
-                        )
+                                'assets/images/mafia.png',
+                                width: 90,
+                              )
                             : Image.asset(
-                          'assets/images/citizen.png',
-                          width: 110,
-                        ),
+                                'assets/images/citizen.png',
+                                width: 110,
+                              ),
                       ),
                     ],
                   ),
