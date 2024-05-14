@@ -27,6 +27,10 @@ class MinigameResultPageState extends State<MinigameResultPage> {
     var scores = context.watch<MinigameResultViewModel>().scores;
     var player = context.watch<MinigameResultViewModel>().account;
     var playerScore = scores!.playersScores[player];
+    if(playerScore == scores.bestScore)
+      {
+        isWinner = true;
+      }
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
