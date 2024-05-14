@@ -10,7 +10,7 @@ import 'package:mobile/viewModels/VotingViewModel.dart';
 import 'package:mobile/state/VotingState.dart';
 import 'package:mobile/views/VotingResults.dart';
 import 'package:mobile/viewModels/RoomViewModel.dart';
-
+import 'package:mobile/views/Menu.dart';
 import 'Voted.dart';
 
 class WaitingPage extends StatefulWidget {
@@ -152,11 +152,20 @@ class _WaitingPageState extends State<WaitingPage>
                           onPressed: () {
                             _roomViewModel.leaveRoom(
                                   () {
-                                // onSuccess - tutaj możesz wykonać jakieś operacje po pomyślnym opuszczeniu pokoju
+                                Navigator.pushReplacement(
+                                  context,
+                                  PageTransition(
+                                    type: PageTransitionType.fade,
+                                    duration: const Duration(milliseconds: 1500),
+                                    child: MenuPage(),
+                                  ),
+                                );
                               },
                                   () {
-                                // onError - tutaj możesz wykonać jakieś operacje po błędzie podczas opuszczania pokoju
-                              },
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Error leaving the room')),
+                                    );
+                                  },
                             );
                           },
                           child: const Text(
