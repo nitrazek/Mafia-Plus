@@ -26,9 +26,7 @@ class MinigameResultPageState extends State<MinigameResultPage> {
   Widget build(BuildContext context) {
     var scores = context.watch<MinigameResultViewModel>().scores;
     var player = context.watch<MinigameResultViewModel>().account;
-    var playerScore = scores!.playersScores
-        .map((map) => map[player])
-        .firstWhere((score) => score != null, orElse: () => null);
+    var playerScore = scores!.playersScores[player];
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(

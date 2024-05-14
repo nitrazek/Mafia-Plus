@@ -3,7 +3,7 @@ import 'Account.dart';
 class Score {
   final Account bestPlayer;
   final int bestScore;
-  final List<Map<Account, int>> playersScores;
+  final Map<Account, int> playersScores;
 
   Score({
     required this.bestScore,
