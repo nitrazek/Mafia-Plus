@@ -147,7 +147,7 @@ class _VotingPageState extends State<VotingPage> {
             right: 20.0,
             child: FloatingActionButton(
               onPressed: () {
-                Provider.of<VotingViewModel>(context, listen: false).skipVote();
+                Provider.of<VotingViewModel>(context, listen: true).skipVote();
               },
               backgroundColor: Colors.red,
               child: const Icon(Icons.skip_next),
