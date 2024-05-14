@@ -202,6 +202,11 @@ class RegisterPageState extends State<RegisterPage> with RouteAware {
                                             context,
                                             MaterialPageRoute(builder: (context) => const MenuPage())
                                         );
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg: "Registration failed",
+                                            toastLength: Toast.LENGTH_SHORT
+                                        );
                                       }
                                       setState(() {
                                         _isLoading = false;

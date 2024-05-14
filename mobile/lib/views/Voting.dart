@@ -72,74 +72,89 @@ class _VotingPageState extends State<VotingPage> {
     String votingText = turn== 'mafia'? 'I\'m all ears. Who\'s the target this time??' :
     'What\'s your gut feeling?\nWho\'s the mafia?';
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              MyStyles.purple,
-              MyStyles.lightestPurple,
-            ],
-          ),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: screenHeight * 0.02),
-                 Text(
-                  votingText,
-                  style: const TextStyle(fontSize: 28, color: Colors.white),
-                  textAlign: TextAlign.center,
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  MyStyles.purple,
+                  MyStyles.lightestPurple,
+                ],
+              ),
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: screenHeight * 0.02),
+                      Text(
+                        votingText,
+                        style: const TextStyle(fontSize: 28, color: Colors.white),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: screenHeight * 0.01),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [BoxShadow(
+                              color: MyStyles.purpleLowOpacity,
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            )
+                            ],
+                          ),
+                          child: Consumer<VotingViewModel>(
+                            builder: (context, viewModel, child) {
+                              return ListView.builder(
+                                  itemCount: viewModel.playerUsernames?.length,
+                                  itemBuilder: (context, index) {
+                                    String playerUsername = viewModel.playerUsernames![index];
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: PlayerButton(
+                                                playerUsername: playerUsername,
+                                                onPressed: () => viewModel.vote(playerUsername)
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ]
                 ),
-                SizedBox(height: screenHeight * 0.01),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [BoxShadow(
-                          color: MyStyles.purpleLowOpacity,
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        )
-                      ],
-                    ),
-                    child: Consumer<VotingViewModel>(
-                      builder: (context, viewModel, child) {
-                        return ListView.builder(
-                          itemCount: viewModel.playerUsernames?.length,
-                          itemBuilder: (context, index) {
-                            String playerUsername = viewModel.playerUsernames![index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: PlayerButton(
-                                      playerUsername: playerUsername,
-                                      onPressed: () => viewModel.vote(playerUsername)
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ]
+              ),
             ),
           ),
-        )
-      )
+          Positioned(
+            bottom: 20.0,
+            right: 20.0,
+            child: FloatingActionButton(
+              onPressed: () {
+                Provider.of<VotingViewModel>(context, listen: false).skipVote();
+              },
+              backgroundColor: Colors.red,
+              child: const Icon(Icons.skip_next),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

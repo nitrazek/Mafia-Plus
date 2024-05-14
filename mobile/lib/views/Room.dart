@@ -134,15 +134,12 @@ class RoomPageState extends State<RoomPage> {
                             int roomId = context.read<RoomViewModel>().room?.id ?? 0;
                             context.read<RoomViewModel>().startGame(
                                 roomId,
-                                    (){},
-                                    (){
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                  if (context.read<RoomViewModel>().messageError.isNotEmpty) {
+                                  (){},
+                                  (messageError){
+                                  if(messageError.isNotEmpty) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text(context.watch<RoomViewModel>().messageError),
+                                        content: Text(messageError),
                                       ),
                                     );
                                   }
@@ -158,7 +155,7 @@ class RoomPageState extends State<RoomPage> {
                                 ? CircularProgressIndicator(
                               color: Colors.white,
                             )
-                                :Text(
+                                :const Text(
                                 'Start Game',
                                 style: TextStyle(
                                     color: Colors.white,
@@ -170,14 +167,20 @@ class RoomPageState extends State<RoomPage> {
                       ElevatedButton(
                         onPressed: () {
                           context.read<RoomViewModel>().leaveRoom(
-                                  () {
-                                Navigator.pop(context, false);
+                              () {
+                                Navigator.pop(context);
                               },
-                                  () {}
+                              (messageError) {}
                           );
                         },
                         style: MyStyles.buttonStyle,
-                        child: const Text('Exit'),
+                        child: const Text(
+                            'Exit',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold
+                            )),
                       ),
                       SizedBox(height: screenHeight * 0.0075),
                       if (context.read<RoomViewModel>().room?.roomSettings.isPublic == false)

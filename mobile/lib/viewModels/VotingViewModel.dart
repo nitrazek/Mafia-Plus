@@ -50,4 +50,10 @@ class VotingViewModel extends ChangeNotifier {
     await _gameService.addVote(_votingId!, playerUsername);
     notifyListeners();
   }
+
+  void skipVote() async {
+    _votedPlayer = "";
+    await _gameService.addVote(_votingId!, "");
+    notifyListeners();
+  }
 }

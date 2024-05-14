@@ -7,6 +7,7 @@ import 'package:mobile/state/MinigameState.dart';
 import 'package:mobile/state/VotingState.dart';
 
 import '../models/MinigameType.dart';
+import '../models/VotingStart.dart';
 
 class UserRoleViewModel extends ChangeNotifier {
   final GameState _gameState = GameState();
@@ -17,6 +18,8 @@ class UserRoleViewModel extends ChangeNotifier {
 
   final _minigameStarted = StreamController<MinigameType>.broadcast();
   Stream<MinigameType> get minigameStarted => _minigameStarted.stream;
+
+  final VotingStart? votingStart = VotingState().currentVoting;
 
   UserRoleViewModel() {
     _gameState.addListener(_updateRole); _updateRole();
