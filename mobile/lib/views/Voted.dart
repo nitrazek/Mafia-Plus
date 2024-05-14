@@ -10,6 +10,7 @@ import 'package:mobile/views/Winner.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/views/VotingAnnouncement.dart';
+import 'package:mobile/viewModels/WaitingViewModel.dart';
 
 class VotedPage extends StatefulWidget {
   const VotedPage({Key? key}) : super(key: key);
@@ -36,32 +37,94 @@ class VotedPageState extends State<VotedPage> {
     });
     _votingStartedSubscription ??= context.read<VotedViewModel>().votingStarted.listen((conditions) {
       WidgetsBinding.instance!.addPostFrameCallback((_) {
-        if (conditions.isVoting) {
-          //najpierw do VotingAnnouncement, a potem do VotingPage
-          Navigator.pushReplacement(context, PageTransition(
-            type: PageTransitionType.fade,
-            duration: const Duration(milliseconds: 1500),
-            child: VotingAnnouncement(viewType: conditions.isAlive ? 0 : 1),
-          )).then((_) {
+
+        if (conditions.isVoting) { //jak glosuje
+
+          //glosuje i jest zywa mafia
+          if (Provider
+              .of<WaitingViewModel>(context, listen: false)
+              .turn == 'mafia') {
+            //najpierw do VotingAnnouncement, a potem do VotingPage
             Navigator.pushReplacement(context, PageTransition(
               type: PageTransitionType.fade,
               duration: const Duration(milliseconds: 1500),
-              child: const VotingPage(),
-            ));
-          });
-        }  else {
-          // najpierw do VotingAnnouncement, a potem do Waitingpage
-          Navigator.pushReplacement(context, PageTransition(
-            type: PageTransitionType.fade,
-            duration: const Duration(milliseconds: 1500),
-            child: VotingAnnouncement(viewType: conditions.isAlive ? 1 : 0),
-          )).then((_) {
+              child: VotingAnnouncement(viewType: 1),
+            )).then((_) {
+              Navigator.pushReplacement(context, PageTransition(
+                type: PageTransitionType.fade,
+                duration: const Duration(milliseconds: 1500),
+                child: const VotingPage(),
+              ));
+            });
+          }
+
+          //glosuje i jest zywe cokolwiek
+          else {
+            //najpierw do VotingAnnouncement 0, a potem do VotingPage
             Navigator.pushReplacement(context, PageTransition(
               type: PageTransitionType.fade,
               duration: const Duration(milliseconds: 1500),
-              child: WaitingPage(viewType: conditions.isAlive ? 1 : 0),
-            ));
-          });
+              child: VotingAnnouncement(viewType: 0),
+            )).then((_) {
+              Navigator.pushReplacement(context, PageTransition(
+                type: PageTransitionType.fade,
+                duration: const Duration(milliseconds: 1500),
+                child: const VotingPage(),
+              ));
+            });
+          }
+        }
+
+           else { //jak nei glosuje to znaczy ze albo nie zyje albo jest obywatelem
+
+             //zyje wiec bedzie w waitingpage potem
+          if (conditions.isAlive) {
+            Navigator.pushReplacement(context, PageTransition(
+              type: PageTransitionType.fade,
+              duration: const Duration(milliseconds: 1500),
+              child: VotingAnnouncement(viewType: 1),
+            )).then((_) {
+              Navigator.pushReplacement(context, PageTransition(
+                type: PageTransitionType.fade,
+                duration: const Duration(milliseconds: 1500),
+                child: WaitingPage(viewType: 1),
+              ));
+            });
+          }
+
+          //nie zyje
+          else{
+            //jak jest glosowanie mafii i nie glosuje bo nie zyje
+            if (Provider
+                .of<WaitingViewModel>(context, listen: false)
+                .turn == 'mafia') {
+              Navigator.pushReplacement(context, PageTransition(
+                type: PageTransitionType.fade,
+                duration: const Duration(milliseconds: 1500),
+                child: VotingAnnouncement(viewType: 1),
+              )).then((_) {
+                Navigator.pushReplacement(context, PageTransition(
+                  type: PageTransitionType.fade,
+                  duration: const Duration(milliseconds: 1500),
+                  child: WaitingPage(viewType: 0),
+                ));
+              });
+            }
+
+            // jak jest glosowanie miasta i nie glosuje bo nei zyje
+            Navigator.pushReplacement(context, PageTransition(
+              type: PageTransitionType.fade,
+              duration: const Duration(milliseconds: 1500),
+              child: VotingAnnouncement(viewType: 0),
+            )).then((_) {
+              Navigator.pushReplacement(context, PageTransition(
+                type: PageTransitionType.fade,
+                duration: const Duration(milliseconds: 1500),
+                child: WaitingPage(viewType: 0),
+              ));
+            });
+
+          }
         }
       });
     });

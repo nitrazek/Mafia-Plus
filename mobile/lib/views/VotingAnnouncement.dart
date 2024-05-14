@@ -20,26 +20,25 @@ class _VotingAnnouncementState extends State<VotingAnnouncement> {
   @override
   void initState() {
     super.initState();
-    // po5 sekundach przechodzi do kolejnej strony
     Timer(Duration(seconds: 5), () {
-      navigateToNextPage(context);
+     // navigateToNextPage(context);
     });
   }
 
-  void navigateToNextPage(BuildContext context) {
+  /*void navigateToNextPage(BuildContext context) {
     Navigator.pushReplacement(
       context,
       PageTransition(
         type: PageTransitionType.fade,
         duration: const Duration(milliseconds: 1500),
         child: widget.viewType == 0
-            ? VotingPage()
+            ? VotingPage() //al glosuja
             : Provider.of<WaitingViewModel>(context, listen: false).turn == 'mafia'
-            ? const VotingPage()
-            : WaitingPage(viewType: 1),
+            ? const VotingPage() //jezeli mafia glosuje
+            : WaitingPage(viewType: 1), //a tak to waitingpage
       ),
     );
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
