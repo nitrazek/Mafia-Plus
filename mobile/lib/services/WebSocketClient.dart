@@ -128,7 +128,7 @@ class WebSocketClient {
             }
           ));
           _unsubscribeFunctions.add(_stompClient!.subscribe(
-              destination: "/topic/$roomId/scores",
+              destination: "/topic/$roomId/minigame-summary",
               callback: (frame) {
                 _minigameState.setScores(null);
                 Map<String, dynamic> scoreEndJson = jsonDecode(frame.body!);
