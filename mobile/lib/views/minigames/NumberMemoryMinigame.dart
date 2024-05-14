@@ -24,7 +24,7 @@ class NumberMemoryMinigamePageState extends State<NumberMemoryMinigamePage> {
   int _minigameDuration = 60;
   bool _isNumberVisible = true;
   bool? _isAnswerCorrect;
-  
+
   late Timer _countdownTimer, _minigameTimer;
   late OverlayEntry _overlayEntry;
 
