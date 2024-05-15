@@ -7,6 +7,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import pl.mafia.backend.models.db.*;
+import pl.mafia.backend.models.dto.AccountDetails;
 import pl.mafia.backend.models.dto.MinigameSummary;
 import pl.mafia.backend.repositories.GameRepository;
 import pl.mafia.backend.repositories.MinigameRepository;
@@ -79,19 +80,19 @@ public class MinigameService {
     Room room = game.getRoom();
 
     //Tutaj wybrać najlepszego i przyznać nagrodę czy coś takiego
-    List<Account> winners = new ArrayList<>();
+    List<AccountDetails> winners = new ArrayList<>();
     int highestScore = 0;
-    Account winner = null;
-    Map<Account,Integer> scores = new HashMap<>();
+    AccountDetails winner = null;
+    Map<AccountDetails,Integer> scores = new HashMap<>();
 
     for (MinigameScore minigameScore : minigame.getMinigameScores()) {
-      scores.put(minigameScore.getAccount(), minigameScore.getScore());
+      scores.put(new AccountDetails(minigameScore.getAccount()), minigameScore.getScore());
       if (minigameScore.getScore() > highestScore) {
         highestScore = minigameScore.getScore();
         winners.clear();
-        winners.add(minigameScore.getAccount());
+        winners.add(new AccountDetails(minigameScore.getAccount()));
       } else if (minigameScore.getScore() == highestScore) {
-        winners.add(minigameScore.getAccount());
+        winners.add(new AccountDetails(minigameScore.getAccount()));
       }
     }
     if (winners.size() > 1) {
@@ -100,6 +101,7 @@ public class MinigameService {
     else{
       winner = winners.get(0);
     }
+
 
     messagingTemplate.convertAndSend("/topic/"+room.getId() + "/minigame-summary",new MinigameSummary(winner,highestScore,scores));
 
