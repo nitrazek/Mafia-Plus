@@ -1,19 +1,20 @@
 package pl.mafia.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import pl.mafia.backend.models.db.*;
+import pl.mafia.backend.models.dto.AccountDetails;
+import pl.mafia.backend.models.dto.MinigameSummary;
 import pl.mafia.backend.repositories.GameRepository;
 import pl.mafia.backend.repositories.MinigameRepository;
 import pl.mafia.backend.repositories.MinigameScoreRepository;
 import pl.mafia.backend.repositories.RoundRepository;
 
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +36,8 @@ public class MinigameService {
   private ScheduledExecutorService scheduledExecutorService;
   @Autowired
   private PlatformTransactionManager transactionManager;
+  @Autowired
+  private SimpMessagingTemplate messagingTemplate;
 
   @Transactional
   private Minigame getMinigame(Long minigameId) {
@@ -70,10 +73,37 @@ public class MinigameService {
   @Transactional
   public void summarizeMinigame(Long minigameId) {
     Minigame minigame = getMinigame(minigameId);
+
     Round round = minigame.getRound();
     round = roundRepository.save(round);
+    Game game = round.getGame();
+    Room room = game.getRoom();
 
     //Tutaj wybrać najlepszego i przyznać nagrodę czy coś takiego
+    List<AccountDetails> winners = new ArrayList<>();
+    int highestScore = 0;
+    AccountDetails winner = null;
+    Map<AccountDetails,Integer> scores = new HashMap<>();
+
+    for (MinigameScore minigameScore : minigame.getMinigameScores()) {
+      scores.put(new AccountDetails(minigameScore.getAccount()), minigameScore.getScore());
+      if (minigameScore.getScore() > highestScore) {
+        highestScore = minigameScore.getScore();
+        winners.clear();
+        winners.add(new AccountDetails(minigameScore.getAccount()));
+      } else if (minigameScore.getScore() == highestScore) {
+        winners.add(new AccountDetails(minigameScore.getAccount()));
+      }
+    }
+    if (winners.size() > 1) {
+      winner = winners.get(new Random().nextInt(winners.size()));
+    }
+    else{
+      winner = winners.get(0);
+    }
+
+
+    messagingTemplate.convertAndSend("/topic/"+room.getId() + "/minigame-summary",new MinigameSummary(winner,highestScore,scores));
 
     Round finalRound = round;
     scheduledExecutorService.schedule(() -> {
