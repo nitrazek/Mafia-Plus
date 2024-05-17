@@ -296,4 +296,9 @@ public class GameService {
             ));
         }
     }
+
+    @Transactional
+    public void getHistory() {
+        //gameRepository.
+    }
 }
