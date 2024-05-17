@@ -16,6 +16,7 @@ import '../models/GameEnd.dart';
 import '../models/GameStart.dart';
 import '../models/Room.dart';
 import '../models/Round.dart';
+import '../models/Score.dart';
 import '../models/VotingEnd.dart';
 
 class WebSocketClient {
@@ -36,6 +37,9 @@ class WebSocketClient {
 
   final _votingSummaryUpdate = StreamController<VotingSummary>.broadcast();
   Stream<VotingSummary> get votingSummaryUpdate => _votingSummaryUpdate.stream;
+
+  final _highestScoreUpdate = StreamController<Score>.broadcast();
+  Stream<Score> get highestScoreUpdate => _highestScoreUpdate.stream;
 
   final AccountState _accountState = AccountState();
   final RoomState _roomState = RoomState();
@@ -122,6 +126,15 @@ class WebSocketClient {
               GameEnd gameEnd = GameEnd.fromJson(gameEndJson);
               _gameState.setGameEnd(gameEnd);
             }
+          ));
+          _unsubscribeFunctions.add(_stompClient!.subscribe(
+              destination: "/topic/$roomId/minigame-summary",
+              callback: (frame) {
+                _minigameState.setScores(null);
+                Map<String, dynamic> scoreEndJson = jsonDecode(frame.body!);
+                Score highestScore = Score.fromJson(scoreEndJson);
+                _minigameState.setScores(highestScore);
+              }
           ));
           connectionCompleter.complete();
         },
