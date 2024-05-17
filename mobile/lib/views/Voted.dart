@@ -10,9 +10,11 @@ import 'package:mobile/views/Waiting.dart';
 import 'package:mobile/views/Winner.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:mobile/views/VotingAnnouncement.dart';
+import 'package:mobile/viewModels/WaitingViewModel.dart';
 
 class VotedPage extends StatefulWidget {
-  const VotedPage({super.key});
+  const VotedPage({Key? key}) : super(key: key);
 
   @override
   VotedPageState createState() => VotedPageState();
@@ -46,21 +48,27 @@ class VotedPageState extends State<VotedPage> {
         ));
       });
     });
-    _votingStartedSubscription ?? context.read<VotedViewModel>().votingStarted.listen((conditions) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if(conditions.isVoting) {
-          Navigator.pushReplacement(context, PageTransition(
-            type: PageTransitionType.fade,
-            duration: const Duration(milliseconds: 1500),
-            child: const VotingPage()
-          ));
-        } else {
-          Navigator.pushReplacement(context, PageTransition(
-            type: PageTransitionType.fade,
-            duration: const Duration(milliseconds: 1500),
-            child: WaitingPage(viewType: conditions.isAlive ? 1 : 0)
-          ));
-        }
+    _votingStartedSubscription ??= context.read<VotedViewModel>().votingStarted.listen((conditions) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+          //turn mafii
+          if (Provider
+              .of<WaitingViewModel>(context, listen: false)
+              .turn == 'mafia') {
+            Navigator.pushReplacement(context, PageTransition(
+              type: PageTransitionType.fade,
+              duration: const Duration(milliseconds: 1500),
+              child: VotingAnnouncement(viewType: 1),
+            ));
+          }
+
+          //turn miasta
+          else {
+            Navigator.pushReplacement(context, PageTransition(
+              type: PageTransitionType.fade,
+              duration: const Duration(milliseconds: 1500),
+              child: VotingAnnouncement(viewType: 0),
+            ));
+          }
       });
     });
   }

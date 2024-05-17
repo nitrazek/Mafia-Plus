@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 import 'package:mobile/state/VotingState.dart';
 import 'package:mobile/views/VotingResults.dart';
-
+import 'package:mobile/viewModels/RoomViewModel.dart';
+import 'package:mobile/views/Menu.dart';
 import 'Voted.dart';
 
 class WaitingPage extends StatefulWidget {
@@ -25,6 +26,7 @@ class _WaitingPageState extends State<WaitingPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   StreamSubscription<void>? _votingFinishedSubscription;
+  final RoomViewModel _roomViewModel = RoomViewModel();
 
   late double screenWidth;
   late double screenHeight;
@@ -143,6 +145,37 @@ class _WaitingPageState extends State<WaitingPage>
                       },
                     ),
                     SizedBox(height: screenHeight * 0.015),
+                    // Przycisk "quit" wyświetli się, jeśli gracz odpadł
+                    if (widget.viewType == 0)
+                      ElevatedButton(
+                          style: MyStyles.buttonStyle,
+                          onPressed: () {
+                            _roomViewModel.leaveRoom(
+                                  () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  PageTransition(
+                                    type: PageTransitionType.fade,
+                                    duration: const Duration(milliseconds: 1500),
+                                    child: MenuPage(),
+                                  ),
+                                );
+                              },
+                                  (errorMsg) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(errorMsg)),
+                                    );
+                                  },
+                            );
+                          },
+                          child: const Text(
+                              'Quit',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold
+                              ))
+                      ),
                   ],
                 ),
               ),

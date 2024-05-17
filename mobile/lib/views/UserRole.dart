@@ -4,7 +4,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/utils/MinigameViewFactory.dart';
+import 'package:mobile/views/Voting.dart';
+import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/UserRoleViewModel.dart';
+import 'package:mobile/views/VotingAnnouncement.dart';
 import 'package:mobile/views/Waiting.dart';
 import 'package:provider/provider.dart';
 
