@@ -6,11 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pl.mafia.backend.models.db.Game;
+import pl.mafia.backend.models.db.GameHistory;
 import pl.mafia.backend.models.db.Round;
 import pl.mafia.backend.models.dto.AccountDetails;
 import pl.mafia.backend.services.GameService;
 import pl.mafia.backend.services.RoomService;
 
+import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -43,8 +45,8 @@ public class GameController {
     @GetMapping("/history")
     public ResponseEntity<?> getHistory(@AuthenticationPrincipal AccountDetails accountDetails) {
         try {
-            gameService.getHistory();
-            return ResponseEntity.noContent().build();
+            List<GameHistory> gameHistoryList = gameService.getHistory(accountDetails.getUsername());
+            return ResponseEntity.ok(gameHistoryList);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex) {

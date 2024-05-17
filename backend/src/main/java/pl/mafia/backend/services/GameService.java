@@ -33,6 +33,8 @@ public class GameService {
     @Autowired
     private GameRepository gameRepository;
     @Autowired
+    private GameHistoryRepository gameHistoryRepository;
+    @Autowired
     private MinigameRepository minigameRepository;
     @Autowired
     private RoundRepository roundRepository;
@@ -191,6 +193,13 @@ public class GameService {
             throw new IllegalArgumentException("Room does not exist.");
         Room room = fetchedRoom.get();
 
+        GameHistory gameHistory = new GameHistory();
+        gameHistory.setCreateTimestamp(game.getCreateTimestamp());
+        gameHistory.setRoundsPlayed(game.getRounds().size());
+        gameHistory.setPlayersUsernames(game.getPlayers().stream().map(Player::getUsername).toList());
+        gameHistory.setWinnerRole(winnerRole);
+        gameHistoryRepository.save(gameHistory);
+
         room.setGame(null);
         game.setRoom(null);
         roomRepository.save(room);
@@ -298,7 +307,8 @@ public class GameService {
     }
 
     @Transactional
-    public void getHistory() {
-        //gameRepository.
+    public List<GameHistory> getHistory(String username) {
+        Optional<List<GameHistory>> gameHistoryList = gameHistoryRepository.findByUsernameInPlayersUsernames(username);
+        return gameHistoryList.orElse(new ArrayList<>());
     }
 }
