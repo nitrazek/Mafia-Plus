@@ -49,7 +49,7 @@ class VotedPageState extends State<VotedPage> {
       });
     });
     _votingStartedSubscription ??= context.read<VotedViewModel>().votingStarted.listen((conditions) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
           //turn mafii
           if (Provider
               .of<WaitingViewModel>(context, listen: false)

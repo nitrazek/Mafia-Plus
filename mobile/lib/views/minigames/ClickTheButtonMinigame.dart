@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/viewModels/minigames/ClickTheButtonMinigameViewModel.dart';
 import 'package:mobile/views/Voting.dart';
+import 'package:mobile/views/VotingResults.dart';
 import 'package:mobile/views/minigames/ClickTheButtonMinigame.dart';
 import 'package:mobile/views/styles.dart';
 import 'package:page_transition/page_transition.dart';
@@ -63,7 +64,7 @@ class ClickTheButtonMinigamePageState extends State<ClickTheButtonMinigamePage> 
         Navigator.pushReplacement(context, PageTransition(
           type: PageTransitionType.fade,
           duration: const Duration(milliseconds: 1500),
-          child: const VotingPage(),
+          child: const VotingResultsPage(),
         ));
       });
     });

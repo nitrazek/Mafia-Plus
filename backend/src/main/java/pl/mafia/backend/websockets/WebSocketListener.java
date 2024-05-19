@@ -70,7 +70,7 @@ public class WebSocketListener {
 
             System.out.println("Subscribed: " + roomId);
         } catch(Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
 
@@ -91,7 +91,7 @@ public class WebSocketListener {
 
             System.out.println("Unsubscribed: " + roomId);
         } catch(Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
 
