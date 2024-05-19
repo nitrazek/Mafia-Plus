@@ -31,7 +31,11 @@ class MinigameResultPageState extends State<MinigameResultPage> {
       {
         isWinner = true;
       }
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+      return false;
+    },
+    child: Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -135,6 +139,7 @@ class MinigameResultPageState extends State<MinigameResultPage> {
                 ),
         ),
       )
+    ),
     );
   }
 }

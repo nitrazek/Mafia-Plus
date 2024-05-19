@@ -102,7 +102,11 @@ class ClickTheButtonMinigamePageState extends State<ClickTheButtonMinigamePage> 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+      return false;
+    },
+    child: Scaffold(
       body: Stack(
         children: [
           Center(
@@ -131,6 +135,7 @@ class ClickTheButtonMinigamePageState extends State<ClickTheButtonMinigamePage> 
           )
         ]
       )
+    ),
     );
   }
 }
