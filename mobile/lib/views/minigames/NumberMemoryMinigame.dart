@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/viewModels/minigames/NumberMemoryMinigameViewModel.dart';
-import 'package:mobile/views/VotingResults.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
@@ -78,7 +77,7 @@ class NumberMemoryMinigamePageState extends State<NumberMemoryMinigamePage> {
         Navigator.pushReplacement(context, PageTransition(
           type: PageTransitionType.fade,
           duration: const Duration(milliseconds: 1500),
-          child: const VotingResultsPage(),
+          child: const VotingPage(),
         ));
       });
     });
