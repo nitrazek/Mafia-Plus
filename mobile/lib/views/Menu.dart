@@ -178,8 +178,8 @@ class MenuPageState extends State<MenuPage> {
                       ),
                       MenuItem(
                         icon: Icons.logout,
-                        title: _isLoading ? 'Logging out...' : 'Logout',
-                        onPressed: () {
+                        title: 'Logout',
+                        onPressed: _isLoading ? null : () async {
                           context.read<MenuViewModel>().logout(
                             () {
                               Navigator.pop(context);

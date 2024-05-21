@@ -33,7 +33,11 @@ class MinigameIntroPageState extends State<MinigameIntroPage> {
         MaterialPageRoute(builder: widget.minigameNavigation)
       );
     });
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+      return false;
+    },
+    child: Scaffold(
       appBar: AppBar(
           title: Text('Minigame', style: MyStyles.backgroundTextStyle),
         automaticallyImplyLeading: false,
@@ -69,6 +73,7 @@ class MinigameIntroPageState extends State<MinigameIntroPage> {
           ],
         )
       )
+    ),
     );
   }
 }
