@@ -115,7 +115,11 @@ class NumberMemoryMinigamePageState extends State<NumberMemoryMinigamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+      return false;
+    },
+    child: Scaffold(
       body: Stack(
         children: [
           if(_isNumberVisible)
@@ -205,6 +209,7 @@ class NumberMemoryMinigamePageState extends State<NumberMemoryMinigamePage> {
           )
         ]
       )
+    ),
     );
   }
 }
