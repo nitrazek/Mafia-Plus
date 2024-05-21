@@ -71,7 +71,11 @@ class _VotingPageState extends State<VotingPage> {
   Widget build(BuildContext context) {
     String votingText = turn== 'mafia'? 'I\'m all ears. Who\'s the target this time??' :
     'What\'s your gut feeling?\nWho\'s the mafia?';
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+      return false;
+    },
+    child: Scaffold(
       body: Stack(
         children: [
           Container(
@@ -155,6 +159,7 @@ class _VotingPageState extends State<VotingPage> {
           ),
         ],
       ),
+    ),
     );
   }
 }

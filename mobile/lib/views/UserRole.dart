@@ -65,7 +65,11 @@ class UserRolePageState extends State<UserRolePage> {
     String role = context.watch<UserRoleViewModel>().role;
     Color textColor = role == 'mafia' ? Colors.red : Colors.green;
 
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+        child: Scaffold(
       backgroundColor: MyStyles.backgroundColor,
       body: Container(
         width: double.infinity,
@@ -121,6 +125,7 @@ class UserRolePageState extends State<UserRolePage> {
           ],
         ),
       ),
+    ),
     );
   }
 }
