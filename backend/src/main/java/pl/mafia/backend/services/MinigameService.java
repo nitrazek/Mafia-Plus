@@ -83,10 +83,10 @@ public class MinigameService {
     List<AccountDetails> winners = new ArrayList<>();
     int highestScore = 0;
     AccountDetails winner = null;
-    Map<AccountDetails,Integer> scores = new HashMap<>();
+    Map<String,Integer> scores = new HashMap<>();
 
     for (MinigameScore minigameScore : minigame.getMinigameScores()) {
-      scores.put(new AccountDetails(minigameScore.getAccount()), minigameScore.getScore());
+      scores.put(minigameScore.getAccount().getUsername(), minigameScore.getScore());
       if (minigameScore.getScore() > highestScore) {
         highestScore = minigameScore.getScore();
         winners.clear();

@@ -9,5 +9,5 @@ import java.util.Map;
 public record MinigameSummary(
         AccountDetails winner,
         int highestScore,
-        Map<AccountDetails, Integer> scores
+        Map<String, Integer> scores
 ) {}

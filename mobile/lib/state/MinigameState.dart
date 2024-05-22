@@ -26,5 +26,6 @@ class MinigameState extends ChangeNotifier {
   void setScores(Score? scores)
   {
     _scores = scores;
+    notifyListeners();
   }
 }

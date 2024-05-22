@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/models/Score.dart';
 import 'package:mobile/viewModels/MinigameResultViewModel.dart';
+import 'package:mobile/views/Voting.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class MinigameResultPage extends StatefulWidget {
@@ -20,14 +22,25 @@ class MinigameResultPageState extends State<MinigameResultPage> {
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration(seconds: 6), () {
+      Navigator.pushReplacement(
+        context,
+        PageTransition(
+          type: PageTransitionType.fade,
+          duration: const Duration(milliseconds: 1000),
+          child: const VotingPage(),
+        ),
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     var scores = context.watch<MinigameResultViewModel>().scores;
     var player = context.watch<MinigameResultViewModel>().account;
-    var playerScore = scores!.playersScores[player];
-    if(playerScore == scores.bestScore)
+    var playerScore = scores!.scores[player!.username]; //zabezpieczyć
+    var winner = scores!.winner;
+    if(player.username == winner.username)
       {
         isWinner = true;
       }
@@ -59,12 +72,12 @@ class MinigameResultPageState extends State<MinigameResultPage> {
                       child: Column(
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(left:40.0, right: 40.0, top: 20.0),
+                            padding: EdgeInsets.only(left:30.0, right: 30.0, top: 20.0),
                             child: Text(
-                              isWinner ? 'Congratulations, You won!' : 'Somebody\nwas better!',
+                              isWinner ? 'Congratulations\nYou won!' : 'Somebody\nwas better!',
                               style: TextStyle(
                                 color: isWinner ? MyStyles.green : MyStyles.red,
-                                fontSize: 40,
+                                fontSize: 38,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -106,7 +119,7 @@ class MinigameResultPageState extends State<MinigameResultPage> {
                                       color: Colors.yellowAccent,
                                       fontSize: 40
                                     ),
-                                      scores == null ? "0" : scores.bestScore.toString(),
+                                      scores == null ? "0" : scores.highestScore.toString(),
                                   ),),
                               ),
                             ],

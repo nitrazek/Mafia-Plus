@@ -8,6 +8,8 @@ import 'package:mobile/views/styles.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
+import '../MinigameResult.dart';
+
 class ClickTheButtonMinigamePage extends StatefulWidget {
   const ClickTheButtonMinigamePage({Key? key}) : super(key: key);
 
@@ -62,7 +64,7 @@ class ClickTheButtonMinigamePageState extends State<ClickTheButtonMinigamePage> 
         Navigator.pushReplacement(context, PageTransition(
           type: PageTransitionType.fade,
           duration: const Duration(milliseconds: 1500),
-          child: const VotingPage(),
+          child: const MinigameResultPage(),
         ));
       });
     });
