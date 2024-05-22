@@ -41,7 +41,11 @@ class WinnerPageState extends State<WinnerPage> {
     String roleName = winnerRole == 'mafia' ? 'Mafia' : 'Citizen';
     String imagePath = winnerRole == 'mafia' ? 'assets/images/Mafias.png' : 'assets/images/Citizens.png';
 
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+      return false;
+    },
+    child: Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -111,6 +115,7 @@ class WinnerPageState extends State<WinnerPage> {
           ],
         ),
       ),
+    ),
     );
   }
 }
