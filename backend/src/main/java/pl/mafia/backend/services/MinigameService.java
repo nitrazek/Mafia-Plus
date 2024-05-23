@@ -106,6 +106,8 @@ public class MinigameService {
     reward.setRound(round);
     reward.setAccount(accountService.getAccount(winner.getUsername()));
     rewardRepository.save(reward);
+    round.setReward(reward);
+    roundRepository.save(round);
 
     messagingTemplate.convertAndSend("/topic/"+room.getId() + "/minigame-summary",new MinigameSummary(winner,highestScore,scores));
 
