@@ -9,7 +9,6 @@ import 'dart:ui' as _i4;
 import 'package:mobile/viewModels/RoomViewModel.dart' as _i5;
 import 'package:mobile/viewModels/VotingResultsViewModel.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -91,24 +90,6 @@ class MockRoomViewModel extends _i1.Mock implements _i5.RoomViewModel {
   }
 
   @override
-  String get messageError => (super.noSuchMethod(
-        Invocation.getter(#messageError),
-        returnValue: _i6.dummyValue<String>(
-          this,
-          Invocation.getter(#messageError),
-        ),
-      ) as String);
-
-  @override
-  set messageError(String? _messageError) => super.noSuchMethod(
-        Invocation.setter(
-          #messageError,
-          _messageError,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
   bool get isHost => (super.noSuchMethod(
         Invocation.getter(#isHost),
         returnValue: false,
@@ -130,7 +111,7 @@ class MockRoomViewModel extends _i1.Mock implements _i5.RoomViewModel {
   _i3.Future<void> startGame(
     int? roomId,
     void Function()? onSuccess,
-    void Function()? onError,
+    void Function(String)? onError,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -148,7 +129,7 @@ class MockRoomViewModel extends _i1.Mock implements _i5.RoomViewModel {
   @override
   _i3.Future<void> leaveRoom(
     void Function()? onSuccess,
-    void Function()? onError,
+    void Function(String)? onError,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
