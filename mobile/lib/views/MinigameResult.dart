@@ -38,9 +38,9 @@ class MinigameResultPageState extends State<MinigameResultPage> {
   Widget build(BuildContext context) {
     var scores = context.watch<MinigameResultViewModel>().scores;
     var player = context.watch<MinigameResultViewModel>().account;
-    var playerScore = scores!.scores[player!.username]; //zabezpieczyć
+    var playerScore = scores?.scores[player?.username];
     var winner = scores!.winner;
-    if(player.username == winner.username)
+    if(player?.username == winner.username && player != null)
       {
         isWinner = true;
       }
@@ -119,7 +119,7 @@ class MinigameResultPageState extends State<MinigameResultPage> {
                                       color: Colors.yellowAccent,
                                       fontSize: 40
                                     ),
-                                      scores == null ? "0" : scores.highestScore.toString(),
+                                      scores.highestScore == null ? "0" : scores.highestScore.toString(),
                                   ),),
                               ),
                             ],
