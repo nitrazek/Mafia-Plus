@@ -15,6 +15,9 @@ public class Vote {
     @SequenceGenerator(name = "vote_sequence", sequenceName = "VOTE_SEQ", allocationSize = 1)
     private Long id;
 
+    @Column(nullable = false)
+    private int weight = 1;
+
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne
