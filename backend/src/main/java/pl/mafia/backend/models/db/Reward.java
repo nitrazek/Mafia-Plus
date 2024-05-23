@@ -2,7 +2,9 @@ package pl.mafia.backend.models.db;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import pl.mafia.backend.models.enums.RewardType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +19,19 @@ public class Reward {
     @SequenceGenerator(name = "reward_sequence", sequenceName = "REWARD_SEQ", allocationSize = 1)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
-    private String acquiring_method;
+    private RewardType title;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "reward")
-    private List<Round> rounds = new ArrayList<>();
+    @EqualsAndHashCode.Exclude
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_round")
+    private Round round;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @ManyToOne
+    @JoinColumn(name = "id_account")
+    private Account account;
 }

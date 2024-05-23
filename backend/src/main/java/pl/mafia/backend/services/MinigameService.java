@@ -9,10 +9,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 import pl.mafia.backend.models.db.*;
 import pl.mafia.backend.models.dto.AccountDetails;
 import pl.mafia.backend.models.dto.MinigameSummary;
-import pl.mafia.backend.repositories.GameRepository;
-import pl.mafia.backend.repositories.MinigameRepository;
-import pl.mafia.backend.repositories.MinigameScoreRepository;
-import pl.mafia.backend.repositories.RoundRepository;
+import pl.mafia.backend.models.enums.RewardType;
+import pl.mafia.backend.repositories.*;
 
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
@@ -28,6 +26,8 @@ public class MinigameService {
   private MinigameScoreRepository minigameScoreRepository;
   @Autowired
   private RoundRepository roundRepository;
+  @Autowired
+  private RewardRepository rewardRepository;
   @Autowired
   private AccountService accountService;
   @Autowired
@@ -79,7 +79,6 @@ public class MinigameService {
     Game game = round.getGame();
     Room room = game.getRoom();
 
-    //Tutaj wybrać najlepszego i przyznać nagrodę czy coś takiego
     List<AccountDetails> winners = new ArrayList<>();
     int highestScore = 0;
     AccountDetails winner = null;
@@ -102,12 +101,18 @@ public class MinigameService {
       winner = winners.get(0);
     }
 
+    Reward reward = new Reward();
+    reward.setTitle(RewardType.random());
+    reward.setRound(round);
+    reward.setAccount(accountService.getAccount(winner.getUsername()));
+    rewardRepository.save(reward);
+    round.setReward(reward);
+    roundRepository.save(round);
 
     messagingTemplate.convertAndSend("/topic/"+room.getId() + "/minigame-summary",new MinigameSummary(winner,highestScore,scores));
 
     Round finalRound = round;
-    scheduledExecutorService.schedule(() -> {
-      TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+    scheduledExecutorService.schedule(() -> {TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
       transactionTemplate.execute(status -> {
         gameService.startVotingCity(finalRound.getId());
         return null;

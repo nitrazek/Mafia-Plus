@@ -11,6 +11,7 @@ import pl.mafia.backend.models.db.*;
 import pl.mafia.backend.models.dto.VotingEnd;
 import pl.mafia.backend.models.dto.VotingResult;
 import pl.mafia.backend.models.dto.VotingSummary;
+import pl.mafia.backend.models.enums.RewardType;
 import pl.mafia.backend.repositories.*;
 
 import java.util.*;
@@ -35,6 +36,8 @@ public class VotingService {
     private AccountRepository accountRepository;
     @Autowired
     private PlayerRepository playerRepository;
+    @Autowired
+    private RewardRepository rewardRepository;
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -68,12 +71,21 @@ public class VotingService {
         if(voted != null) vote.setVoted(voted);
         vote = voteRepository.save(vote);
 
+        Round round = voting.getRound();
+        round = roundRepository.save(round);
+        Reward reward = round.getReward();
+        reward = rewardRepository.save(reward);
+        Account rewardedPlayer = reward.getAccount();
+        rewardedPlayer = accountRepository.save(rewardedPlayer);
+        if(Objects.equals(rewardedPlayer.getUsername(), voter.getUsername()) && reward.getTitle() == RewardType.DOUBLE_VOTE) {
+            vote.setWeight(2);
+            vote = voteRepository.save(vote);
+        }
+
         voting.getVotes().add(vote);
         votingRepository.save(voting);
 
-        Room room = voter.getRoom();
-        room = roomRepository.save(room);
-        Game game = room.getGame();
+        Game game = round.getGame();
         game = gameRepository.save(game);
 
         if(voting.getType().equals("city")) {
@@ -85,9 +97,8 @@ public class VotingService {
 
     public VotingSummary calculateVotingSummary(Voting voting) {
       Map<Account, Long> voteCounts = voting.getVotes().stream()
-        .map(Vote::getVoted)
         .filter(Objects::nonNull)
-        .collect(Collectors.groupingBy(account -> account, Collectors.counting()));
+        .collect(Collectors.groupingBy(Vote::getVoted, Collectors.summingLong(Vote::getWeight)));
       List<VotingResult> votingResults = voteCounts.entrySet().stream()
         .map(entry -> new VotingResult(entry.getKey().getUsername(), entry.getValue()))
         .toList();
