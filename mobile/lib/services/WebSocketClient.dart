@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:mobile/models/MinigameStart.dart';
+import 'package:mobile/models/Reward.dart';
 import 'package:mobile/models/VotingStart.dart';
 import 'package:mobile/models/VotingSummary.dart';
 import 'package:mobile/state/GameState.dart';
@@ -40,6 +41,9 @@ class WebSocketClient {
 
   final _highestScoreUpdate = StreamController<Score>.broadcast();
   Stream<Score> get highestScoreUpdate => _highestScoreUpdate.stream;
+
+  final _rewardUpdate = StreamController<Reward>.broadcast();
+  Stream<Reward> get rewardUpdate => _rewardUpdate.stream;
 
   final AccountState _accountState = AccountState();
   final RoomState _roomState = RoomState();
@@ -136,6 +140,16 @@ class WebSocketClient {
                 _minigameState.setScores(highestScore);
               }
           ));
+          _unsubscribeFunctions.add(_stompClient!.subscribe(
+            destination: "/topic/$roomId/reward",
+              callback: (frame) {
+              _minigameState.setReward(null);
+              Map<String, dynamic> rewardEndJson = jsonDecode(frame.body!);
+              Reward rewardName = Reward.fromJson(rewardEndJson);
+              _minigameState.setReward(rewardName);
+              }
+          ));
+
           connectionCompleter.complete();
         },
         onDisconnect: (StompFrame frame) {

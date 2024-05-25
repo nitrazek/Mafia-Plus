@@ -111,6 +111,9 @@ public class MinigameService {
 
     messagingTemplate.convertAndSend("/topic/"+room.getId() + "/minigame-summary",new MinigameSummary(winner,highestScore,scores));
 
+    messagingTemplate.convertAndSend("/topic/"+room.getId() + "/reward", reward.getTitle());
+
+
     Round finalRound = round;
     scheduledExecutorService.schedule(() -> {TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
       transactionTemplate.execute(status -> {

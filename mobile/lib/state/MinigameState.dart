@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '../models/MinigameStart.dart';
+import '../models/Reward.dart';
 import '../models/Score.dart';
 
 class MinigameState extends ChangeNotifier {
@@ -10,6 +11,8 @@ class MinigameState extends ChangeNotifier {
   MinigameStart? get currentMinigame => _currentMinigame;
   Score? _scores;
   Score? get scores => _scores;
+  Reward? _reward;
+  Reward? get reward => _reward;
 
   MinigameState._internal();
 
@@ -26,5 +29,9 @@ class MinigameState extends ChangeNotifier {
   void setScores(Score? scores)
   {
     _scores = scores;
+  }
+
+  void setReward(Reward? reward){
+    _reward = reward;
   }
 }

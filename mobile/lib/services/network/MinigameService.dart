@@ -27,4 +27,22 @@ class MinigameService {
       }
     }
   }
+
+  Future<void> giveReward(int rewardId, String reward) async {
+    try{
+      final response = await httpClient.post(
+        Uri.parse("$baseUrl/reward/$rewardId"),
+          body: jsonEncode(<String, String>{
+            'reward': reward,
+          }),
+      );
+      return handleResponse(response);
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException('No Internet Connection');
+      } else {
+        rethrow;
+      }
+    }
+  }
 }
