@@ -43,4 +43,23 @@ class GameService {
       }
     }
   }
+
+  Future<void> useReward(int rewardId, String username) async {
+    try{
+      final response = await httpClient.post(
+        Uri.parse("$baseUrl/reward/$rewardId"),
+        body: jsonEncode(<String, String>{
+          'username': username,
+        }),
+      );
+      return handleResponse(response);
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException('No Internet Connection');
+      } else {
+        rethrow;
+      }
+    }
+  }
+
 }
