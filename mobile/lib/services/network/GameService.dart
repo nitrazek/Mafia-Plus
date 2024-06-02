@@ -44,10 +44,10 @@ class GameService {
     }
   }
 
-  Future<void> useReward(int rewardId, String username) async {
+  Future<void> useReward(int roomId, String username) async {
     try{
       final response = await httpClient.post(
-        Uri.parse("$baseUrl/reward/$rewardId"),
+        Uri.parse("$baseUrl/reward/$roomId"),
         body: jsonEncode(<String, String>{
           'username': username,
         }),

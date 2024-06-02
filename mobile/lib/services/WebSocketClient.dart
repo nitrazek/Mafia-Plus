@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:mobile/models/MinigameStart.dart';
-import 'package:mobile/models/Reward.dart';
 import 'package:mobile/models/VotingStart.dart';
 import 'package:mobile/models/VotingSummary.dart';
 import 'package:mobile/state/GameState.dart';
@@ -26,24 +25,6 @@ class WebSocketClient {
   final List<void Function({Map<String, String>? unsubscribeHeaders})> _unsubscribeFunctions = [];
 
   final String baseUrl = "ws://${Constants.baseUrl}";
-
-  final _roomUpdate = StreamController<Room>.broadcast();
-  Stream<Room> get roomUpdate => _roomUpdate.stream;
-
-  final _gameStartUpdate = StreamController<GameStart>.broadcast();
-  Stream<GameStart> get gameStartUpdate => _gameStartUpdate.stream;
-
-  final _roundStartUpdate = StreamController<Round>.broadcast();
-  Stream<Round> get roundStartUpdate => _roundStartUpdate.stream;
-
-  final _votingSummaryUpdate = StreamController<VotingSummary>.broadcast();
-  Stream<VotingSummary> get votingSummaryUpdate => _votingSummaryUpdate.stream;
-
-  final _highestScoreUpdate = StreamController<Score>.broadcast();
-  Stream<Score> get highestScoreUpdate => _highestScoreUpdate.stream;
-
-  final _rewardUpdate = StreamController<Reward>.broadcast();
-  Stream<Reward> get rewardUpdate => _rewardUpdate.stream;
 
   final AccountState _accountState = AccountState();
   final RoomState _roomState = RoomState();
@@ -144,8 +125,7 @@ class WebSocketClient {
             destination: "/topic/$roomId/reward",
               callback: (frame) {
               _minigameState.setReward(null);
-              Map<String, dynamic> rewardEndJson = jsonDecode(frame.body!);
-              Reward rewardName = Reward.fromJson(rewardEndJson);
+              String rewardName =frame.body!;
               _minigameState.setReward(rewardName);
               }
           ));
