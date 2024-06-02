@@ -59,8 +59,5 @@ class VotingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> useReward(String playerUsername) async{
-    _votedPlayer = playerUsername;
-    await _gameService.useReward(_rewardId!, playerUsername);
-  }
+
 }

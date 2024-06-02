@@ -105,7 +105,7 @@ public class MinigameService {
     reward.setTitle(RewardType.random());
     reward.setRound(round);
     reward.setAccount(accountService.getAccount(winner.getUsername()));
-    rewardRepository.save(reward);
+    reward = rewardRepository.save(reward);
     round.setReward(reward);
     roundRepository.save(round);
 
