@@ -15,9 +15,11 @@ class MinigameResultViewModel extends ChangeNotifier {
   Account? _account;
   Account? get account => _account;
 
+
   MinigameResultViewModel() {
     _minigameState.addListener(_updateScores); _updateScores();
     _accountState.addListener(_updatePlayer); _updatePlayer();
+
   }
 
   void _updateScores() {
@@ -29,4 +31,5 @@ class MinigameResultViewModel extends ChangeNotifier {
     if(_accountState.currentAccount == null) return;
     _account = _accountState.currentAccount;
   }
+
 }

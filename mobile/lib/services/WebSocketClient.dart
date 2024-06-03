@@ -26,21 +26,6 @@ class WebSocketClient {
 
   final String baseUrl = "ws://${Constants.baseUrl}";
 
-  final _roomUpdate = StreamController<Room>.broadcast();
-  Stream<Room> get roomUpdate => _roomUpdate.stream;
-
-  final _gameStartUpdate = StreamController<GameStart>.broadcast();
-  Stream<GameStart> get gameStartUpdate => _gameStartUpdate.stream;
-
-  final _roundStartUpdate = StreamController<Round>.broadcast();
-  Stream<Round> get roundStartUpdate => _roundStartUpdate.stream;
-
-  final _votingSummaryUpdate = StreamController<VotingSummary>.broadcast();
-  Stream<VotingSummary> get votingSummaryUpdate => _votingSummaryUpdate.stream;
-
-  final _highestScoreUpdate = StreamController<Score>.broadcast();
-  Stream<Score> get highestScoreUpdate => _highestScoreUpdate.stream;
-
   final AccountState _accountState = AccountState();
   final RoomState _roomState = RoomState();
   final GameState _gameState = GameState();
@@ -136,6 +121,15 @@ class WebSocketClient {
                 _minigameState.setScores(highestScore);
               }
           ));
+          _unsubscribeFunctions.add(_stompClient!.subscribe(
+            destination: "/topic/$roomId/reward",
+              callback: (frame) {
+              _minigameState.setReward(null);
+              String rewardName =frame.body!;
+              _minigameState.setReward(rewardName);
+              }
+          ));
+
           connectionCompleter.complete();
         },
         onDisconnect: (StompFrame frame) {
