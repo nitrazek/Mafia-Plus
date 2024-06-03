@@ -110,7 +110,7 @@ class WebSocketClient {
             }
           ));
           _unsubscribeFunctions.add(_stompClient!.subscribe(
-            destination: "/topic/$roomId/voting-end",
+            destination: "/queue/$roomId/voting-end",
             callback: (frame) {
               _votingState.setVotingSummary(null);
               Map<String, dynamic> votingEndJson = jsonDecode(frame.body!);

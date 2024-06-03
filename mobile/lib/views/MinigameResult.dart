@@ -16,13 +16,12 @@ class MinigameResultPage extends StatefulWidget {
 }
 
 class MinigameResultPageState extends State<MinigameResultPage> {
-
   bool isWinner = false;
-  int rank = 1;
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 6), () {
+    Future.delayed(Duration(seconds: 10), () {
       Navigator.pushReplacement(
         context,
         PageTransition(
@@ -36,123 +35,137 @@ class MinigameResultPageState extends State<MinigameResultPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     var scores = context.watch<MinigameResultViewModel>().scores;
     var player = context.watch<MinigameResultViewModel>().account;
     var playerScore = scores?.scores[player?.username];
-    var winner = scores!.winner;
-    if(player?.username == winner.username && player != null)
-      {
-        isWinner = true;
-      }
+    var winner = scores?.winner;
+    if (player?.username == winner?.username && player != null) {
+      isWinner = true;
+    }
+
+    double baseHeight = 640.0; // Example base height, adjust as needed
+    double fontSizeScale = screenHeight / baseHeight;
+
     return WillPopScope(
-        onWillPop: () async {
-      return false;
-    },
-    child: Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              MyStyles.purple,
-              MyStyles.lightestPurple,
-            ],
-          )
-        ),
-        child: Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: MyStyles.backgroundColor,
-                        borderRadius: BorderRadius.circular(20.0),
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                MyStyles.purple,
+                MyStyles.lightestPurple,
+              ],
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: MyStyles.backgroundColor,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+                      child: Text(
+                        isWinner ? 'Congratulations\nYou won!' : 'Somebody\nwas better!',
+                        style: TextStyle(
+                          color: isWinner ? MyStyles.green : MyStyles.red,
+                          fontSize: 35 * fontSizeScale,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      child: Column(
+                    ),
+                    SizedBox(height: screenHeight * 0.01),
+                    Image.asset(
+                      isWinner ? 'assets/images/Prize.png' : 'assets/images/SecondPrize.png',
+                      width: 100 * fontSizeScale,
+                    ),
+                    SizedBox(height: screenHeight * 0.01),
+                    Text(
+                      isWinner ? 'Your prize is:' : 'Winner is richer by:',
+                      style: TextStyle(fontSize: 20 * fontSizeScale),
+                    ),
+                    SizedBox(height: screenHeight * 0.1),
+                    Container(
+                      padding: const EdgeInsets.only(top: 15, bottom: 5),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.only(left:30.0, right: 30.0, top: 20.0),
-                            child: Text(
-                              isWinner ? 'Congratulations\nYou won!' : 'Somebody\nwas better!',
-                              style: TextStyle(
-                                color: isWinner ? MyStyles.green : MyStyles.red,
-                                fontSize: 38,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10, ),
-                          Image.asset(
-                              isWinner ? 'assets/images/Prize.png' : 'assets/images/SecondPrize.png',
-                              width: 100
-                          ),
-                          SizedBox(height: 10,),
-                          Text(
-                            isWinner ? 'Your prize is:' : 'Winner is richer by:',
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                      SizedBox(height: 200,),
-                      Container(
-                          padding:EdgeInsets.only(top:15,bottom:5),
-                          child:Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                          Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              CircleAvatar(radius: 45, backgroundColor: Color(0xFF8E44AD),
-                              child: Text(
-                                style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 25
+                              CircleAvatar(
+                                radius: 45 * fontSizeScale,
+                                backgroundColor: const Color(0xFF8E44AD),
+                                child: Text(
+                                  playerScore?.toString() ?? "0",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25 * fontSizeScale,
+                                  ),
                                 ),
-                                playerScore == null ? "0" : playerScore.toString(),
                               ),
-                              ),
-                              SizedBox(width:20),
-                              Padding(
-                                padding:EdgeInsets.only(bottom:30),
-                                child: CircleAvatar(radius: 80, backgroundColor: Color(0xFFA569BD),
-                                  child: Text(
-                                    style: TextStyle(
-                                      color: Colors.yellowAccent,
-                                      fontSize: 40
-                                    ),
-                                      scores.highestScore == null ? "0" : scores.highestScore.toString(),
-                                  ),),
-                              ),
-                            ],
-                          )
-                      ),
-                          Row(
-                            children: [
-                              SizedBox(width: 60,),
+                              SizedBox(height: 10 * fontSizeScale),
                               Text(
                                 "Yours",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                              ),
-                              SizedBox(width: 91,),
-                              Text(
-                                "Best",
                                 style: TextStyle(
-                                  fontSize: 30,
+                                  fontSize: 20 * fontSizeScale,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],
-                          )
-                      ],
-                      )
+                          ),
+                          const SizedBox(width: 20),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 30),
+                                child: CircleAvatar(
+                                  radius: 80 * fontSizeScale,
+                                  backgroundColor: const Color(0xFFA569BD),
+                                  child: Text(
+                                    scores?.highestScore?.toString() ?? "0",
+                                    style: TextStyle(
+                                      color: Colors.yellowAccent,
+                                      fontSize: 40 * fontSizeScale,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10 * fontSizeScale),
+                              Text(
+                                "Best",
+                                style: TextStyle(
+                                  fontSize: 30 * fontSizeScale,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
+              ),
+            ),
+          ),
         ),
-      )
-    ),
+      ),
     );
   }
 }
