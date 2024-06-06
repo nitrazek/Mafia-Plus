@@ -19,7 +19,7 @@ class _GameHistoryPageState extends State<GameHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    //List<Game> gameHistory = context.watch<GameHistoryViewModel>().gameHistory;
+    List<Game> gameHistory = context.watch<GameHistoryViewModel>().gameHistory;
 
     return Scaffold(
       appBar: AppBar(

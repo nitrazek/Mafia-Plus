@@ -2,7 +2,6 @@ package pl.mafia.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
@@ -308,7 +307,9 @@ public class GameService {
 
     @Transactional
     public List<GameHistory> getHistory(String username) {
-        Optional<List<GameHistory>> gameHistoryList = gameHistoryRepository.findByUsernameInPlayersUsernames(username);
-        return gameHistoryList.orElse(new ArrayList<>());
+        List<GameHistory> gameHistoryList = gameHistoryRepository.findAll();
+        return gameHistoryList.stream()
+                .filter(history -> history.getPlayersUsernames().contains(username))
+                .collect(Collectors.toList());
     }
 }
