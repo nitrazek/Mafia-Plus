@@ -105,11 +105,14 @@ public class MinigameService {
     reward.setTitle(RewardType.random());
     reward.setRound(round);
     reward.setAccount(accountService.getAccount(winner.getUsername()));
-    rewardRepository.save(reward);
+    reward = rewardRepository.save(reward);
     round.setReward(reward);
     roundRepository.save(round);
 
     messagingTemplate.convertAndSend("/topic/"+room.getId() + "/minigame-summary",new MinigameSummary(winner,highestScore,scores));
+
+    messagingTemplate.convertAndSend("/topic/"+room.getId() + "/reward", reward.getTitle());
+
 
     Round finalRound = round;
     scheduledExecutorService.schedule(() -> {TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
