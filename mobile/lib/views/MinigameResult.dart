@@ -21,7 +21,7 @@ class MinigameResultPageState extends State<MinigameResultPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 10), () {
+    Future.delayed(Duration(seconds: 10000), () {
       Navigator.pushReplacement(
         context,
         PageTransition(
@@ -45,9 +45,10 @@ class MinigameResultPageState extends State<MinigameResultPage> {
     if (player?.username == winner?.username && player != null) {
       isWinner = true;
     }
+    isWinner = true;
 
-    double baseHeight = 640.0; // Example base height, adjust as needed
-    double fontSizeScale = screenHeight / baseHeight;
+    double baseWidth = 350.0; // Example base height, adjust as needed
+    double fontSizeScale = screenWidth / baseWidth;
 
     return WillPopScope(
       onWillPop: () async {
