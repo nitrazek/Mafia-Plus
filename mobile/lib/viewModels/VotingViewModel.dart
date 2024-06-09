@@ -24,6 +24,8 @@ class VotingViewModel extends ChangeNotifier {
   Room? _room;
   Room? get room => _room;
 
+  int? _rewardId;
+
   final _votingFinished = StreamController<void>.broadcast();
   Stream<void> get votingFinished => _votingFinished.stream;
 
@@ -56,4 +58,6 @@ class VotingViewModel extends ChangeNotifier {
     await _gameService.addVote(_votingId!, "");
     notifyListeners();
   }
+
+
 }

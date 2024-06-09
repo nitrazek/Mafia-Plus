@@ -10,6 +10,8 @@ class MinigameState extends ChangeNotifier {
   MinigameStart? get currentMinigame => _currentMinigame;
   Score? _scores;
   Score? get scores => _scores;
+  String? _reward;
+  String? get reward => _reward;
 
   MinigameState._internal();
 
@@ -27,5 +29,9 @@ class MinigameState extends ChangeNotifier {
   {
     _scores = scores;
     notifyListeners();
+  }
+
+  void setReward(String? reward){
+    _reward = reward;
   }
 }
