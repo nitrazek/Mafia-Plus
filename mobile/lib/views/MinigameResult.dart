@@ -45,7 +45,6 @@ class MinigameResultPageState extends State<MinigameResultPage> {
     if (player?.username == winner?.username && player != null) {
       isWinner = true;
     }
-    isWinner = true;
 
     double baseWidth = 350.0; // Example base height, adjust as needed
     double fontSizeScale = screenWidth / baseWidth;
