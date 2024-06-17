@@ -34,7 +34,7 @@ class _RewardVotingPageState extends State<RewardVotingPage> {
 
   @override
   Widget build(BuildContext context) {
-    String votingText = 'Who would you like to Protect?';
+    String votingText = 'Who would you like to protect?';
     return Scaffold(
       body: Stack(
         children: [
@@ -89,7 +89,7 @@ class _RewardVotingPageState extends State<RewardVotingPage> {
                                           Expanded(
                                             child: PlayerButton(
                                                 playerUsername: playerUsername,
-                                                onPressed: () => viewModel.protect(playerUsername) //chyba nie ma w viewmodelu czegos takiego
+                                                onPressed: () => viewModel.useReward(playerUsername)
                                             ),
                                           ),
                                         ],
