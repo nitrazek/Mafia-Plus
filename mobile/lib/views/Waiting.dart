@@ -75,11 +75,7 @@ class _WaitingPageState extends State<WaitingPage>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async {
-      return false;
-    },
-    child: Scaffold(
+    return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -187,7 +183,6 @@ class _WaitingPageState extends State<WaitingPage>
           ),
         ),
       ),
-    ),
     );
   }
 }

@@ -60,11 +60,7 @@ class VotingResultsPageState extends State<VotingResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async {
-      return false;
-    },
-    child: Scaffold(
+    return Scaffold(
       body: Container(
         decoration:  BoxDecoration(
           gradient: LinearGradient(
@@ -141,7 +137,6 @@ class VotingResultsPageState extends State<VotingResultsPage> {
           ],
         ),
       ),
-    ),
     );
   }
 }
