@@ -178,7 +178,7 @@ class MenuPageState extends State<MenuPage> {
                     ),
                     MenuItem(
                       icon: Icons.logout,
-                      title: _isLoading ? 'Logging out...' : 'Logout',
+                      title: 'Logout',
                       onPressed: _isLoading
                           ? null
                           : () {
