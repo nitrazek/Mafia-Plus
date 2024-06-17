@@ -150,7 +150,8 @@ public class VotingService {
         voting = votingRepository.save(voting);
 
         Player player = gameService.getPlayer(votedPlayerUsername);
-        player.setAlive(false);
+        if(!player.getInvincible()) player.setAlive(false);
+        else player.setInvincible(false);
         playerRepository.save(player);
 
         Round round = voting.getRound();
