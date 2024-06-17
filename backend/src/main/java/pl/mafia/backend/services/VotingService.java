@@ -149,9 +149,9 @@ public class VotingService {
         voting.setAccount(account);
         voting = votingRepository.save(voting);
 
-        Player player = gameService.getPlayer(votedPlayerUsername);
-        player.setAlive(false);
-        playerRepository.save(player);
+        Player votedPlayer = gameService.getPlayer(votedPlayerUsername);
+        votedPlayer.setAlive(false);
+        playerRepository.save(votedPlayer);
 
         Round round = voting.getRound();
         round = roundRepository.save(round);
@@ -159,7 +159,9 @@ public class VotingService {
         game = gameRepository.save(game);
         Room room = game.getRoom();
         room = roomRepository.save(room);
-        messagingTemplate.convertAndSend("/topic/" + room.getId() + "/voting-end", new VotingEnd(voting.getType(), votedPlayerUsername));
+        for(Player player : game.getPlayers()) {
+            messagingTemplate.convertAndSendToUser(player.getUsername(), "/queue/" + room.getId() + "/voting-end", new VotingEnd(voting.getType(), votedPlayerUsername, player.getAlive()));
+        }
 
         Voting finalVoting = voting;
         Round finalRound = round;
