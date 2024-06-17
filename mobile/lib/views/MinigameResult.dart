@@ -5,6 +5,7 @@ import 'package:mobile/Views/styles.dart';
 import 'package:mobile/models/Score.dart';
 import 'package:mobile/viewModels/MinigameResultViewModel.dart';
 import 'package:provider/provider.dart';
+import 'package:mobile/viewModels/RewardViewModel.dart';
 
 class MinigameResultPage extends StatefulWidget {
   const MinigameResultPage({super.key});
@@ -17,9 +18,15 @@ class MinigameResultPageState extends State<MinigameResultPage> {
 
   bool isWinner = false;
   int rank = 1;
+  String? prize;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var rewardViewModel = Provider.of<RewardViewModel>(context, listen: false);
+      prize = rewardViewModel.reward?? "no prize for you today sorry";
+    });
   }
 
   @override
@@ -76,7 +83,7 @@ class MinigameResultPageState extends State<MinigameResultPage> {
                           ),
                           SizedBox(height: 10,),
                           Text(
-                            isWinner ? 'Your prize is:' : 'Winner is richer by:',
+                            isWinner ? 'Your prize is: $prize'  : 'Winner is richer by:',
                             style: TextStyle(
                               fontSize: 20,
                             ),
