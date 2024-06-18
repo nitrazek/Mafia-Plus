@@ -27,6 +27,18 @@ class _ChooseRevievedState extends State<ChooseRevieved> {
     Size size = view.physicalSize;
     screenWidth = size.width;
     screenHeight = size.height;
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      checkIfDeadPlayersEmpty();
+    });
+
+  }
+
+  void checkIfDeadPlayersEmpty() {
+    var viewModel = context.read<RewardViewModel>();
+    if (viewModel.deadPlayers.isEmpty) {
+      _onRewardUsed();
+    }
   }
 
   void _onRewardUsed() {
@@ -39,7 +51,6 @@ class _ChooseRevievedState extends State<ChooseRevieved> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
