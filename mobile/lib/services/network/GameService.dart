@@ -47,7 +47,7 @@ class GameService {
 
   Future<List<GameHistory>> getHistory() async {
     try {
-      final response = await httpClient.post(Uri.parse("$baseUrl/game/history"));
+      final response = await httpClient.get(Uri.parse("$baseUrl/game/history"));
       if (response.statusCode == 200) {
         List<dynamic> gamesJson = jsonDecode(response.body);
         List<GameHistory> games = gamesJson
