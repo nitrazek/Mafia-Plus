@@ -1,25 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/models/GameResult.dart';
+import 'package:mobile/models/GameHistory.dart';
+import '../services/network/GameService.dart';
 
 class GameHistoryViewModel extends ChangeNotifier {
- // final GameService _gameService = GameService();
-  List<GameResult> _gameHistory = [];
+  final GameService _gameService = GameService();
+  List<GameHistory> _gameHistory = [];
 
-  List<GameResult> get gameHistory => _gameHistory;
+  List<GameHistory> get gameHistory => _gameHistory;
 
   Future<void> fetchGameHistory() async {
     try{
-      //zakomentowane bo serwsue ni ma
-       // List <Game> games = await _gameHistory.getGames();
-       // jakiea prkladowe nizej
-      _gameHistory = [
-        GameResult(date: DateTime(2024, 1, 1), won: true),
-        GameResult(date: DateTime(2024, 1, 5), won: false),
-      ];
+        _gameHistory = await _gameService.getHistory();
         notifyListeners();
       } catch (e) {
         print('Error: $e');
       }
-  }
+    }
 }
