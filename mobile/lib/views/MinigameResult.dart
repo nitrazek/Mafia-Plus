@@ -117,7 +117,7 @@ class MinigameResultPageState extends State<MinigameResultPage> {
                     ),
                     SizedBox(height: screenHeight * 0.01),
                     Text(
-                      isWinner ? 'Your prize is: $prize' : 'Winner is richer by:',
+                      isWinner ? 'Your prize is: $prize' : 'Winner is richer by: $prize',
                       style: TextStyle(fontSize: 20 * fontSizeScale),
                     ),
                     SizedBox(height: screenHeight * 0.1),
