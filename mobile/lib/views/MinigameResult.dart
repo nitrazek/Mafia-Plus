@@ -28,9 +28,8 @@ class MinigameResultPageState extends State<MinigameResultPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var rewardViewModel = Provider.of<RewardViewModel>(context, listen: false);
       setState(() {
-        prize = rewardViewModel.reward ?? "no prize for you today sorry";
+        prize = context.read<RewardViewModel>().reward;
       });
 
       // do uzycia invincible jesli ta nagroda
