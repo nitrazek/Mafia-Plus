@@ -9,16 +9,17 @@ import 'package:mobile/views/styles.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/RewardViewModel.dart';
-import 'Voted.dart';
+import 'package:mobile/views/Voting.dart';
 
-class RewardVotingPage extends StatefulWidget {
-  const RewardVotingPage({super.key});
+class ChooseProtected extends StatefulWidget {
+  const ChooseProtected({Key? key}) : super(key: key);
 
   @override
-  _RewardVotingPageState createState() => _RewardVotingPageState();
+  _ChooseProtectedState createState() => _ChooseProtectedState();
 }
 
-class _RewardVotingPageState extends State<RewardVotingPage> {
+
+class _ChooseProtectedState extends State<ChooseProtected> {
   late double screenWidth;
   late double screenHeight;
 
@@ -29,6 +30,17 @@ class _RewardVotingPageState extends State<RewardVotingPage> {
     Size size = view.physicalSize;
     screenWidth = size.width;
     screenHeight = size.height;
+  }
+
+  void _onRewardUsed() {
+    Navigator.pushReplacement(
+      context,
+      PageTransition(
+        type: PageTransitionType.fade,
+        duration: const Duration(milliseconds: 1000),
+        child: const VotingPage(),
+      ),
+    );
   }
 
 
