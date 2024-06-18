@@ -66,7 +66,7 @@ class GameService {
     }
   }
 
-  Future<void> useReward(int roomId, String username) async {
+  Future<void> useReward(String username) async {
     try{
       final response = await httpClient.post(
         Uri.parse("$baseUrl/reward"),
