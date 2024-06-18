@@ -31,7 +31,7 @@ public class Reward {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "id_account")
     private Account account;
 }
