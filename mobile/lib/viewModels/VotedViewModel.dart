@@ -16,6 +16,9 @@ class VotedViewModel extends ChangeNotifier {
   String? _votingType;
   String? get votingType => _votingType;
 
+  List<String> _deadPlayers = [];
+  List<String> get deadPlayers => _deadPlayers;
+
   String? _votedPlayerNickname;
   String? get votedPlayerNickname => _votedPlayerNickname;
 
@@ -74,6 +77,11 @@ class VotedViewModel extends ChangeNotifier {
   void _updateMinigame() {
     if(_minigameState.currentMinigame == null) return;
     _minigameStarted.add(_minigameState.currentMinigame!.type);
+    notifyListeners();
+  }
+
+  void addDeadPlayer(String playerUsername) {
+    _deadPlayers.add(playerUsername);
     notifyListeners();
   }
 }

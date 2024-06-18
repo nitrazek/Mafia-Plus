@@ -4,6 +4,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/viewModels/VotedViewModel.dart';
+import 'package:mobile/viewModels/VotingViewModel.dart';
 import 'package:mobile/views/Voting.dart';
 import 'package:mobile/views/Waiting.dart';
 import 'package:mobile/views/Winner.dart';
@@ -42,6 +43,10 @@ class VotedPageState extends State<VotedPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final votedViewModel = context.read<VotedViewModel>();
+    if (votedViewModel.votedPlayerNickname != null) {
+      votedViewModel.addDeadPlayer(votedViewModel.votedPlayerNickname!); //doanie do trupow
+    }
     _gameEndedSubscription ??= context.read<VotedViewModel>().gameEnded.listen((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(context, PageTransition(
@@ -87,7 +92,7 @@ class VotedPageState extends State<VotedPage> {
         }
       });
     });
-  }
+    }
 
   @override
   void dispose() {
