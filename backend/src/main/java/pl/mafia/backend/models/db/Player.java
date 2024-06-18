@@ -24,4 +24,7 @@ public class Player {
 
   @Column(nullable = false)
   private Boolean alive;
+
+  @Column(nullable = false)
+  private Boolean invincible = false;
 }
