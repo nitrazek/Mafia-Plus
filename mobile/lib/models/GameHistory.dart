@@ -1,14 +1,14 @@
 import 'Account.dart';
 import 'Round.dart';
 
-class Game {
+class GameHistory {
   final int id;
   final DateTime createTimestamp;
   final int roundsPlayed;
   final List<String> playersUsernames;
   final String winnerRole;
 
-  Game({
+  GameHistory({
     required this.id,
     required this.createTimestamp,
     required this.roundsPlayed,
@@ -16,8 +16,8 @@ class Game {
     required this.winnerRole,
   });
 
-  factory Game.fromJson(Map<String, dynamic> json) {
-    return Game(
+  factory GameHistory.fromJson(Map<String, dynamic> json) {
+    return GameHistory(
       id: json['id'],
       createTimestamp: DateTime.parse(json['createTimestamp']),
       roundsPlayed: json['roundsPlayed'],

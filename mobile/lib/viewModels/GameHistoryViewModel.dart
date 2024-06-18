@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/models/GameHistory.dart';
+import '../services/network/GameService.dart';
 
 class GameHistoryViewModel extends ChangeNotifier {
   final GameService _gameService = GameService();
@@ -10,12 +11,10 @@ class GameHistoryViewModel extends ChangeNotifier {
 
   Future<void> fetchGameHistory() async {
     try{
-      //zakomentowane bo serwsue ni ma
-       // List <Game> games = await _gameHistory.getGames();
-      _gameHistory =
+        _gameHistory = await _gameService.getHistory();
         notifyListeners();
       } catch (e) {
         print('Error: $e');
       }
-  }
+    }
 }
