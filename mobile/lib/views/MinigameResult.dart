@@ -22,17 +22,19 @@ class MinigameResultPageState extends State<MinigameResultPage> {
 
   bool isWinner = false;
   int rank = 1;
-  String? prize;
+  String? prize = "nie znalazlo";
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var rewardViewModel = Provider.of<RewardViewModel>(context, listen: false);
-      prize = rewardViewModel.reward ?? "no prize for you today sorry";
+      setState(() {
+        prize = rewardViewModel.reward ?? "no prize for you today sorry";
+      });
 
       // do uzycia invincible jesli ta nagroda
-      if (prize == "INVINCIBLE") {
+      if (prize == "INVINCIBLE" && isWinner==true) {
         Navigator.pushReplacement(
           context,
           PageTransition(
