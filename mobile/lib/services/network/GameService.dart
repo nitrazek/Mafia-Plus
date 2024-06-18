@@ -58,10 +58,11 @@ class GameService {
         throw FetchDataException('Failed to load games');
       }
     } catch (e) {
-    if (e is SocketException) {
-      throw FetchDataException('No Internet Connection');
-    } else {
-      rethrow;
+      if (e is SocketException) {
+        throw FetchDataException('No Internet Connection');
+      } else {
+        rethrow;
+      }
     }
   }
 
