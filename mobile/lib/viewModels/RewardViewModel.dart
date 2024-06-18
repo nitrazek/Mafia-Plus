@@ -4,6 +4,7 @@ import 'package:mobile/state/MinigameState.dart';
 import '../models/Room.dart';
 import '../services/network/GameService.dart';
 import '../state/RoomState.dart';
+import 'package:mobile/viewModels/VotingViewModel.dart';
 
 class RewardViewModel extends ChangeNotifier{
   final GameService _gameService = GameService();
@@ -12,6 +13,10 @@ class RewardViewModel extends ChangeNotifier{
 
   String? _reward;
   String? get reward => _reward;
+
+  List<String>? _playerUsernames;
+  List<String>? get playerUsernames => _playerUsernames;
+
 
   RewardViewModel(){
     _minigameState.addListener(_updateReward); _updateReward();
@@ -27,4 +32,10 @@ class RewardViewModel extends ChangeNotifier{
   Room? room = _roomState.currentRoom;
     await _gameService.useReward(room!.id, playerUsername);
   }
+
+  void fetchPlayerUsernamesFromVoting(VotingViewModel votingViewModel) {
+    _playerUsernames = votingViewModel.playerUsernames;
+    notifyListeners();
+  }
+
 }

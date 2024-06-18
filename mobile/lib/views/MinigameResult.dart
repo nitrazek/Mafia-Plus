@@ -7,6 +7,8 @@ import 'package:mobile/viewModels/MinigameResultViewModel.dart';
 import 'package:mobile/views/Voting.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:mobile/viewModels/RewardViewModel.dart';
+import 'package:mobile/views/ChooseProtected.dart';
 
 class MinigameResultPage extends StatefulWidget {
   const MinigameResultPage({super.key});
@@ -15,21 +17,42 @@ class MinigameResultPage extends StatefulWidget {
   State<MinigameResultPage> createState() => MinigameResultPageState();
 }
 
+
 class MinigameResultPageState extends State<MinigameResultPage> {
+
   bool isWinner = false;
+  int rank = 1;
+  String? prize;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 10), () {
-      Navigator.pushReplacement(
-        context,
-        PageTransition(
-          type: PageTransitionType.fade,
-          duration: const Duration(milliseconds: 1000),
-          child: const VotingPage(),
-        ),
-      );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var rewardViewModel = Provider.of<RewardViewModel>(context, listen: false);
+      prize = rewardViewModel.reward ?? "no prize for you today sorry";
+
+      // do uzycia invincible jesli ta nagroda
+      if (prize == "INVINCIBLE") {
+        Navigator.pushReplacement(
+          context,
+          PageTransition(
+            type: PageTransitionType.fade,
+            duration: const Duration(milliseconds: 1000),
+            child: ChooseProtected(),
+          ),
+        );
+      } else {
+        Future.delayed(Duration(seconds: 10), () {
+          Navigator.pushReplacement(
+            context,
+            PageTransition(
+              type: PageTransitionType.fade,
+              duration: const Duration(milliseconds: 1000),
+              child: const VotingPage(),
+            ),
+          );
+        });
+      }
     });
   }
 
@@ -48,7 +71,6 @@ class MinigameResultPageState extends State<MinigameResultPage> {
 
     double baseWidth = 350.0;
     double fontSizeScale = screenWidth / baseWidth;
-
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -94,7 +116,7 @@ class MinigameResultPageState extends State<MinigameResultPage> {
                     ),
                     SizedBox(height: screenHeight * 0.01),
                     Text(
-                      isWinner ? 'Your prize is:' : 'Winner is richer by:',
+                      isWinner ? 'Your prize is: $prize' : 'Winner is richer by:',
                       style: TextStyle(fontSize: 20 * fontSizeScale),
                     ),
                     SizedBox(height: screenHeight * 0.1),
