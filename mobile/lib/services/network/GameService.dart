@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:mobile/models/GameHistory.dart';
 import 'package:mobile/services/WebSocketClient.dart';
 import 'package:mobile/utils/Constants.dart' as Constants;
 import 'package:http/http.dart' as http;
@@ -44,7 +45,28 @@ class GameService {
     }
   }
 
-  Future<void> useReward(String username) async {
+  Future<List<GameHistory>> getHistory() async {
+    try {
+      final response = await httpClient.get(Uri.parse("$baseUrl/game/history"));
+      if (response.statusCode == 200) {
+        List<dynamic> gamesJson = jsonDecode(response.body);
+        List<GameHistory> games = gamesJson
+            .map((json) => GameHistory.fromJson(json as Map<String, dynamic>))
+            .toList();
+        return games;
+      } else {
+        throw FetchDataException('Failed to load games');
+      }
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException('No Internet Connection');
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> useReward(int roomId, String username) async {
     try{
       final response = await httpClient.post(
         Uri.parse("$baseUrl/reward"),
@@ -61,5 +83,4 @@ class GameService {
       }
     }
   }
-
 }

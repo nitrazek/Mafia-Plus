@@ -72,6 +72,22 @@ class RoomViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> getHistory(void Function() onSuccess, void Function(String errorMsg) onError) async {
+    try {
+      await _gameService.getHistory();
+      onSuccess();
+    }
+    catch(e)
+    {
+      if(e is UnauthorisedException) {
+        onError("Not enough players");
+      } else {
+        onError("Wrong starting procedure");
+      }
+      notifyListeners();
+    }
+  }
+
   void openGameSettings() {
     // Implement the logic for opening game settings
   }

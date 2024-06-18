@@ -2,7 +2,6 @@ package pl.mafia.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +31,8 @@ public class GameService {
     private RoomRepository roomRepository;
     @Autowired
     private GameRepository gameRepository;
+    @Autowired
+    private GameHistoryRepository gameHistoryRepository;
     @Autowired
     private MinigameRepository minigameRepository;
     @Autowired
@@ -191,6 +192,13 @@ public class GameService {
             throw new IllegalArgumentException("Room does not exist.");
         Room room = fetchedRoom.get();
 
+        GameHistory gameHistory = new GameHistory();
+        gameHistory.setCreateTimestamp(game.getCreateTimestamp());
+        gameHistory.setRoundsPlayed(game.getRounds().size());
+        gameHistory.setPlayersUsernames(game.getPlayers().stream().map(Player::getUsername).toList());
+        gameHistory.setWinnerRole(winnerRole);
+        gameHistoryRepository.save(gameHistory);
+
         room.setGame(null);
         game.setRoom(null);
         roomRepository.save(room);
@@ -295,5 +303,13 @@ public class GameService {
               usernamesToVote
             ));
         }
+    }
+
+    @Transactional
+    public List<GameHistory> getHistory(String username) {
+        List<GameHistory> gameHistoryList = gameHistoryRepository.findAll();
+        return gameHistoryList.stream()
+                .filter(history -> history.getPlayersUsernames().contains(username))
+                .collect(Collectors.toList());
     }
 }
