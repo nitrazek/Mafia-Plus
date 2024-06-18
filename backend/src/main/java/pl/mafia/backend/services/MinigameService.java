@@ -19,7 +19,11 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class MinigameService {
   @Autowired
+  private AccountRepository accountRepository;
+  @Autowired
   private GameRepository gameRepository;
+  @Autowired
+  private PlayerRepository playerRepository;
   @Autowired
   private MinigameRepository minigameRepository;
   @Autowired
@@ -102,11 +106,16 @@ public class MinigameService {
     }
 
     Reward reward = new Reward();
+    Account account = accountService.getAccount(winner.getUsername());
+
     reward.setTitle(RewardType.random());
     reward.setRound(round);
-    reward.setAccount(accountService.getAccount(winner.getUsername()));
-    reward = rewardRepository.save(reward);
+    reward.setAccount(account);
+    account.setReward(reward);
     round.setReward(reward);
+
+    reward = rewardRepository.save(reward);
+    accountRepository.save(account);
     roundRepository.save(round);
 
     messagingTemplate.convertAndSend("/topic/"+room.getId() + "/minigame-summary",new MinigameSummary(winner,highestScore,scores));
@@ -121,5 +130,24 @@ public class MinigameService {
         return null;
       });
     }, 3, TimeUnit.SECONDS);
+  }
+
+  @Transactional
+  public void useReward(String winnerUsername, String playerUsername) {
+    Account winner = accountService.getAccount(winnerUsername);
+    Player player = gameService.getPlayer(playerUsername);
+    Reward reward = winner.getReward();
+
+    if(reward == null) return;
+    switch(reward.getTitle()) {
+      case REVIVE -> {
+        player.setAlive(true);
+        playerRepository.save(player);
+      }
+      case INVINCIBLE -> {
+        player.setInvincible(true);
+        playerRepository.save(player);
+      }
+    }
   }
 }
