@@ -6,6 +6,7 @@ import 'package:mobile/views/styles.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/RewardViewModel.dart';
+import 'package:mobile/viewModels/VotingViewModel.dart';
 import 'package:mobile/views/Voting.dart';
 
 class ChooseProtected extends StatefulWidget {
@@ -15,7 +16,6 @@ class ChooseProtected extends StatefulWidget {
   _ChooseProtectedState createState() => _ChooseProtectedState();
 }
 
-
 class _ChooseProtectedState extends State<ChooseProtected> {
   late double screenWidth;
   late double screenHeight;
@@ -23,7 +23,7 @@ class _ChooseProtectedState extends State<ChooseProtected> {
   @override
   void initState() {
     super.initState();
-    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+    FlutterView view = WidgetsBinding.instance!.platformDispatcher.views.first;
     Size size = view.physicalSize;
     screenWidth = size.width;
     screenHeight = size.height;
@@ -39,7 +39,6 @@ class _ChooseProtectedState extends State<ChooseProtected> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -62,60 +61,68 @@ class _ChooseProtectedState extends State<ChooseProtected> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: screenHeight * 0.02),
-                      Text(
-                        votingText,
-                        style: const TextStyle(fontSize: 28, color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: screenHeight * 0.01),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [BoxShadow(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: screenHeight * 0.02),
+                    Text(
+                      votingText,
+                      style: const TextStyle(fontSize: 28, color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: screenHeight * 0.01),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
                               color: MyStyles.purpleLowOpacity,
                               blurRadius: 20,
                               offset: const Offset(0, 10),
                             )
-                            ],
-                          ),
-                          child: Consumer<RewardViewModel>(
-                            builder: (context, viewModel, child) {
-                              return ListView.builder(
-                                  itemCount: viewModel.playerUsernames?.length,
+                          ],
+                        ),
+                        child: MultiProvider(
+                          providers: [
+                            ChangeNotifierProvider(create: (_) => context.read<RewardViewModel>()),
+                            ChangeNotifierProvider(create: (_) => context.read<VotingViewModel>()),
+                          ],
+                          builder: (context, child) {
+                            return Consumer2<RewardViewModel, VotingViewModel>(
+                              builder: (context, rewardViewModel, votingViewModel, child) {
+                                return ListView.builder(
+                                  itemCount: votingViewModel.playerUsernames?.length,
                                   itemBuilder: (context, index) {
-                                    String playerUsername = viewModel.playerUsernames![index];
+                                    String playerUsername = votingViewModel.playerUsernames![index];
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                                       child: Row(
                                         children: [
                                           Expanded(
                                             child: PlayerButton(
-                                                playerUsername: playerUsername,
-                                                onPressed: () => viewModel.useReward(playerUsername)
+                                              playerUsername: playerUsername,
+                                              onPressed: () => rewardViewModel.useReward(playerUsername),
                                             ),
                                           ),
                                         ],
                                       ),
                                     );
-                                  }
-                              );
-                            },
-                          ),
+                                  },
+                                );
+                              },
+                            );
+                          },
                         ),
                       ),
-                    ]
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
-
         ],
       ),
     );
@@ -128,7 +135,7 @@ class PlayerButton extends StatelessWidget {
 
   PlayerButton({
     required this.playerUsername,
-    required this.onPressed
+    required this.onPressed,
   });
 
   @override
@@ -145,22 +152,22 @@ class PlayerButton extends StatelessWidget {
               child: const Icon(Icons.person, size: 35.0, color: Colors.white),
             ),
             Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Colors.black,
-                      width: 2.0,
-                    ),
+              padding: const EdgeInsets.all(8.0),
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.black,
+                    width: 2.0,
                   ),
                 ),
-                child: Text(
-                  playerUsername,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.black,
-                  ),
-                )
+              ),
+              child: Text(
+                playerUsername,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
+              ),
             ),
           ],
         ),

@@ -6,39 +6,27 @@ import 'package:mobile/views/styles.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/RewardViewModel.dart';
+import 'package:mobile/viewModels/VotingViewModel.dart';
 import 'package:mobile/views/Voting.dart';
 
-class ChooseRevieved extends StatefulWidget {
-  const ChooseRevieved({Key? key}) : super(key: key);
+class ChooseProtected extends StatefulWidget {
+  const ChooseProtected({Key? key}) : super(key: key);
 
   @override
-  _ChooseRevievedState createState() => _ChooseRevievedState();
+  _ChooseProtectedState createState() => _ChooseProtectedState();
 }
 
-
-class _ChooseRevievedState extends State<ChooseRevieved> {
+class _ChooseProtectedState extends State<ChooseProtected> {
   late double screenWidth;
   late double screenHeight;
 
   @override
   void initState() {
     super.initState();
-    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+    FlutterView view = WidgetsBinding.instance!.platformDispatcher.views.first;
     Size size = view.physicalSize;
     screenWidth = size.width;
     screenHeight = size.height;
-
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      checkIfDeadPlayersEmpty();
-    });
-
-  }
-
-  void checkIfDeadPlayersEmpty() {
-    var viewModel = context.read<RewardViewModel>();
-    if (viewModel.deadPlayers.isEmpty) {
-      _onRewardUsed();
-    }
   }
 
   void _onRewardUsed() {
@@ -54,7 +42,7 @@ class _ChooseRevievedState extends State<ChooseRevieved> {
 
   @override
   Widget build(BuildContext context) {
-    String votingText = 'Who would you like to revive?';
+    String votingText = 'Who would you like to protect?';
     return Scaffold(
       body: Stack(
         children: [
@@ -73,60 +61,84 @@ class _ChooseRevievedState extends State<ChooseRevieved> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: screenHeight * 0.02),
-                      Text(
-                        votingText,
-                        style: const TextStyle(fontSize: 28, color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: screenHeight * 0.01),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [BoxShadow(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: screenHeight * 0.02),
+                    Text(
+                      votingText,
+                      style: const TextStyle(fontSize: 28, color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: screenHeight * 0.01),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
                               color: MyStyles.purpleLowOpacity,
                               blurRadius: 20,
                               offset: const Offset(0, 10),
                             )
-                            ],
-                          ),
-                          child: Consumer<RewardViewModel>(
-                            builder: (context, viewModel, child) {
-                              return ListView.builder(
-                                  itemCount: viewModel.deadPlayers?.length, //tu pobiera martwych
-                                  itemBuilder: (context, index) {
-                                    String playerUsername = viewModel.deadPlayers![index];
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: PlayerButton(
-                                                playerUsername: playerUsername,
-                                                onPressed: () => viewModel.useReward(playerUsername)
-                                            ),
-                                          ),
-                                        ],
+                          ],
+                        ),
+                        child: MultiProvider(
+                          providers: [
+                            ChangeNotifierProvider(create: (_) => context.read<RewardViewModel>()),
+                            ChangeNotifierProvider(create: (_) => context.read<VotingViewModel>()),
+                          ],
+                          builder: (context, child) {
+                            return Consumer2<RewardViewModel, VotingViewModel>(
+                              builder: (context, rewardViewModel, votingViewModel, child) {
+                                if (votingViewModel.playerUsernames == null || votingViewModel.playerUsernames!.isEmpty) {
+                                  Future.delayed(Duration.zero, () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      PageTransition(
+                                        type: PageTransitionType.fade,
+                                        duration: const Duration(milliseconds: 1000),
+                                        child: const VotingPage(),
                                       ),
                                     );
-                                  }
-                              );
-                            },
-                          ),
+                                  });
+                                  return Center(
+                                    child: CircularProgressIndicator(), // Placeholder for loading state
+                                  );
+                                } else {
+                                  return ListView.builder(
+                                    itemCount: votingViewModel.playerUsernames!.length,
+                                    itemBuilder: (context, index) {
+                                      String playerUsername = votingViewModel.playerUsernames![index];
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: PlayerButton(
+                                                playerUsername: playerUsername,
+                                                onPressed: () => rewardViewModel.useReward(playerUsername),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                            );
+                          },
                         ),
                       ),
-                    ]
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
-
         ],
       ),
     );
@@ -139,7 +151,7 @@ class PlayerButton extends StatelessWidget {
 
   PlayerButton({
     required this.playerUsername,
-    required this.onPressed
+    required this.onPressed,
   });
 
   @override
@@ -156,22 +168,22 @@ class PlayerButton extends StatelessWidget {
               child: const Icon(Icons.person, size: 35.0, color: Colors.white),
             ),
             Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Colors.black,
-                      width: 2.0,
-                    ),
+              padding: const EdgeInsets.all(8.0),
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.black,
+                    width: 2.0,
                   ),
                 ),
-                child: Text(
-                  playerUsername,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.black,
-                  ),
-                )
+              ),
+              child: Text(
+                playerUsername,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
+              ),
             ),
           ],
         ),
