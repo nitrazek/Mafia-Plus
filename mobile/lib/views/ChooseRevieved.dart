@@ -8,15 +8,15 @@ import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/RewardViewModel.dart';
 import 'package:mobile/views/Voting.dart';
 
-class ChooseProtected extends StatefulWidget {
-  const ChooseProtected({Key? key}) : super(key: key);
+class ChooseRevieved extends StatefulWidget {
+  const ChooseRevieved({Key? key}) : super(key: key);
 
   @override
-  _ChooseProtectedState createState() => _ChooseProtectedState();
+  _ChooseRevievedState createState() => _ChooseRevievedState();
 }
 
 
-class _ChooseProtectedState extends State<ChooseProtected> {
+class _ChooseRevievedState extends State<ChooseRevieved> {
   late double screenWidth;
   late double screenHeight;
 
@@ -43,7 +43,7 @@ class _ChooseProtectedState extends State<ChooseProtected> {
 
   @override
   Widget build(BuildContext context) {
-    String votingText = 'Who would you like to protect?';
+    String votingText = 'Who would you like to revive?';
     return Scaffold(
       body: Stack(
         children: [
@@ -88,7 +88,7 @@ class _ChooseProtectedState extends State<ChooseProtected> {
                           child: Consumer<RewardViewModel>(
                             builder: (context, viewModel, child) {
                               return ListView.builder(
-                                  itemCount: viewModel.playerUsernames?.length,
+                                  itemCount: viewModel.playerUsernames?.length, //tu pobiera zywych trzeab ogarnac martwych
                                   itemBuilder: (context, index) {
                                     String playerUsername = viewModel.playerUsernames![index];
                                     return Padding(
