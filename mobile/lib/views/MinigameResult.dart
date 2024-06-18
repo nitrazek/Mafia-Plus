@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/models/Score.dart';
 import 'package:mobile/viewModels/MinigameResultViewModel.dart';
+import 'package:mobile/views/ChooseRevieved.dart';
 import 'package:mobile/views/Voting.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,18 @@ class MinigameResultPageState extends State<MinigameResultPage> {
             child: ChooseProtected(),
           ),
         );
-      } else {
+      } else if (prize == "REVIVE" && isWinner==true) {
+        Navigator.pushReplacement(
+          context,
+          PageTransition(
+            type: PageTransitionType.fade,
+            duration: const Duration(milliseconds: 1000),
+            child: ChooseRevieved(),
+          ),
+        );
+      }
+
+      else {
         Future.delayed(Duration(seconds: 10), () {
           Navigator.pushReplacement(
             context,

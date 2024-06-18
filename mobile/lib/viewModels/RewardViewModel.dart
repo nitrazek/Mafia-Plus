@@ -14,9 +14,11 @@ class RewardViewModel extends ChangeNotifier{
   String? _reward;
   String? get reward => _reward;
 
+  List<String> _deadPlayers = [];
+  List<String> get deadPlayers => _deadPlayers;
+
   List<String>? _playerUsernames;
   List<String>? get playerUsernames => _playerUsernames;
-
 
   RewardViewModel(){
     _minigameState.addListener(_updateReward); _updateReward();
@@ -35,6 +37,11 @@ class RewardViewModel extends ChangeNotifier{
 
   void fetchPlayerUsernamesFromVoting(VotingViewModel votingViewModel) {
     _playerUsernames = votingViewModel.playerUsernames;
+    notifyListeners();
+  }
+
+  void fetchDeadPlayerUsernamesFromVoting(VotingViewModel votingViewModel) {
+    _deadPlayers = votingViewModel.deadPlayers;
     notifyListeners();
   }
 

@@ -18,6 +18,10 @@ class VotingViewModel extends ChangeNotifier {
   List<String>? _playerUsernames;
   List<String>? get playerUsernames => _playerUsernames;
 
+  List<String> _deadPlayers = [];
+  List<String> get deadPlayers => _deadPlayers;
+
+
   String? _votedPlayer;
   String? get votedPlayer => _votedPlayer;
 
@@ -56,6 +60,11 @@ class VotingViewModel extends ChangeNotifier {
   void skipVote() async {
     _votedPlayer = "";
     await _gameService.addVote(_votingId!, "");
+    notifyListeners();
+  }
+
+  void addDeadPlayer(String playerUsername) {
+    _deadPlayers.add(playerUsername);
     notifyListeners();
   }
 

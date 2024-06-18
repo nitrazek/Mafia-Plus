@@ -88,9 +88,9 @@ class _ChooseRevievedState extends State<ChooseRevieved> {
                           child: Consumer<RewardViewModel>(
                             builder: (context, viewModel, child) {
                               return ListView.builder(
-                                  itemCount: viewModel.playerUsernames?.length, //tu pobiera zywych trzeab ogarnac martwych
+                                  itemCount: viewModel.deadPlayers?.length, //tu pobiera martwych
                                   itemBuilder: (context, index) {
-                                    String playerUsername = viewModel.playerUsernames![index];
+                                    String playerUsername = viewModel.deadPlayers![index];
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                                       child: Row(
