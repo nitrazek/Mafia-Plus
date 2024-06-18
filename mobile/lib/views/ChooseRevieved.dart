@@ -105,7 +105,7 @@ class _ChooseProtectedState extends State<ChooseProtected> {
                                     );
                                   });
                                   return Center(
-                                    child: CircularProgressIndicator(), // Placeholder for loading state
+                                    child: CircularProgressIndicator(),
                                   );
                                 } else {
                                   return ListView.builder(
