@@ -26,8 +26,7 @@ public class Round {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_reward")
+    @OneToOne(mappedBy = "round", fetch = FetchType.LAZY)
     private Reward reward;
 
     @ToString.Exclude

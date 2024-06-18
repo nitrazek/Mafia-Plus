@@ -58,6 +58,23 @@ class GameService {
         throw FetchDataException('Failed to load games');
       }
     } catch (e) {
+    if (e is SocketException) {
+      throw FetchDataException('No Internet Connection');
+    } else {
+      rethrow;
+    }
+  }
+
+  Future<void> useReward(int roomId, String username) async {
+    try{
+      final response = await httpClient.post(
+        Uri.parse("$baseUrl/reward/$roomId"),
+        body: jsonEncode(<String, String>{
+          'username': username,
+        }),
+      );
+      return handleResponse(response);
+    } catch (e) {
       if (e is SocketException) {
         throw FetchDataException('No Internet Connection');
       } else {
