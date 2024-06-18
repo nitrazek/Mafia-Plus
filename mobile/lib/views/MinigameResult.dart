@@ -49,7 +49,7 @@ class MinigameResultPageState extends State<MinigameResultPage> {
 
   void navigateBasedOnPrize() {
   // do uzycia invincible jesli ta nagroda
-      if (prize == "INVINCIBLE" && isWinner==true) {
+      if (prize == "\"INVINCIBLE\"" && isWinner==true) {
         Navigator.pushReplacement(
           context,
           PageTransition(
@@ -58,7 +58,7 @@ class MinigameResultPageState extends State<MinigameResultPage> {
             child: ChooseProtected(),
           ),
         );
-      } else if (prize == "REVIVE" && isWinner==true) {
+      } else if (prize == "\"REVIVE\"" && isWinner==true) {
         Navigator.pushReplacement(
           context,
           PageTransition(
