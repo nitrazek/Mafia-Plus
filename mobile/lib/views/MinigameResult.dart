@@ -33,7 +33,22 @@ class MinigameResultPageState extends State<MinigameResultPage> {
         prize = context.read<RewardViewModel>().reward;
       });
 
-      // do uzycia invincible jesli ta nagroda
+      var scores = context.read<MinigameResultViewModel>().scores;
+      var player = context.read<MinigameResultViewModel>().account;
+      var winner = scores?.winner;
+
+      if (player?.username == winner?.username && player != null) {
+        setState(() {
+          isWinner = true;
+        });
+      }
+      navigateBasedOnPrize();
+    });
+  }
+
+
+  void navigateBasedOnPrize() {
+  // do uzycia invincible jesli ta nagroda
       if (prize == "INVINCIBLE" && isWinner==true) {
         Navigator.pushReplacement(
           context,
@@ -66,8 +81,8 @@ class MinigameResultPageState extends State<MinigameResultPage> {
           );
         });
       }
-    });
   }
+
 
   @override
   Widget build(BuildContext context) {
