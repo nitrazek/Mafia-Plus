@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:mobile/Views/styles.dart';
 import 'package:mobile/models/Score.dart';
 import 'package:mobile/viewModels/MinigameResultViewModel.dart';
+import 'package:mobile/views/ChooseRevieved.dart';
 import 'package:mobile/views/Voting.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:mobile/viewModels/RewardViewModel.dart';
+import 'package:mobile/views/ChooseProtected.dart';
 
 class MinigameResultPage extends StatefulWidget {
   const MinigameResultPage({super.key});
@@ -15,13 +18,38 @@ class MinigameResultPage extends StatefulWidget {
   State<MinigameResultPage> createState() => MinigameResultPageState();
 }
 
+
 class MinigameResultPageState extends State<MinigameResultPage> {
+
   bool isWinner = false;
+  int rank = 1;
+  String? prize = "brak";
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 10), () {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        prize = context.read<RewardViewModel>().reward;
+      });
+
+      var scores = context.read<MinigameResultViewModel>().scores;
+      var player = context.read<MinigameResultViewModel>().account;
+      var winner = scores?.winner;
+
+      if (player?.username == winner?.username && player != null) {
+        setState(() {
+          isWinner = true;
+        });
+      }
+      navigateBasedOnPrize();
+    });
+  }
+
+
+  void navigateBasedOnPrize() {
+    // do uzycia invincible jesli ta nagroda
+    if (prize == "INVINCIBLE" && isWinner==true) {
       Navigator.pushReplacement(
         context,
         PageTransition(
@@ -30,8 +58,31 @@ class MinigameResultPageState extends State<MinigameResultPage> {
           child: const VotingPage(),
         ),
       );
-    });
+    } else if (prize == "REVIVE" && isWinner==true) {
+      Navigator.pushReplacement(
+        context,
+        PageTransition(
+          type: PageTransitionType.fade,
+          duration: const Duration(milliseconds: 1000),
+          child: const VotingPage(),
+        ),
+      );
+    }
+
+    else {
+      Future.delayed(Duration(seconds: 10), () {
+        Navigator.pushReplacement(
+          context,
+          PageTransition(
+            type: PageTransitionType.fade,
+            duration: const Duration(milliseconds: 1000),
+            child: const VotingPage(),
+          ),
+        );
+      });
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +99,6 @@ class MinigameResultPageState extends State<MinigameResultPage> {
 
     double baseWidth = 350.0;
     double fontSizeScale = screenWidth / baseWidth;
-
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -94,7 +144,7 @@ class MinigameResultPageState extends State<MinigameResultPage> {
                     ),
                     SizedBox(height: screenHeight * 0.01),
                     Text(
-                      isWinner ? 'Your prize is:' : 'Winner is richer by:',
+                      isWinner ? 'Your prize is: $prize' : 'Winner is richer by: $prize',
                       style: TextStyle(fontSize: 20 * fontSizeScale),
                     ),
                     SizedBox(height: screenHeight * 0.1),

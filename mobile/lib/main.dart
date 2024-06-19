@@ -24,6 +24,7 @@ import 'package:mobile/viewModels/PublicRoomsViewModel.dart';
 import 'package:mobile/views/Register.dart';
 import 'package:mobile/viewModels/GameHistoryViewModel.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
+import 'package:mobile/viewModels/RewardViewModel.dart';
 
 void main() {
   RoomState(); GameState(); VotingState();
@@ -51,7 +52,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => VotingResultsViewModel()),
         ChangeNotifierProvider(create: (context) => VotedViewModel()),
         ChangeNotifierProvider(create: (context) => WinnerViewModel()),
-        ChangeNotifierProvider(create: (context) => MinigameResultViewModel())
+        ChangeNotifierProvider(create: (context) => MinigameResultViewModel()),
+        ChangeNotifierProvider(create: (context) => RewardViewModel())
       ],
       child: const MaterialApp(
         title: 'MAFIA+',
