@@ -25,6 +25,6 @@ class RewardViewModel extends ChangeNotifier{
 
   Future<void> useReward(String playerUsername) async{
   Room? room = _roomState.currentRoom;
-    await _gameService.useReward(room!.id, playerUsername);
+    await _gameService.useReward(playerUsername);
   }
 }
